@@ -2,9 +2,12 @@ package com.gis.common.utils
 
 import android.content.Context
 import android.os.Parcelable
+import com.gis.common.CommonUtil
+import com.gis.common.extension.LogEnum
+import com.gis.common.extension.logWithTag
 import com.tencent.mmkv.MMKV
+import com.tencent.mmkv.MMKVHandler
 import com.tencent.mmkv.MMKVLogLevel
-import kotlin.collections.HashSet
 
 object MMKVUtil{
 
@@ -12,17 +15,32 @@ object MMKVUtil{
 
     fun init(context: Context){
         // /data/user/0/com.module.plug/files
-        MMKV.initialize(context, context.filesDir.absolutePath, MMKVLogLevel.LevelDebug)
-        mmkv = MMKV.mmkvWithID("MMKV_${context.packageName}")!!
+        MMKV.initialize(context, context.filesDir.absolutePath, null, MMKVLogLevel.LevelDebug,
+            object : MMKVHandler{
+                override fun onMMKVCRCCheckFail(mmapID: String?) = null
+
+                override fun onMMKVFileLengthError(mmapID: String?) = null
+
+                override fun wantLogRedirecting() = CommonUtil.isDebug
+
+                override fun mmkvLog(level: MMKVLogLevel?, file: String?, line: Int, function: String?, message: String?) {
+                    val log = "<$file:$line::$function> $message"
+                    when (level) {
+                        MMKVLogLevel.LevelDebug -> "redirect logging MMKV $log".logWithTag("MMKV", LogEnum.VERBOSE)
+                        MMKVLogLevel.LevelInfo -> "redirect logging MMKV $log".logWithTag("MMKV", LogEnum.INFO)
+                        MMKVLogLevel.LevelWarning -> "redirect logging MMKV $log".logWithTag("MMKV", LogEnum.WARN)
+                        MMKVLogLevel.LevelError,
+                        MMKVLogLevel.LevelNone -> "redirect logging MMKV $log".logWithTag("MMKV", LogEnum.ERROR)
+                        else -> "redirect logging MMKV $log".logWithTag("MMKV", LogEnum.VERBOSE)
+                    }
+                }
+        })
+        mmkv = MMKV.mmkvWithID("MMKV_${context.packageName}")
     }
 
-    /*fun getKV():MMKV{
-        if (mmkv == null){
-            throw RuntimeException("MMKV not init")
-        }
-        return mmkv!!
-    }*/
-
+    /**
+     * 保存数据
+     */
     fun <T>encode(key: String, value: T) {
         when (value) {
             is String -> {

@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import com.gis.common.CommonUtil
 import com.gis.common.log.LogHelper
 import com.gis.common.utils.DisplayUtil
 import com.gis.common.utils.DoubleMathUtils
@@ -16,6 +17,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.*
 import kotlin.random.Random
 
 /**
@@ -36,9 +38,9 @@ fun Any.showToast(isLong:Boolean = false){
  */
 fun Int.randomInt() = Random.nextInt(0, this)
 
-fun Int.getDrawable(context: Context) = ActivityCompat.getDrawable(context, this)
+fun Int.getDrawable() = ActivityCompat.getDrawable(CommonUtil.mContext, this)
 
-fun Int.getResString(context: Context) = context.getString(this)
+fun Int.getResString() = CommonUtil.mContext.getString(this)
 
 fun <T : Any> Observable<T>.subIoObsMain(observer: Observer<T>) {
     this
@@ -51,11 +53,11 @@ fun Int.delay(runnable: Runnable) {
     Handler(Looper.getMainLooper()).postDelayed(runnable, this.toLong())
 }
 
-fun Int.getResDimen(context: Context) = context.resources.getDimension(this)
+fun Int.getResDimen() = CommonUtil.mContext.resources.getDimension(this)
 
-fun Int.getResDrawable(context: Context) = ContextCompat.getDrawable(context, this)
+fun Int.getResDrawable() = ContextCompat.getDrawable(CommonUtil.mContext, this)
 
-fun Int.getResColor(context: Context) = ContextCompat.getColor(context, this)
+fun Int.getResColor() = ContextCompat.getColor(CommonUtil.mContext, this)
 
 fun Int.delay(action: () -> Unit) {
     Handler(Looper.getMainLooper()).postDelayed({ action.invoke() }, this.toLong())
@@ -111,7 +113,7 @@ enum class LogEnum {
 }
 
 fun String.log(logEnum: LogEnum = LogEnum.ERROR) {
-    if (true) {
+    if (CommonUtil.isDebug) {
         when (logEnum) {
             LogEnum.VERBOSE -> LogHelper.v("CZF", this)
             LogEnum.DEBUG -> LogHelper.d("CZF", this)
@@ -123,7 +125,7 @@ fun String.log(logEnum: LogEnum = LogEnum.ERROR) {
 }
 
 fun String.logWithTag(tag: String, logEnum: LogEnum = LogEnum.ERROR) {
-    if (true) {
+    if (CommonUtil.isDebug) {
         when (logEnum) {
             LogEnum.VERBOSE -> LogHelper.v(tag, this)
             LogEnum.DEBUG -> LogHelper.d(tag, this)
@@ -134,6 +136,10 @@ fun String.logWithTag(tag: String, logEnum: LogEnum = LogEnum.ERROR) {
     }
 }
 
+/**
+ * 获取UUID
+ */
+fun getUUID() = UUID.randomUUID().toString().uppercase(Locale.getDefault())
 
 /**
  * 默认头像

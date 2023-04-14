@@ -1,7 +1,9 @@
 package com.gis.network
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 /**
  * @author czf
@@ -11,53 +13,61 @@ import java.io.Serializable
 /**
  * 不关心data数据
  */
+@Parcelize
 data class ObjectAnyBean(
         @SerializedName("data")
-        var data: Any
-):BaseBean(),Serializable
+        var data: @RawValue Any
+):BaseBean(),Parcelable
 
+@Parcelize
 data class ObjectBooleanBean(
         @SerializedName("data")
         var data: Boolean
-):BaseBean(),Serializable
+):BaseBean(),Parcelable
 
+@Parcelize
 data class ObjectStringBean(
         @SerializedName("data")
         var data: String?
-):BaseBean(),Serializable
+):BaseBean(),Parcelable
 
+@Parcelize
 data class ObjectIntBean(
         @SerializedName("data")
         var data: Int
-):BaseBean(),Serializable
+):BaseBean(),Parcelable
 
 
 /**
  * BaseBean<T>
  */
+@Parcelize
 data class ObjectBaseBean<T>(
-        val data: T
-):BaseBean(),Serializable
+        val data: @RawValue T
+):BaseBean(),Parcelable
 
+@Parcelize
 data class ObjectBaseBeanWithNull<T>(
-        val data: T?
-):BaseBean(),Serializable
+        val data: @RawValue T?
+):BaseBean(),Parcelable
 
 /**
  * BaseBean<T>
  */
+@Parcelize
 data class ObjectBaseListBean<T>(
-        val data: List<T>
-):BaseBean(),Serializable
+        val data: @RawValue List<T>
+):BaseBean(),Parcelable
 
+@Parcelize
 data class ObjectBaseListBeanWithNull<T>(
-        val data: List<T>?
-):BaseBean(),Serializable
-
+        val data: @RawValue List<T>?
+):BaseBean(),Parcelable
 
 /**
  * 分页相关
  */
+@Parcelize
 data class CommonBeanList<T>(
         // 当前页
         val current:Int,
@@ -68,17 +78,18 @@ data class CommonBeanList<T>(
         // 总记录数
         val total:Int,
         // 是否能加载更多
-        val records:List<T>,
+        val records: @RawValue List<T>,
         var isLoadMoreEnabled:Boolean =false,
-):Serializable
+):Parcelable
 
-
+@Parcelize
 open class BaseBean(
         var code: Int? = null,
         var message: String? = null,
         var msg: String? = null,
-) : Serializable
+) : Parcelable
 
 
-
+@Parcelize
+data class MyDataClass(val name: String, val age: Int): Parcelable
 

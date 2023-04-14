@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_baseline_add_location_24.xml" value="0.1295" />
+        <entry key="app/src/main/res/drawable/ic_baseline_album_24.xml" value="0.1295" />
+        <entry key="app/src/main/res/drawable/ic_baseline_lens_24.xml" value="0.1295" />
+        <entry key="app/src/main/res/drawable/ic_baseline_location_on_24.xml" value="0.1295" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1796875" />
         <entry key="common/src/main/res/layout/dialog_loading.xml" value="0.20425724637681159" />
       </map>
     </option>

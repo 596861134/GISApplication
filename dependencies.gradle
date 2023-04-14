@@ -1,5 +1,6 @@
 //配置各个module共用的参数
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'//kotlin语言使用注入框架，dataBinding都需要这个
 apply plugin: 'androidx.navigation.safeargs.kotlin'//用于navigation传参的时候一种安全防护,非空，类型判断等。
 
@@ -14,6 +15,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
 
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
     }
 
     buildFeatures {
@@ -38,6 +42,21 @@ android {
         checkReleaseBuilds false
         ignoreWarnings true       // false by default
         quiet true                // false by default
+    }
+
+    packagingOptions {
+        doNotStrip "*/x86/*.so"
+        doNotStrip "*/armeabi/*.so"
+        doNotStrip "*/armeabi-v7a/*.so"
+
+        exclude 'META-INF/ASL2.0'
+        exclude 'META-INF/com.android.tools/proguard/coroutines.pro'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
     }
 }
 
@@ -123,8 +142,8 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:4.15.1"
 
     //okhttp3 :  https://github.com/square/okhttp
-    implementation "com.squareup.okhttp3:okhttp:4.9.1"
-    implementation "com.squareup.okhttp3:logging-interceptor:4.9.1"
+    implementation "com.squareup.okhttp3:okhttp:4.10.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
 
     //retrofit  https://github.com/square/retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
@@ -199,6 +218,12 @@ dependencies {
     implementation "com.liulishuo.okdownload:filedownloader:$okdownload_version"
     // 为kotlin扩展提供接口
     implementation "com.liulishuo.okdownload:ktx:$okdownload_version"
+
+    // https://docs.mapbox.com/android/maps/guides/install/
+    implementation ('com.mapbox.maps:android:10.12.1'){
+        // 排除mapbox自己引用的okhttp3
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.5"

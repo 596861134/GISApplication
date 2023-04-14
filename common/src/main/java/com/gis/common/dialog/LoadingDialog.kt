@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDialog
 import androidx.core.content.ContextCompat
-import com.gis.common.BaseApplication
 import com.gis.common.R
 
 /**
@@ -17,9 +16,9 @@ class LoadingDialog(context: Context,private val isFullScreen:Boolean = false)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (isFullScreen){
-            window?.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+            window?.setFlags(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
         }
-        window?.statusBarColor = ContextCompat.getColor(BaseApplication.getContext(), R.color.colorBlue)
+        window?.statusBarColor = ContextCompat.getColor(context, R.color.colorBlue)
         setContentView(R.layout.dialog_loading)
         setCancelable(false)
         setCanceledOnTouchOutside(true)

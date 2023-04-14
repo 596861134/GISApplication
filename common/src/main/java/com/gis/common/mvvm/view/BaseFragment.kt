@@ -3,11 +3,9 @@ package com.gis.common.mvvm.view
 import android.content.Context
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.gis.common.BaseApplication
 import com.gis.common.dialog.LoadingDialog
 
 /**
@@ -51,12 +49,6 @@ open class BaseFragment:Fragment() {
                 )
             }
         }
-    }
-
-    private val mApplicationProvider by lazy { ViewModelProvider(mActivity.applicationContext as BaseApplication) }
-
-    protected fun <T: ViewModel> getApplicationScopeViewModel(@NonNull modelClass:Class<T> ):T {
-        return mApplicationProvider[modelClass]
     }
 
     /**

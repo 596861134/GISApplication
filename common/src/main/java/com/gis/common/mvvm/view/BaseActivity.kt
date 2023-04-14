@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.gis.common.BaseApplication
 import com.gis.common.R
 import com.gis.common.dialog.LoadingDialog
 import com.gis.common.extension.isNotNull
@@ -125,12 +123,6 @@ open class BaseActivity:AppCompatActivity() {
                 imm.hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
             }
         }
-    }
-
-    private val mApplicationProvider by lazy { ViewModelProvider(applicationContext as BaseApplication) }
-
-    protected fun <T: ViewModel> getApplicationScopeViewModel(@NonNull modelClass:Class<T> ):T {
-        return mApplicationProvider[modelClass]
     }
 
     /**
