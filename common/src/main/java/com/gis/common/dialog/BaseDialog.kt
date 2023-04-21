@@ -37,7 +37,7 @@ open class BaseDialog constructor(context: Context, @StyleRes themeResId: Int = 
     DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
 
     private val listeners: ListenersWrapper<BaseDialog> = ListenersWrapper(this)
-    private val mLifecycle: LifecycleRegistry = LifecycleRegistry(this)
+    private val mLifecycle: LifecycleRegistry = lifecycle as LifecycleRegistry//LifecycleRegistry(this)
     private var showListeners: MutableList<OnShowListener?>? = null
     private var cancelListeners: MutableList<OnCancelListener?>? = null
     private var dismissListeners: MutableList<OnDismissListener?>? = null
@@ -149,10 +149,6 @@ open class BaseDialog constructor(context: Context, @StyleRes themeResId: Int = 
             getSystemService(InputMethodManager::class.java).hideSoftInputFromWindow(focusView.windowToken, 0)
         }
         super.dismiss()
-    }
-
-    fun getDialogLifecycle(): Lifecycle {
-        return mLifecycle
     }
 
     /**

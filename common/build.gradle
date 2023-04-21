@@ -26,7 +26,8 @@ android {
             // res 资源目录配置
             res.srcDirs(
                     'src/main/res',
-                    'src/main/res-sw'
+                    // 使用头条屏幕适配方案替代此方案
+//                    'src/main/res-sw'
             )
         }
     }
