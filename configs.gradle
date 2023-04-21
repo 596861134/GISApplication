@@ -1,0 +1,75 @@
+ext {
+    kotlin_version = '1.8.20'
+
+    /*当xml中没有代码提示时把版本改成32*/
+    compile_sdk_version = 33
+//    build_tools_version = '33.0.2'
+    min_sdk_verion = 21
+    target_sdk_version = 32
+
+    lifecycle_version = "2.5.1"
+    navigation_version = "2.5.3"
+    room_version = "2.5.0"
+    okdownload_version = "1.0.7"
+
+    // 测试服
+    def SERVER_TYPE_DEBUG = "debug"
+    // 预发布服
+    def SERVER_TYPE_PREVIEW = "preview"
+    // 正式服
+    def SERVER_TYPE_RELEASE = "release"
+
+    def taskName = project.gradle.startParameter.taskNames[0]
+    if (taskName == null) {
+        taskName = ""
+    }
+    // 打印当前执行的任务名称
+    println "GradleLog TaskNameOutput " + taskName
+
+    def serverType = SERVER_TYPE_RELEASE
+
+    if (taskName.endsWith("Debug")) {
+        serverType = SERVER_TYPE_DEBUG
+    } else if (taskName.endsWith("Preview")) {
+        serverType = SERVER_TYPE_PREVIEW
+    }else {
+        serverType = SERVER_TYPE_RELEASE
+    }
+
+    // 从 Gradle 命令中读取参数配置，例如：./gradlew assembleRelease -P ServerType="test"
+    if (project.hasProperty("ServerType")) {
+        serverType = project.properties["ServerType"]
+    }
+
+    // 打印当前服务器配置
+    println "GradleLog ServerTypeOutput " + serverType
+
+    // 友盟 AppKey
+    UMENG_APP_KEY = "5cb16d93570df399fd0014e2"
+    // QQ AppId
+    QQ_APP_ID = "101828096"
+    // QQ Secret
+    QQ_APP_SECRET = "9dfd3300c3aa3c4596a07796c64914b2"
+    // 微信 AppId
+    WX_APP_ID = "wxd35706cc9f46114c"
+    // 微信 Secret
+    WX_APP_SECRET = "0c8c7cf831dd135a32b3e395ea459b5a"
+
+    switch(serverType) {
+        case SERVER_TYPE_DEBUG:
+        case SERVER_TYPE_PREVIEW:
+            LOG_ENABLE = true
+            // 不同环境的key 可以在这里配 如：BUGLY_ID = "测试 AppID"
+            if (serverType == SERVER_TYPE_PREVIEW) {
+                HOST_URL = "https://www.wanandroid.com/prerelease/"
+            } else {
+                HOST_URL = "https://www.wanandroid.com/debug/"
+            }
+            break
+        case SERVER_TYPE_RELEASE:
+            LOG_ENABLE = false
+            // 不同环境的key 可以在这里配 如：BUGLY_ID = "正式 AppID"
+            HOST_URL = "https://www.wanandroid.com/release/"
+            break
+    }
+}

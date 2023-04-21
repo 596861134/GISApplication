@@ -33,6 +33,7 @@ open class BaseViewModelFragment<VM: BaseLayoutViewModel, T:ViewDataBinding>(@La
         onViewInit()
         mRealVM.onModelBind()
         onEvent()
+        lazyFetchDataIfPrepared()
     }
 
     override fun beforeSetView() {

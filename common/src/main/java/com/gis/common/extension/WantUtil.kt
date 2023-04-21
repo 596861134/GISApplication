@@ -8,6 +8,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
+import com.gis.common.BuildConfig
 import com.gis.common.CommonUtil
 import com.gis.common.log.LogHelper
 import com.gis.common.utils.DisplayUtil
@@ -113,7 +114,7 @@ enum class LogEnum {
 }
 
 fun String.log(logEnum: LogEnum = LogEnum.ERROR) {
-    if (CommonUtil.isDebug) {
+    if (BuildConfig.LOG_ENABLE) {
         when (logEnum) {
             LogEnum.VERBOSE -> LogHelper.v("CZF", this)
             LogEnum.DEBUG -> LogHelper.d("CZF", this)
@@ -125,7 +126,7 @@ fun String.log(logEnum: LogEnum = LogEnum.ERROR) {
 }
 
 fun String.logWithTag(tag: String, logEnum: LogEnum = LogEnum.ERROR) {
-    if (CommonUtil.isDebug) {
+    if (BuildConfig.LOG_ENABLE) {
         when (logEnum) {
             LogEnum.VERBOSE -> LogHelper.v(tag, this)
             LogEnum.DEBUG -> LogHelper.d(tag, this)

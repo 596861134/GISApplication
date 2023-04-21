@@ -1,6 +1,5 @@
 package com.gis.common.mvvm.interfaces
 
-import androidx.lifecycle.Observer
 import com.gis.common.mvvm.view.BaseActivity
 import com.gis.common.mvvm.viewmodel.BaseViewModel
 
@@ -17,18 +16,18 @@ interface ViewState {
     fun onEvent()
 
     fun BaseViewModel.dialogState(baseActivity: BaseActivity) {
-        isDialogShow.observe(baseActivity, Observer {
+        isDialogShow.observe(baseActivity) {
             if (it) baseActivity.showDialog() else baseActivity.dismissDialog()
-        })
+        }
     }
 
     fun BaseViewModel.finish(baseActivity: BaseActivity) {
-        isFinish.observe(baseActivity, Observer {
+        isFinish.observe(baseActivity) {
             if (it) {
                 baseActivity.finish()
                 isFinish.value = false
             }
-        })
+        }
     }
 
 }

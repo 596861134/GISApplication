@@ -22,9 +22,41 @@ android {
     }
 
     buildTypes {
+        debug {
+            // 给包名添加后缀
+            applicationIdSuffix '.debug'
+            // 添加清单占位符
+            addManifestPlaceholders([
+                    'app_name'    :   '项目框架Debug版'
+            ])
+        }
+
+        preview.initWith(debug)
+        preview {
+            applicationIdSuffix '.preview'
+            // 添加清单占位符
+            addManifestPlaceholders([
+                    'app_name'    :    '项目框架Preview版'
+            ])
+        }
+
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            applicationIdSuffix ''
+            // 添加清单占位符
+            addManifestPlaceholders([
+                    'app_name'    :    '@string/project_name'
+            ])
+        }
+    }
+
+    applicationVariants.all { variant ->
+        // apk 输出文件名配置
+        variant.outputs.all { output ->
+            outputFileName = rootProject.getName() + '_v' + variant.versionName + '_' + variant.buildType.name
+            if (variant.buildType.name == buildTypes.release.getName()) {
+                outputFileName += '_' + new Date().format('MMdd')
+            }
+            outputFileName += '.apk'
         }
     }
 

@@ -2,4 +2,32 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gis.common">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application>
+
+        <!-- 友盟 Key（请在 Gradle 中配置，请不要在此处修改） -->
+        <meta-data
+            android:name="UM_KEY"
+            android:value="${UM_KEY}" />
+
+        <!-- QQ AppId（请在 Gradle 中配置，请不要在此处修改） -->
+        <meta-data
+            android:name="QQ_ID"
+            android:value="${QQ_ID}" />
+        <!-- QQ Secret（请在 Gradle 中配置，请不要在此处修改） -->
+        <meta-data
+            android:name="QQ_SECRET"
+            android:value="${QQ_SECRET}" />
+
+        <!-- 微信 AppId（请在 Gradle 中配置，请不要在此处修改） -->
+        <meta-data
+            android:name="WX_ID"
+            android:value="${WX_ID}" />
+        <!-- 微信 Secret（请在 Gradle 中配置，请不要在此处修改） -->
+        <meta-data
+            android:name="WX_SECRET"
+            android:value="${WX_SECRET}" />
+
+    </application>
 </manifest>

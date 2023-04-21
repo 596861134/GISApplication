@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.hjq.shape.layout.ShapeConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:shape_solidColor="@color/white"
+    app:shape_radius="@dimen/dp_10">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_20"
+        android:text="提示"
+        android:textColor="@color/color_343434"
+        android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_10"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_title"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dp_20"
+        android:gravity="center_vertical"
+        android:textColor="@color/color_585858"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        tools:text="您本月的剩余额度不足，请调整订单商品！您本月的剩余额度不足，请调整订单商品！" />
+
+    <ImageView
+        android:id="@+id/iv_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/sp_13"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/tv_content"
+        app:layout_constraintStart_toStartOf="@id/tv_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_content"
+        tools:layout_height="@dimen/dp_30"
+        tools:src="@color/color_343434"
+        tools:visibility="visible" />
+
+    <com.hjq.shape.view.ShapeButton
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_31"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:minWidth="@dimen/dp_87"
+        android:paddingStart="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_8"
+        android:text="取消"
+        android:textColor="@color/color_416FFC"
+        android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btn_conform"
+        app:layout_constraintTop_toBottomOf="@id/iv_content"
+        app:shape_radius="@dimen/dp_16"
+        app:shape_solidColor="@color/white"
+        app:shape_strokeColor="@color/colorBlue"
+        app:shape_strokeWidth="1dp"
+        tools:visibility="visible" />
+
+    <com.hjq.shape.view.ShapeButton
+        android:id="@+id/btn_conform"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_31"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:gravity="center"
+        android:minWidth="@dimen/dp_87"
+        android:paddingStart="@dimen/dp_8"
+        android:paddingEnd="@dimen/dp_8"
+        android:text="确认"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/btn_cancel"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_content"
+        app:shape_radius="@dimen/dp_16"
+        app:shape_solidColor="@color/colorBlue" />
+
+</com.hjq.shape.layout.ShapeConstraintLayout>

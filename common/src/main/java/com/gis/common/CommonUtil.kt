@@ -1,13 +1,22 @@
 package com.gis.common
 
+import android.app.Activity
 import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.os.Build
 import android.os.Process
+import androidx.core.content.ContextCompat
 import androidx.core.content.pm.PackageInfoCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import com.gis.common.extension.showToast
 import com.gis.common.log.LogHelper
+import com.gis.common.manager.AppActivityManager
+import com.gis.common.manager.MMKVUtil
 import com.gis.common.utils.CrashHandler
-import com.gis.common.utils.MMKVUtil
 import com.hjq.toast.Toaster
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 
@@ -17,21 +26,43 @@ import me.jessyan.retrofiturlmanager.RetrofitUrlManager
  */
 object CommonUtil {
 
-    lateinit var mApplication: Application
     lateinit var mContext: Context
-    var isDebug: Boolean = true
 
-    private const val BASE_URL = "https://www.wanandroid.com/"
-
-    fun init(application: Application, debug: Boolean) {
-        mApplication = application
+    fun init(application: Application) {
         mContext = application.applicationContext
-        isDebug = debug
-        LogHelper.init(debug, "GIS")
+        // 初始化日志打印
+        LogHelper.init(BuildConfig.LOG_ENABLE, BuildConfig.LOG_TAG)
+        // 初始化页面管理
+        AppActivityManager.getInstance().init(application)
+        // 初始Toast
         Toaster.init(application)
+        //
         CrashHandler.getInstance().init(application.applicationContext)
         MMKVUtil.init(application.applicationContext)
-        RetrofitUrlManager.getInstance().setGlobalDomain(BASE_URL)
+        RetrofitUrlManager.getInstance().setGlobalDomain(BuildConfig.HOST_URL)
+        registerNet(mContext)
+    }
+
+    private fun registerNet(context: Context){
+        // 注册网络状态变化监听
+        val connectivityManager: ConnectivityManager? = ContextCompat.getSystemService(context, ConnectivityManager::class.java)
+        if (connectivityManager != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
+                override fun onLost(network: Network) {
+                    val topActivity: Activity? = AppActivityManager.getInstance().getTopActivity()
+                    topActivity?.let {
+                        if (topActivity !is LifecycleOwner) {
+                            return
+                        }
+                        val lifecycleOwner: LifecycleOwner = topActivity
+                        if (lifecycleOwner.lifecycle.currentState != Lifecycle.State.RESUMED) {
+                            return
+                        }
+                        "当前网络不可用，请检查网络设置".showToast()
+                    }
+                }
+            })
+        }
     }
 
     /**

@@ -1,15 +1,16 @@
 package com.czf.gis
 
 import android.Manifest
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Application
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import com.czf.gis.databinding.ActivityMainBinding
 import com.gis.common.extension.showToast
+import com.gis.common.mvvm.view.BaseVMRepositoryActivity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.maps.CameraOptions
-import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
@@ -19,17 +20,16 @@ import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListene
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 
-class MainActivity : AppCompatActivity() {
+class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>(R.layout.activity_main){
 
-    private val mapView: MapView by lazy { findViewById(R.id.mapView) }
 
     private val onIndicatorBearingChangedListener = OnIndicatorBearingChangedListener {
-        mapView.getMapboxMap().setCamera(CameraOptions.Builder().bearing(it).build())
+        mBinding.mapView.getMapboxMap().setCamera(CameraOptions.Builder().bearing(it).build())
     }
 
     private val onIndicatorPositionChangedListener = OnIndicatorPositionChangedListener {
-        mapView.getMapboxMap().setCamera(CameraOptions.Builder().center(it).build())
-        mapView.gestures.focalPoint = mapView.getMapboxMap().pixelForCoordinate(it)
+        mBinding.mapView.getMapboxMap().setCamera(CameraOptions.Builder().center(it).build())
+        mBinding.mapView.gestures.focalPoint = mBinding.mapView.getMapboxMap().pixelForCoordinate(it)
     }
 
     private val onMoveListener = object : OnMoveListener {
@@ -44,10 +44,8 @@ class MainActivity : AppCompatActivity() {
         override fun onMoveEnd(detector: MoveGestureDetector) {}
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+    override fun onViewInit() {
+        super.onViewInit()
         XXPermissions.with(this).permission(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -66,16 +64,20 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
+    }
 
+    override fun onEvent() {
+        super.onEvent()
+        mRealVM.userLogout()
     }
 
     private fun initMap() {
-        mapView.getMapboxMap().setCamera(
+        mBinding.mapView.getMapboxMap().setCamera(
             CameraOptions.Builder()
                 .zoom(14.0)
                 .build()
         )
-        mapView.getMapboxMap().loadStyleUri(
+        mBinding.mapView.getMapboxMap().loadStyleUri(
             Style.MAPBOX_STREETS
         ) {
             initLocationComponent()
@@ -92,11 +94,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupGesturesListener() {
-        mapView.gestures.addOnMoveListener(onMoveListener)
+        mBinding.mapView.gestures.addOnMoveListener(onMoveListener)
     }
 
     private fun initLocationComponent() {
-        val locationComponentPlugin = mapView.location
+        val locationComponentPlugin = mBinding.mapView.location
         locationComponentPlugin.updateSettings {
             this.enabled = true
             this.locationPuck = LocationPuck2D(
@@ -128,35 +130,37 @@ class MainActivity : AppCompatActivity() {
 
     private fun onCameraTrackingDismissed() {
         "onCameraTrackingDismissed".showToast()
-        mapView.location
+        mBinding.mapView.location
             .removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
-        mapView.location
+        mBinding.mapView.location
             .removeOnIndicatorBearingChangedListener(onIndicatorBearingChangedListener)
-        mapView.gestures.removeOnMoveListener(onMoveListener)
+        mBinding.mapView.gestures.removeOnMoveListener(onMoveListener)
     }
 
     override fun onStart() {
         super.onStart()
-        mapView.onStart()
+        mBinding.mapView.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
+        mBinding.mapView.onStop()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+        mBinding.mapView.onLowMemory()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mapView.location
+        mBinding.mapView.location
             .removeOnIndicatorBearingChangedListener(onIndicatorBearingChangedListener)
-        mapView.location
+        mBinding.mapView.location
             .removeOnIndicatorPositionChangedListener(onIndicatorPositionChangedListener)
-        mapView.gestures.removeOnMoveListener(onMoveListener)
-        mapView.onDestroy()
+        mBinding.mapView.gestures.removeOnMoveListener(onMoveListener)
+        mBinding.mapView.onDestroy()
     }
+
+    override fun getViewModel(app: Application) = MainViewModel(app)
 }

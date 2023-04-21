@@ -1,18 +1,6 @@
 buildscript {
-
-    ext {
-        kotlin_version = '1.8.20'
-
-        compile_sdk_version = 33
-//        build_tools_version = '30.0.3'
-        min_sdk_verion = 21
-        target_sdk_version = 32
-
-        lifecycle_version = "2.5.1"
-        navigation_version = "2.5.3"
-        room_version = "2.5.0"
-        okdownload_version = "1.0.7"
-    }
+    // 导入配置文件
+    apply from : 'configs.gradle'
 
     dependencies {
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
@@ -28,6 +16,27 @@ plugins {
     id 'com.android.library' version '7.2.2' apply false
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
 }
+
+allprojects {
+
+    tasks.withType(JavaCompile) {
+        // 设置全局编码
+        options.encoding = 'UTF-8'
+    }
+
+    tasks.withType(Javadoc) {
+        // 设置文档编码
+        options {
+            encoding 'UTF-8'
+            charSet 'UTF-8'
+            links 'http://docs.oracle.com/javase/8/docs/api'
+        }
+    }
+
+    // 将构建文件统一输出到项目根目录下的 build 文件夹
+    setBuildDir(new File(rootDir, "build/${path.replaceAll(':', '/')}"))
+}
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir

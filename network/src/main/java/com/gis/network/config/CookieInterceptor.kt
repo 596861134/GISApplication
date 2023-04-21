@@ -1,7 +1,7 @@
 package com.gis.network.config
 
 import com.gis.network.util.Constant
-import com.gis.common.utils.MMKVUtil
+import com.gis.common.manager.MMKVUtil
 import okhttp3.Interceptor
 import okhttp3.Response
 

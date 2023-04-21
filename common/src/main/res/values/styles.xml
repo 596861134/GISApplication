@@ -72,4 +72,17 @@
         <item name="android:windowExitAnimation">@anim/bottom_out_window</item>
     </style>
 
+
+    <!-- 左边弹出动画 -->
+    <style name="LeftAnimStyle" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/window_left_in</item>
+        <item name="android:windowExitAnimation">@anim/window_left_out</item>
+    </style>
+
+    <!-- 右边弹出动画 -->
+    <style name="RightAnimStyle" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/window_right_in</item>
+        <item name="android:windowExitAnimation">@anim/window_right_out</item>
+    </style>
+
 </resources>

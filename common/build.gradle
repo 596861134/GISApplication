@@ -10,7 +10,27 @@ android {
     defaultConfig {
         versionCode 1
         versionName "1.0"
+
+        // 清单占位符
+        addManifestPlaceholders([
+                'UM_KEY' : UMENG_APP_KEY,
+                'QQ_ID' : QQ_APP_ID,
+                'QQ_SECRET' : QQ_APP_SECRET,
+                'WX_ID' : WX_APP_ID,
+                'WX_SECRET' : WX_APP_SECRET
+        ])
     }
+
+    sourceSets {
+        main {
+            // res 资源目录配置
+            res.srcDirs(
+                    'src/main/res',
+                    'src/main/res-sw'
+            )
+        }
+    }
+
 
 }
 
