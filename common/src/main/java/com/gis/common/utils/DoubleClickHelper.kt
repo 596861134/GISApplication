@@ -10,6 +10,8 @@ import android.os.SystemClock
  */
 object DoubleClickHelper {
 
+    const val DIFF = 500
+
     /** 数组的长度为2代表只记录双击操作 */
     private val TIME_ARRAY: LongArray = LongArray(2)
 
@@ -18,7 +20,7 @@ object DoubleClickHelper {
      */
     fun isOnDoubleClick(): Boolean {
         // 默认间隔时长
-        return isOnDoubleClick(1500)
+        return isOnDoubleClick(DIFF)
     }
 
     /**

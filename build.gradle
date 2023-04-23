@@ -6,6 +6,9 @@ buildscript {
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-parcelize-runtime:$kotlin_version"
+        // 多渠道打包：https://github.com/Tencent/VasDolly
+        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'com.tencent.vasdolly:plugin:3.0.6'
     }
 
 }

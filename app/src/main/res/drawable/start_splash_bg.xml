@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@color/transparent"/>
+
+    <item>
+        <bitmap android:antialias="true"
+            android:src="@mipmap/splash"/>
+    </item>
+
+    <item android:top="0dp">
+        <bitmap android:antialias="true"
+            android:gravity="top|center"
+            android:src="@mipmap/ic_launcher"/>
+    </item>
+
+    <item android:top="0dp">
+        <bitmap android:antialias="true"
+            android:gravity="center"
+            android:src="@mipmap/ic_launcher_round"/>
+    </item>
+
+</layer-list>

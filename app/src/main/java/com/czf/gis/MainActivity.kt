@@ -3,10 +3,11 @@ package com.czf.gis
 import android.Manifest
 import android.app.Application
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
 import com.czf.gis.databinding.ActivityMainBinding
 import com.gis.common.extension.showToast
 import com.gis.common.mvvm.view.BaseVMRepositoryActivity
+import com.gyf.immersionbar.BarHide
+import com.gyf.immersionbar.ImmersionBar
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
 import com.mapbox.android.gestures.MoveGestureDetector
@@ -68,6 +69,10 @@ class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>
 
     override fun onEvent() {
         super.onEvent()
+        mRealVM.getUpdateBusinessLiveData().observe(this){
+            // 执行回调操作，避免页面关闭操作View
+        }
+
         mRealVM.userLogout()
     }
 

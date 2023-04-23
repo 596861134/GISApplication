@@ -4,10 +4,12 @@ import android.app.Application
 import android.content.Context
 import androidx.core.content.ContextCompat
 import com.gis.common.CommonUtil
+import com.gis.common.extension.log
 import com.gis.common.widget.MaterialHeader
 import com.gis.common.widget.SmartBallPulseFooter
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
+import com.tencent.vasdolly.helper.ChannelReaderUtil
 
 /**
  * Created by chengzf on 2021/5/12.
@@ -35,15 +37,15 @@ open class BaseApplication:Application() {
         CommonUtil.init(this@BaseApplication)
 
         // 设置全局的 Header 构建器
-        SmartRefreshLayout.setDefaultRefreshHeaderCreator{ context: Context, layout: RefreshLayout ->
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator{ context: Context, _: RefreshLayout ->
             MaterialHeader(context).setColorSchemeColors(ContextCompat.getColor(context, R.color.teal_700))
         }
         // 设置全局的 Footer 构建器
-        SmartRefreshLayout.setDefaultRefreshFooterCreator{ context: Context, layout: RefreshLayout ->
+        SmartRefreshLayout.setDefaultRefreshFooterCreator{ context: Context, _: RefreshLayout ->
             SmartBallPulseFooter(context)
         }
         // 设置全局初始化器
-        SmartRefreshLayout.setDefaultRefreshInitializer { context: Context, layout: RefreshLayout ->
+        SmartRefreshLayout.setDefaultRefreshInitializer { _: Context, layout: RefreshLayout ->
             // 刷新头部是否跟随内容偏移
             layout.setEnableHeaderTranslationContent(true)
                 // 刷新尾部是否跟随内容偏移
@@ -55,7 +57,11 @@ open class BaseApplication:Application() {
                 // 仿苹果越界效果开关
                 .setEnableOverScrollDrag(false)
         }
+        "渠道号：${getChannel()}".log()
+    }
 
+    fun getChannel():String{
+        return ChannelReaderUtil.getChannel(this@BaseApplication)
     }
 
 }

@@ -2,7 +2,9 @@ package com.czf.gis
 
 import android.app.Application
 import com.gis.common.extension.emptyBody
+import com.gis.common.mvvm.livedata.UnPeekLiveData
 import com.gis.common.mvvm.viewmodel.BaseRepositoryViewModel
+import com.gis.network.ObjectAnyBean
 import com.gis.network.util.launch
 import com.gis.network.util.response
 
@@ -11,10 +13,16 @@ import com.gis.network.util.response
  */
 class MainViewModel(app:Application):BaseRepositoryViewModel<MainRepository>(app, MainRepository()) {
 
+
+    private val mUpdateBusinessLiveData: UnPeekLiveData<ObjectAnyBean> by lazy { UnPeekLiveData() }
+    fun getUpdateBusinessLiveData(): UnPeekLiveData<ObjectAnyBean> {
+        return mUpdateBusinessLiveData
+    }
+
     fun userLogout(){
         launch(true){
             response(mRepo.userLogout(emptyBody)){
-
+                mUpdateBusinessLiveData.value = this
             }
         }
 

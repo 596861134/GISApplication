@@ -1,6 +1,8 @@
-package com.gis.common.manager;
+package com.gis.common.mvvm.livedata;
 
 /**
+ * https://github.com/KunMinX/UnPeek-LiveData
+ *
  * TODO 唯一可信源设计
  * 我们在 V6 中继续沿用从 V3 版延续下来的基于 "唯一可信源" 理念的设计，
  * 来确保 "事件" 的发送权牢牢握在可信的逻辑中枢单元手里，从而确保所有订阅者收到的信息都是可靠且一致的，
@@ -15,6 +17,14 @@ package com.gis.common.manager;
  * Create by KunMinX at 2021/6/17
  */
 public class UnPeekLiveData<T> extends ProtectedUnPeekLiveData<T> {
+
+  public UnPeekLiveData(T value) {
+    super(value);
+  }
+
+  public UnPeekLiveData() {
+    super();
+  }
 
   @Override
   public void setValue(T value) {

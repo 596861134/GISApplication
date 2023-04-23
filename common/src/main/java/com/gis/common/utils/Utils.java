@@ -17,10 +17,15 @@ import androidx.core.content.FileProvider;
 import com.hjq.toast.Toaster;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 
+/**
+ * @author czf
+ */
 public class Utils {
 
     private static Utils utils;
@@ -67,11 +72,146 @@ public class Utils {
     }
 
     /**
+     * 获取文件Uri
+     *
+     * @param context
+     * @param file
+     * @return
+     */
+    public Uri getUriForFile(Context context, File file) {
+        if (context == null || file == null) {
+            return null;
+        }
+        Uri fileUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            fileUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
+        } else {
+            fileUri = Uri.fromFile(file);
+        }
+        // 处理中文转义
+        String uriPath = Uri.decode(fileUri.toString());
+        Uri decodeUri = Uri.parse(uriPath);
+        context.grantUriPermission(context.getPackageName(), decodeUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        context.grantUriPermission(context.getPackageName(), decodeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        return decodeUri;
+    }
+
+    /**
+     * 通过指定pkg获取文件Uri，允许其访问应用内部文件
+     *
+     * @param context
+     * @param file
+     * @return
+     */
+    public Uri getUriForFile(Context context, File file, String pkg) {
+        if (context == null || file == null) {
+            return null;
+        }
+        Uri fileUri;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            fileUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", file);
+        } else {
+            fileUri = Uri.fromFile(file);
+        }
+        // 处理中文转义
+        String uriPath = Uri.decode(fileUri.toString());
+        Uri decodeUri = Uri.parse(uriPath);
+        context.grantUriPermission(pkg, decodeUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        context.grantUriPermission(pkg, decodeUri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        return decodeUri;
+    }
+
+    /**
+     * 根据文件后缀获取文件MIME类型
+     * MediaMetadataRetriever 不能处理访问本地文件的权限，如要处理本地文件请使用 getFileContentType
+     * MediaMetadataRetriever 类只支持从特定来源（例如网络地址或媒体播放器）获取多媒体数据，而不能直接访问本地文件系统
+     * @param path
+     * @return
+     */
+    public String getMimeType(Context context, Uri path) {
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        String mime = "*/*";
+        if (path != null) {
+            try {
+                mmr.setDataSource(context, path);
+                mime = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return mime;
+            }
+        }
+        return mime;
+    }
+
+    /**
+     * 根据文件后缀获取文件ContentType，不推荐使用，因为不是通过provider获取的URI
+     *
+     * @param filePath 获取本地文件路径
+     * @return ContentType
+     */
+    public String getFileContentType(String filePath) {
+        String contentType = "*/*";
+        URLConnection urlConnection = null;
+        try {
+            File file = new File(filePath);
+            URL fileUrl = file.toURI().toURL();
+            urlConnection = fileUrl.openConnection();
+            contentType = urlConnection.getContentType();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != urlConnection){
+                    urlConnection.getInputStream().close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return contentType;
+    }
+
+    /**
+     * 根据文件Uri获取文件ContentType
+     * @param context
+     * @param uri
+     * @return  MIME
+     */
+    public String getFileContentType(Context context, Uri uri){
+        return context.getContentResolver().getType(uri);
+    }
+
+    /**
+     * 打开系统中安装的对应程序预览
+     * @param path 文件路径
+     */
+    public void openReaderByMIME(Context context, String path){
+        File file = new File(path);
+        if (file.exists()) {
+            try {
+                String uriPath = Uri.decode(getUriForFile(context, file).toString());
+                Uri uri = Uri.parse(uriPath);
+                String mimeType = getFileContentType(context, uri);
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                intent.setDataAndType(uri, mimeType);
+                context.startActivity(intent);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+                Toaster.showShort("没有可查看\""+file.getName()+"\"的应用程序");
+            }
+        }
+    }
+
+    /**
      * 跳转到应用详情界面
      *
      * @param context
      */
-    public static void startAppDetailSetting(Context context) {
+    public void startAppDetailSetting(Context context) {
         Intent intent = new Intent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
@@ -90,7 +230,7 @@ public class Utils {
      *
      * @param context
      */
-    public static void startNotificationSetting(Context context) {
+    public void startNotificationSetting(Context context) {
         try {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -122,7 +262,7 @@ public class Utils {
      * @param context
      * @return
      */
-    public static boolean isOpenNotification(Context context) {
+    public boolean isOpenNotification(Context context) {
         return NotificationManagerCompat.from(context).areNotificationsEnabled();
     }
 
@@ -131,7 +271,7 @@ public class Utils {
      *
      * @param context
      */
-    public static void startSystemFileManager(Context context) {
+    public void startSystemFileManager(Context context) {
         String path = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
         Uri fileURI = getUriForFile(context, new File(path));
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -143,103 +283,13 @@ public class Utils {
         context.startActivity(intent);
     }
 
-    /** 根据文件后缀获取文件MIME类型
-     *
-     * @param filePath
-     * @return
-     */
-    private String getMimeType(String filePath){
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        String mime = "*/*";
-        if (filePath != null) {
-            try {
-                mmr.setDataSource(filePath);
-                mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
-            } catch (Exception e) {
-                return mime;
-            }
-        }
-        return mime;
-    }
-
-    /**
-     * 获取文件Uri
-     *
-     * @param context
-     * @param file
-     * @return
-     */
-    public static Uri getUriForFile(Context context, File file) {
-        if (context == null || file == null) {
-            return null;
-        }
-        Uri fileURI;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            fileURI = FileProvider.getUriForFile(context, context.getApplicationInfo().packageName + ".fileprovider", file);
-        } else {
-            fileURI = Uri.fromFile(file);
-        }
-        context.grantUriPermission(context.getApplicationInfo().packageName, fileURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        context.grantUriPermission(context.getApplicationInfo().packageName, fileURI, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        return fileURI;
-    }
-
-    public static Uri getUriForFile(Context context, File file, String pkg) {
-        if (context == null || file == null) {
-            return null;
-        }
-        Uri fileURI;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            fileURI = FileProvider.getUriForFile(context, context.getApplicationInfo().packageName + ".fileprovider", file);
-        } else {
-            fileURI = Uri.fromFile(file);
-        }
-        context.grantUriPermission(pkg, fileURI, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        context.grantUriPermission(pkg, fileURI, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        return fileURI;
-    }
-
-    public static String getDocumentPath() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            String Document = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath();
-            File pdfFile = new File(Document + File.separator + "want_pdf");
-            if (!pdfFile.exists()) {
-                boolean mkdirs = pdfFile.mkdirs();
-            }
-            String absolutePath = pdfFile.getAbsolutePath();
-            return absolutePath;
-        }
-        return null;
-    }
-
-
-    /**
-     * 打开系统中安装的支持pdf预览程序
-     */
-    public static void openPDFReader(Context context, String path){
-        File file = new File(path);
-        if (file.exists()) {
-            Uri uri = Utils.getUriForFile(context, file);
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(uri, "application/pdf");
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            try {
-                context.startActivity(intent);
-            }
-            catch (Exception e) {
-                Toaster.showShort("没有可查看PDF的应用程序");
-                e.printStackTrace();
-            }
-        }
-    }
-
     /**
      * 位置信息是否关闭
      * 是否将访问我的位置信息总开关关闭
      * @param context
      * @return
      */
-    public static final boolean isPhoneLocationOpen(final Context context) {
+    public final boolean isPhoneLocationOpen(Context context) {
         if (context == null) {
             return true;
         }
@@ -265,7 +315,7 @@ public class Utils {
      *
      * @return
      */
-    private Intent getAppDetailSettingIntent(final Context context) {
+    private Intent getAppDetailSettingIntent(Context context) {
         Intent localIntent = new Intent();
         localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         if (Build.VERSION.SDK_INT >= 9) {
@@ -284,7 +334,7 @@ public class Utils {
      *
      * @return  系统版本号
      */
-    public static String getSystemVersion() {
+    public String getSystemVersion() {
         return Build.VERSION.RELEASE;
     }
 
@@ -293,7 +343,7 @@ public class Utils {
      *
      * @return  手机型号
      */
-    public static String getSystemModel() {
+    public String getSystemModel() {
         return Build.MODEL;
     }
 
@@ -302,7 +352,7 @@ public class Utils {
      *
      * @return  手机厂商
      */
-    public static String getDeviceBrand() {
+    public String getDeviceBrand() {
         return Build.BRAND;
     }
 }

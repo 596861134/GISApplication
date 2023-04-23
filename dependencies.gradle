@@ -28,14 +28,26 @@ android {
     }
 
     signingConfigs {
-        config {
+        debug {
             storeFile file(StoreFile)
             storePassword StorePassword
             keyAlias KeyAlias
             keyPassword KeyPassword
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+
+        release {
+            storeFile file(StoreFile)
+            storePassword StorePassword
+            keyAlias KeyAlias
+            keyPassword KeyPassword
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
 
+    // Android Gradle使用总结: https://blog.51cto.com/zhaoyanjun/3815153
     buildTypes {
         debug {
             // 调试模式开关
@@ -48,7 +60,7 @@ android {
             // 代码混淆开关
             minifyEnabled false
             // 签名信息配置
-            signingConfig signingConfigs.config
+            signingConfig signingConfigs.debug
             // 调试模式下只保留一种架构的 so 库，提升打包速度
             ndk {
                 abiFilters 'armeabi-v7a'
@@ -70,7 +82,7 @@ android {
             // 代码混淆开关
             minifyEnabled true
             // 签名信息配置
-            signingConfig signingConfigs.config
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -290,6 +302,9 @@ dependencies {
         // 排除mapbox自己引用的okhttp3
         exclude group: 'com.squareup.okhttp3', module: 'okhttp'
     }
+
+    // 多渠道打包：https://github.com/Tencent/VasDolly
+    implementation 'com.tencent.vasdolly:helper:3.0.6'
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.5"

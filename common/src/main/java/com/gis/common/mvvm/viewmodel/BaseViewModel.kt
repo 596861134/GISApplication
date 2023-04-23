@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.lifecycle.AndroidViewModel
-import com.gis.common.manager.UnPeekLiveData
+import com.gis.common.mvvm.livedata.UnPeekLiveData
 import java.io.Serializable
 
 /**

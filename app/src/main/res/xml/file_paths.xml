@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <root-path name="camera_photos" path="" />
-    <external-path name="camera_photos" path="." />
-    <external-path name="my_images" path="Pictures"/>
-    <external-path name="external_files" path="." />
-    <external-path name="external_path" path="." />
-    <external-cache-path name="name" path="." />
-    <external-cache-path name="external_cache" path="."/>
-    <!--友盟分享 适配Android 11-->
-    <external-files-path name="umeng_cache" path="umeng_cache/" />
-    <external-files-path name="share_files" path="." />
-    <external-files-path name="sharedata" path="."/>
-
+<paths>
+    <!-- 代表设备的根目录 new File("/") -->
+    <root-path name="root" path="." />
+    <!-- context.getFilesDir() -->
+    <files-path name="files" path="." />
+    <!-- context.getCacheDir() -->
+    <cache-path name="cache" path="." />
+    <!-- context.getExternalFilesDirs() -->
+    <external-files-path name="name" path="path" />
+    <!-- context.getExternalCacheDirs() -->
+    <external-cache-path name="name" path="path" />
+    <!-- Environment.getExternalStorageDirectory() -->
+    <external-path name="external" path="." />
 </paths>

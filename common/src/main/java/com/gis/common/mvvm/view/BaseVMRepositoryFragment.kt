@@ -39,7 +39,6 @@ abstract class BaseVMRepositoryFragment<VM: BaseRepositoryViewModel<*>, T:ViewDa
         onViewInit()
         mRealVM.onModelBind()
         onEvent()
-        lazyFetchDataIfPrepared()
     }
 
     override fun beforeSetView() {

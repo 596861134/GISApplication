@@ -307,7 +307,9 @@ public class Codec {
          * @throws Exception
          */
         public static String initMacKey(Algorithm algorithm) throws Exception {
-            if (algorithm == null) algorithm = Algorithm.Hmac_MD5;
+            if (algorithm == null) {
+                algorithm = Algorithm.Hmac_MD5;
+            }
             KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm.getType());
             SecretKey secretKey = keyGenerator.generateKey();
 
@@ -324,7 +326,9 @@ public class Codec {
          * @throws Exception
          */
         public static byte[] encrypt(byte[] plain, String key, Algorithm algorithm) throws Exception {
-            if (algorithm == null) algorithm = Algorithm.Hmac_MD5;
+            if (algorithm == null) {
+                algorithm = Algorithm.Hmac_MD5;
+            }
             SecretKey secretKey = new SecretKeySpec(BASE64.decode(key), algorithm.getType());
             Mac mac = Mac.getInstance(secretKey.getAlgorithm());
             mac.init(secretKey);
