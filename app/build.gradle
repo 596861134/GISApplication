@@ -4,13 +4,50 @@ plugins {
 }
 
 apply from: '../dependencies.gradle'
-apply plugin: 'com.tencent.vasdolly'
+
+if (IS_RELEASE_PACKAGE){
+
+    apply plugin: 'com.tencent.vasdolly'
+
+    //VasDolly插件配置
+    //gradle channelDebug/channelRelease 编译生成apk后，再根据生成的Apk生成渠道包
+    //gradle channelDebug/channelRelease -Pchannels=yingyongbao,gamecenter 生成指定渠道包
+    channel{
+        channelFile = file("channel.txt")
+        //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
+        outputDir = new File(project.buildDir,"channels")
+        //多渠道包的命名规则，默认为：${appName}-${versionName}-${versionCode}-${flavorName}-${buildType}-${buildTime}
+        apkNameFormat ='${appName}-${versionName}-${versionCode}-${flavorName}-${buildType}'
+        //快速模式：生成渠道包时不进行校验（速度可以提升10倍以上，默认为false）
+        fastMode = false
+        //buildTime的时间格式，默认格式：yyyyMMdd-HHmmss
+        buildTimeDateFormat = 'yyyyMMdd-HH:mm:ss'
+        //低内存模式（仅针对V2签名，默认为false）：只把签名块、中央目录和EOCD读取到内存，不把最大头的内容块读取到内存，在手机上合成APK时，可以使用该模式
+        lowMemory = false
+    }
+
+    // gradle rebuildChannel 配置此任务用于不希望重新构建apk，直接根据指定的apk生成渠道包
+    //gradle rebuildChannel -Pchannels=yingyongbao,gamecenter 生成指定渠道包
+    rebuildChannel {
+        channelFile = file("channel.txt")
+        //指定的apk生成渠道包,文件名中如果有base将被替换为渠道名，否则渠道名将作为前缀
+        baseApk = new File(project.buildDir, "outputs/apk/debug/app-debug.apk")
+        //默认为new File(project.buildDir, "rebuildChannel")
+        outputDir = new File(project.buildDir, "rebuildChannels")
+        //快速模式：生成渠道包时不进行校验（速度可以提升10倍以上，默认为false）
+        fastMode = false
+        //低内存模式（仅针对V2签名，默认为false）：只把签名块、中央目录和EOCD读取到内存，不把最大头的内容块读取到内存，在手机上合成APK时，可以使用该模式
+        lowMemory = false
+    }
+}else {
+    apply from: 'build_apk.gradle'
+}
 
 android {
 
     defaultConfig {
-        versionCode 1
-        versionName "1.0"
+        versionCode VERSIONCODE as int
+        versionName VERSIONNAME
 
         /*javaCompileOptions {
             annotationProcessorOptions {
@@ -22,10 +59,6 @@ android {
         }*/
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
-    }
 
     buildTypes {
         debug {
@@ -50,7 +83,7 @@ android {
             applicationIdSuffix ''
             // 添加清单占位符
             addManifestPlaceholders([
-                    'app_name'    :    '@string/project_name'
+                    'app_name'    :    '@string/app_name'
             ])
         }
     }
@@ -63,50 +96,21 @@ android {
         }
     }
 
-    /*// 打包 使用VasDolly替代自己打包
-    applicationVariants.all { variant ->
-        // apk 输出文件名配置
-        variant.outputs.all { output ->
-            // app名称 = app 名字+ 渠道号 + 版本号 + 构建类型
-            outputFileName = rootProject.getName() + '_' + variant.flavorName + '_v' + variant.versionName + '_' + variant.buildType.name
-            if (variant.buildType.name == buildTypes.release.getName()) {
-                outputFileName += '_' + new Date().format('MMdd')
+    if (!IS_RELEASE_PACKAGE){
+        // 打包 使用VasDolly替代自己打包
+        applicationVariants.configureEach { variant ->
+            // apk 输出文件名配置
+            variant.outputs.configureEach { output ->
+                // app名称 = app 名字+ 渠道号 + 版本号 + 构建类型
+                /*outputFileName = rootProject.getName() + '_' + variant.flavorName + '_v' + variant.versionName + '_' + variant.buildType.name
+                if (variant.buildType.name == buildTypes.release.getName()) {
+                    outputFileName += '_' + new Date().format('MMdd')
+                }*/
+                outputFileName = rootProject.getName() + '_v' + variant.versionName + '_' + variant.buildType.name + '_' + new Date().format('MMdd') + '.apk'
             }
-            outputFileName += '.apk'
         }
-    }*/
+    }
 
-}
-
-//VasDolly插件配置
-//gradle channelDebug/channelRelease 编译生成apk后，再根据生成的Apk生成渠道包
-//gradle channelDebug/channelRelease -Pchannels=yingyongbao,gamecenter 生成指定渠道包
-channel{
-    channelFile = file("channel.txt")
-    //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
-    outputDir = new File(project.buildDir,"channels")
-    //多渠道包的命名规则，默认为：${appName}-${versionName}-${versionCode}-${flavorName}-${buildType}-${buildTime}
-    apkNameFormat ='${appName}-${versionName}-${versionCode}-${flavorName}-${buildType}'
-    //快速模式：生成渠道包时不进行校验（速度可以提升10倍以上，默认为false）
-    fastMode = false
-    //buildTime的时间格式，默认格式：yyyyMMdd-HHmmss
-    buildTimeDateFormat = 'yyyyMMdd-HH:mm:ss'
-    //低内存模式（仅针对V2签名，默认为false）：只把签名块、中央目录和EOCD读取到内存，不把最大头的内容块读取到内存，在手机上合成APK时，可以使用该模式
-    lowMemory = false
-}
-
-// gradle rebuildChannel 配置此任务用于不希望重新构建apk，直接根据指定的apk生成渠道包
-//gradle rebuildChannel -Pchannels=yingyongbao,gamecenter 生成指定渠道包
-rebuildChannel {
-    channelFile = file("channel.txt")
-    //指定的apk生成渠道包,文件名中如果有base将被替换为渠道名，否则渠道名将作为前缀
-    baseApk = new File(project.buildDir, "outputs/apk/debug/app-debug.apk")
-    //默认为new File(project.buildDir, "rebuildChannel")
-    outputDir = new File(project.buildDir, "rebuildChannels")
-    //快速模式：生成渠道包时不进行校验（速度可以提升10倍以上，默认为false）
-    fastMode = false
-    //低内存模式（仅针对V2签名，默认为false）：只把签名块、中央目录和EOCD读取到内存，不把最大头的内容块读取到内存，在手机上合成APK时，可以使用该模式
-    lowMemory = false
 }
 
 dependencies {

@@ -1,0 +1,196 @@
+import groovy.json.JsonSlurper
+
+/*加载keystore.properties信息到该gradle文件中*/
+def keystorePropertiesFile = rootProject.file("gradle.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+ext {
+    //源代码文件路径
+    SOURCE_PATH = "${project.projectDir}"
+    //源apk文件路径
+    SOURCE_APK_PATH = "${project.buildDir}"
+    //默认release文件路径
+    DEFAULT_APK_PATH_RELEASE = "${project.buildDir}/outputs/apk/release"
+    //默认preview文件路径
+    DEFAULT_APK_PATH_PREVIEW = "${project.buildDir}/outputs/apk/preview"
+    //默认debug文件路径
+    DEFAULT_APK_PATH_DEBUG = "${project.buildDir}/outputs/apk/debug"
+}
+
+/**
+ * 正式包
+ */
+task buildAppUploadRelease() {
+    group '项目框架'
+    dependsOn("assembleRelease")
+    doLast {
+        println DEFAULT_APK_PATH_RELEASE
+        //上传apk文件到蒲公英平台
+        def apkDir = new File(DEFAULT_APK_PATH_RELEASE)
+        uploadApk(apkDir)
+    }
+}
+
+/**
+ * 预发包
+ */
+task buildAppUploadPreview() {
+    group '项目框架'
+    dependsOn("assemblePreview")
+    doLast {
+        println DEFAULT_APK_PATH_PREVIEW
+        //上传apk文件到蒲公英平台
+        def apkDir = new File(DEFAULT_APK_PATH_PREVIEW)
+        uploadApk(apkDir)
+    }
+}
+
+/**
+ * 打包测试环境apk 上传蒲公英
+ */
+task buildAppUploadDebug() {
+    group '项目框架'
+    //生成debug包
+    dependsOn("assembleDebug")
+    doLast {
+        //上传apk文件到蒲公英平台
+        println DEFAULT_APK_PATH_DEBUG
+        def apkDir = new File(DEFAULT_APK_PATH_DEBUG)
+        uploadApk(apkDir)
+    }
+}
+
+//自动上传到蒲公英
+def uploadApk(File apkDir) {
+    //查找等待上传的apk文件
+    //正常打包可以在debug和relase下找到，但是多渠道打包，需要选择正确的渠道路径
+//    def apkDir = new File(DEFAULT_APK_PATH_DEBUG)
+
+    if (!apkDir.exists()) {
+        throw new RuntimeException("apk outputs path not exists!")
+    }
+    def apk = null
+    for (int i = apkDir.listFiles().length - 1; i >= 0; i--) {
+        File file = apkDir.listFiles()[i]
+        if (file.name.endsWith(".apk")) {
+            apk = file
+            break
+        }
+    }
+
+    if (apk == null) {
+        throw new RuntimeException("apk file not exists!")
+    }
+
+    println "\n"
+    println "*********************************** start upload file ******************************************"
+
+    def twoHyphens = "--"
+    def boundary = "*********"
+    def end = "\r\n"
+
+    //蒲公英API上传接口   https://www.pgyer.com/doc/view/api#uploadApp  官方文档地址
+    def conn = new URL("https://www.pgyer.com/apiv2/app/upload").openConnection()
+    conn.setRequestMethod("POST")
+    conn.setRequestProperty("Connection", "Keep-Alive")
+    conn.setRequestProperty("Charset", "UTF-8")
+    conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary)
+    conn.setDoInput(true)
+    conn.setDoOutput(true)
+
+    /**
+     * 蒲公英为测试账号
+     */
+    //添加参数：_api_key
+    def sb = new StringBuilder()
+    sb.append(twoHyphens).append(boundary).append(end)
+    sb.append("Content-Disposition: form-data; name=_api_key")
+    sb.append(end).append(end)
+    sb.append(PGY_API_KEY).append(end)
+
+    // buildType (必填) 需要上传的应用类型，如果是iOS类型请传ios或ipa，如果是Android类型请传android或apk
+    sb.append(twoHyphens).append(boundary).append(end)
+    sb.append("Content-Disposition: form-data; name=buildType")
+    sb.append(end).append(end)
+    sb.append("android").append(end)
+
+    //添加参数：buildUpdateDescription 更新日志，取值git
+    sb.append(twoHyphens).append(boundary).append(end)
+    sb.append("Content-Disposition: form-data; name=buildUpdateDescription")
+    sb.append(end).append(end)
+    sb.append(BUILD_DESCRIPTION).append(end)
+
+    //添加参数：buildInstallType (选填)
+    // 应用安装方式，值为(1,2,3，默认为1 公开安装)。1：公开安装，2：密码安装，3：邀请安装
+    sb.append(twoHyphens).append(boundary).append(end)
+    sb.append("Content-Disposition: form-data; name=buildInstallType")
+    sb.append(end).append(end)
+    sb.append(2).append(end)
+
+    //添加参数：buildPassword (选填) 设置App安装密码，密码为空时默认公开安装
+    sb.append(twoHyphens).append(boundary).append(end)
+    sb.append("Content-Disposition: form-data; name=buildPassword")
+    sb.append(end).append(end)
+    sb.append("123456").append(end)
+
+    //添加参数file: 需要上传的apk文件
+    sb.append(twoHyphens).append(boundary).append(end)
+    sb.append("Content-Disposition: form-data; name=file;filename=").append(apk.getName())
+    sb.append(end).append(end)
+
+    def dos = new DataOutputStream(conn.getOutputStream())
+    dos.writeBytes(sb.toString())
+    dos.flush()
+    sb.delete(0, sb.length())
+
+    def fis = new FileInputStream(apk)
+    byte[] bf = new byte[8192]
+    int len
+    while ((len = fis.read(bf)) != -1) {
+        dos.write(bf, 0, len)
+    }
+    sb.append(end)
+    sb.append(twoHyphens).append(boundary).append(end)
+    dos.writeBytes(sb.toString())
+
+    dos.flush()
+    fis.close()
+    dos.close()
+    conn.connect()
+
+    def text = conn.getContent().text
+    def resp = new JsonSlurper().parseText(text)
+
+    println text
+    println "***********************************  upload finish ******************************************"
+
+    if (resp.code != 0) {
+        throw new RuntimeException(resp.message)
+    }
+
+    //解析蒲公英上传返回数据
+    //apk下载地址
+    def apkDownloadUrl = "https://www.pgyer.com/" + resp.data.buildShortcutUrl
+
+    def time = resp.data.buildCreated
+    def buildQRCodeURL = resp.data.buildQRCodeURL
+    def buildName = resp.data.buildName
+    def buildVersion = resp.data.buildVersion
+    def buildBuildVersion = resp.data.buildBuildVersion
+    def buildUpdateDescription = URLDecoder.decode(resp.data.buildUpdateDescription, "UTF-8")
+
+    println "\n"
+    println("***********************************  result begin ******************************************")
+
+    println("【" + buildName + "】构建成功" +
+            "\n应用类型：Android" +
+            "\n打包版本：" + buildBuildVersion +
+            "\n构建版本：" + buildVersion +
+            "\n下载地址：" +
+            "\n[下载地址](" + apkDownloadUrl + ")" +
+            "\n[二维码](" + buildQRCodeURL + ")" +
+            "\n更新内容：" + buildUpdateDescription +
+            "\n构建时间：" + time)
+    println("***********************************  result end ********************************************")
+}

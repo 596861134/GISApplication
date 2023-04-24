@@ -26,7 +26,7 @@ ext {
     // 打印当前执行的任务名称
     println "GradleLog TaskNameOutput " + taskName
 
-    def serverType = SERVER_TYPE_RELEASE
+//    def serverType = SERVER_TYPE_RELEASE
 
     if (taskName.endsWith("Debug")) {
         serverType = SERVER_TYPE_DEBUG
@@ -54,6 +54,9 @@ ext {
     WX_APP_ID = "wxd35706cc9f46114c"
     // 微信 Secret
     WX_APP_SECRET = "0c8c7cf831dd135a32b3e395ea459b5a"
+    
+    // 是否是线上环境
+    IS_RELEASE_PACKAGE = false
 
     switch(serverType) {
         case SERVER_TYPE_DEBUG:
@@ -67,7 +70,7 @@ ext {
             }
             break
         case SERVER_TYPE_RELEASE:
-            LOG_ENABLE = false
+            LOG_ENABLE = !IS_RELEASE_PACKAGE
             // 不同环境的key 可以在这里配 如：BUGLY_ID = "正式 AppID"
             HOST_URL = "https://www.wanandroid.com/release/"
             break
