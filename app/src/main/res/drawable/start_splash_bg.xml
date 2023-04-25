@@ -11,7 +11,7 @@
     <item android:top="0dp">
         <bitmap android:antialias="true"
             android:gravity="top|center"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@mipmap/ic_launcher_preview"/>
     </item>
 
     <item android:top="0dp">

@@ -68,7 +68,7 @@
         android:name=".BaseApplication"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="${icon_launcher}"
         android:label="${app_name}"
         android:largeHeap="true"
         android:supportsRtl="false"

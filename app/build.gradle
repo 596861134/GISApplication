@@ -72,7 +72,8 @@ android {
             applicationIdSuffix ''
             // 添加清单占位符
             addManifestPlaceholders([
-                    'app_name'    :    '@string/app_name'
+                    'app_name'    :    '@string/app_name',
+                    'icon_launcher' : '@mipmap/ic_launcher_release'
             ])
         }
     }
@@ -92,7 +93,8 @@ android {
                 applicationIdSuffix '.debug'
                 // 添加清单占位符
                 addManifestPlaceholders([
-                        'app_name'    :   '项目框架Debug版'
+                        'app_name'    :   '项目框架Debug版',
+                        'icon_launcher' : '@mipmap/ic_launcher'
                 ])
             }
 
@@ -101,7 +103,8 @@ android {
                 applicationIdSuffix '.preview'
                 // 添加清单占位符
                 addManifestPlaceholders([
-                        'app_name'    :    '项目框架Preview版'
+                        'app_name'    :    '项目框架Preview版',
+                        'icon_launcher' : '@mipmap/ic_launcher_preview'
                 ])
             }
 
@@ -109,7 +112,8 @@ android {
                 applicationIdSuffix ''
                 // 添加清单占位符
                 addManifestPlaceholders([
-                        'app_name'    :    '@string/app_name'
+                        'app_name'    :    '@string/app_name',
+                        icon_launcher : '@mipmap/ic_launcher_release'
                 ])
             }
         }

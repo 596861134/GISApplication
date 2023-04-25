@@ -13,7 +13,8 @@ android {
         targetSdk target_sdk_version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles 'consumer-rules.pro'
+        // 混淆配置
+        proguardFiles 'proguard-sdk.pro', 'proguard-app.pro'
 
         multiDexEnabled true
 
@@ -195,6 +196,7 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.7.1"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation "com.google.android.material:material:1.8.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
