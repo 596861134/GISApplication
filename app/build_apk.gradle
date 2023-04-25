@@ -1,7 +1,5 @@
 import groovy.json.JsonSlurper
 
-apply from: '../dependencies.gradle'
-
 /*加载keystore.properties信息到该gradle文件中*/
 def keystorePropertiesFile = rootProject.file("gradle.properties")
 def keystoreProperties = new Properties()
@@ -12,21 +10,12 @@ ext {
     SOURCE_PATH = "${project.projectDir}"
     //源apk文件路径
     SOURCE_APK_PATH = "${project.buildDir}"
-    if (IS_OPEN_FLAVORS){
-        //默认release文件路径
-        DEFAULT_APK_PATH_RELEASE = "${project.buildDir}/outputs/apk/_release/debug"
-        //默认preview文件路径
-        DEFAULT_APK_PATH_PREVIEW = "${project.buildDir}/outputs/apk/_preview/debug"
-        //默认debug文件路径
-        DEFAULT_APK_PATH_DEBUG = "${project.buildDir}/outputs/apk/_debug/debug"
-    }else {
-        //默认release文件路径
-        DEFAULT_APK_PATH_RELEASE = "${project.buildDir}/outputs/apk/release"
-        //默认preview文件路径
-        DEFAULT_APK_PATH_PREVIEW = "${project.buildDir}/outputs/apk/preview"
-        //默认debug文件路径
-        DEFAULT_APK_PATH_DEBUG = "${project.buildDir}/outputs/apk/debug"
-    }
+    //默认release文件路径
+    DEFAULT_APK_PATH_RELEASE = "${project.buildDir}/outputs/apk/release"
+    //默认preview文件路径
+    DEFAULT_APK_PATH_PREVIEW = "${project.buildDir}/outputs/apk/preview"
+    //默认debug文件路径
+    DEFAULT_APK_PATH_DEBUG = "${project.buildDir}/outputs/apk/debug"
 
 }
 
@@ -35,11 +24,7 @@ ext {
  */
 task buildAppUploadRelease() {
     group '项目框架'
-    if (IS_OPEN_FLAVORS){
-        dependsOn("assemble_releaseDebug")
-    }else {
-        dependsOn("assembleRelease")
-    }
+    dependsOn("assembleRelease")
     doLast {
         println DEFAULT_APK_PATH_RELEASE
         //上传apk文件到蒲公英平台
@@ -53,11 +38,7 @@ task buildAppUploadRelease() {
  */
 task buildAppUploadPreview() {
     group '项目框架'
-    if (IS_OPEN_FLAVORS){
-        dependsOn("assemble_previewDebug")
-    }else {
-        dependsOn("assemblePreview")
-    }
+    dependsOn("assemblePreview")
     doLast {
         println DEFAULT_APK_PATH_PREVIEW
         //上传apk文件到蒲公英平台
@@ -72,11 +53,7 @@ task buildAppUploadPreview() {
 task buildAppUploadDebug() {
     group '项目框架'
     //生成debug包
-    if (IS_OPEN_FLAVORS){
-        dependsOn("assemble_debugDebug")
-    }else {
-        dependsOn("assembleDebug")
-    }
+    dependsOn("assembleDebug")
     doLast {
         //上传apk文件到蒲公英平台
         println DEFAULT_APK_PATH_DEBUG

@@ -9,6 +9,8 @@ buildscript {
         // 多渠道打包：https://github.com/Tencent/VasDolly
         classpath 'com.android.tools.build:gradle:7.4.2'
         classpath 'com.tencent.vasdolly:plugin:3.0.6'
+        // AOP 配置插件：https://github.com/HujiangTechnology/gradle_plugin_android_aspectjx
+        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
     }
 
 }

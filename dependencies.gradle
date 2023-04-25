@@ -107,6 +107,13 @@ android {
         jvmTarget = "1.8"
     }
 
+    // 设置存放 so 文件的目录
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
     /**
      * 忽略警告
      */

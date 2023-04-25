@@ -62,7 +62,7 @@
     </style>
 
     <style name="AppStartup" parent="SplashTheme">
-        <!--<item name="android:windowBackground">@drawable/start_splash_bg</item>-->
+        <item name="android:windowBackground">@drawable/start_splash_bg</item>
     </style>
 
 </resources>

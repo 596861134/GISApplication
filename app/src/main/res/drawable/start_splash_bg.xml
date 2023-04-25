@@ -5,7 +5,7 @@
 
     <item>
         <bitmap android:antialias="true"
-            android:src="@mipmap/splash"/>
+            android:src="@mipmap/splash_release"/>
     </item>
 
     <item android:top="0dp">

@@ -3,7 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+apply from: 'buildTrace.gradle'
 apply from: '../dependencies.gradle'
+
 
 if (IS_RELEASE_PACKAGE){
 
@@ -53,7 +55,10 @@ android {
         // 动态向string.xml中写入值
         resValue "string", "build_config_package", "${applicationId}"
         resValue "string", "mapbox_access_token", "${MAPBOX_ACCESS_TOKEN}"
-
+        // 仅保留中文语种的资源
+        resConfigs 'zh'
+        // 仅保留 xxhdpi 图片资源（目前主流分辨率 1920 * 1080）
+        resConfigs 'xxhdpi'
         /*javaCompileOptions {
             annotationProcessorOptions {
                 arguments += mapOf(
@@ -81,65 +86,31 @@ android {
     }
 
     if (!IS_RELEASE_PACKAGE){
-        if (IS_OPEN_FLAVORS){
-            flavorDimensions.add("versionCode")
-            /**
-             * 渠道
-             */
-            productFlavors {
-                _debug {
-                    // 给包名添加后缀
-                    applicationIdSuffix '.debug'
-                    // 添加清单占位符
-                    addManifestPlaceholders([
-                            'app_name'    :   '项目框架Debug版'
-                    ])
-                }
-
-                _preview.initWith(_debug)
-                _preview {
-                    applicationIdSuffix '.preview'
-                    // 添加清单占位符
-                    addManifestPlaceholders([
-                            'app_name'    :    '项目框架Preview版'
-                    ])
-                }
-
-                _release {
-                    applicationIdSuffix ''
-                    // 添加清单占位符
-                    addManifestPlaceholders([
-                            'app_name'    :    '@string/app_name'
-                    ])
-                }
+        buildTypes {
+            debug {
+                // 给包名添加后缀
+                applicationIdSuffix '.debug'
+                // 添加清单占位符
+                addManifestPlaceholders([
+                        'app_name'    :   '项目框架Debug版'
+                ])
             }
-        }else {
-            buildTypes {
-                debug {
-                    // 给包名添加后缀
-                    applicationIdSuffix ''
-                    // 添加清单占位符
-                    addManifestPlaceholders([
-                            'app_name'    :   '项目框架Debug版'
-                    ])
-                }
 
-                preview.initWith(debug)
-                preview {
-                    applicationIdSuffix ''
-                    // 添加清单占位符
-                    addManifestPlaceholders([
-                            'app_name'    :    '项目框架Preview版'
-                    ])
-                }
+            preview.initWith(debug)
+            preview {
+                applicationIdSuffix '.preview'
+                // 添加清单占位符
+                addManifestPlaceholders([
+                        'app_name'    :    '项目框架Preview版'
+                ])
+            }
 
-                release {
-                    applicationIdSuffix ''
-                    // 添加清单占位符
-                    addManifestPlaceholders([
-                            'app_name'    :    '@string/app_name'
-                    ])
-                }
+            release {
+                applicationIdSuffix ''
+                // 添加清单占位符
+                addManifestPlaceholders([
+                        'app_name'    :    '@string/app_name'
+                ])
             }
         }
 
@@ -152,11 +123,7 @@ android {
                 if (variant.buildType.name == buildTypes.release.getName()) {
                     outputFileName += '_' + new Date().format('MMdd')
                 }*/
-                if (IS_OPEN_FLAVORS){
-                    outputFileName = rootProject.getName() + '_v' + variant.versionName + variant.flavorName + '_' + new Date().format('MMdd') + '.apk'
-                }else {
-                    outputFileName = rootProject.getName() + '_v' + variant.versionName + '_' + variant.buildType.name + '_' + new Date().format('MMdd') + '.apk'
-                }
+                outputFileName = rootProject.getName() + '_v' + variant.versionName + '_' + variant.buildType.name + '_' + new Date().format('MMdd') + '.apk'
 
             }
         }

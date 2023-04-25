@@ -59,8 +59,6 @@ ext {
     
     // 是否是线上环境
     IS_RELEASE_PACKAGE = false
-    // 是否开启多渠道 ，生效条件：IS_RELEASE_PACKAGE == false
-    IS_OPEN_FLAVORS = true
     switch(serverType) {
         case SERVER_TYPE_DEBUG:
         case SERVER_TYPE_PREVIEW:
