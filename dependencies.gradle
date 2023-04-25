@@ -29,6 +29,8 @@ android {
         buildConfigField('String', 'LOG_TAG', '"' + 'CZF_TAG' + '"')
         // 服务器的主机地址
         buildConfigField('String', 'HOST_URL', '"' + HOST_URL + '"')
+        // 编译环境
+        buildConfigField('String', 'serverType', '"' + serverType + '"')
     }
 
     signingConfigs {
@@ -52,6 +54,9 @@ android {
     }
 
     // Android Gradle使用总结: https://blog.51cto.com/zhaoyanjun/3815153
+    /**
+     * 编译环境
+     */
     buildTypes {
         debug {
             // 调试模式开关

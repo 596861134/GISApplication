@@ -46,8 +46,13 @@ if (IS_RELEASE_PACKAGE){
 android {
 
     defaultConfig {
+        applicationId "com.czf.gis"
         versionCode VERSIONCODE as int
         versionName VERSIONNAME
+
+        // 动态向string.xml中写入值
+        resValue "string", "build_config_package", "${applicationId}"
+        resValue "string", "mapbox_access_token", "${MAPBOX_ACCESS_TOKEN}"
 
         /*javaCompileOptions {
             annotationProcessorOptions {
@@ -57,29 +62,8 @@ android {
                 )
             }
         }*/
-    }
 
-
-    buildTypes {
-        debug {
-            // 给包名添加后缀
-            applicationIdSuffix '.debug'
-            // 添加清单占位符
-            addManifestPlaceholders([
-                    'app_name'    :   '项目框架Debug版'
-            ])
-        }
-
-        preview.initWith(debug)
-        preview {
-            applicationIdSuffix '.preview'
-            // 添加清单占位符
-            addManifestPlaceholders([
-                    'app_name'    :    '项目框架Preview版'
-            ])
-        }
-
-        release {
+        if (IS_RELEASE_PACKAGE){
             applicationIdSuffix ''
             // 添加清单占位符
             addManifestPlaceholders([
@@ -97,6 +81,68 @@ android {
     }
 
     if (!IS_RELEASE_PACKAGE){
+        if (IS_OPEN_FLAVORS){
+            flavorDimensions.add("versionCode")
+            /**
+             * 渠道
+             */
+            productFlavors {
+                _debug {
+                    // 给包名添加后缀
+                    applicationIdSuffix '.debug'
+                    // 添加清单占位符
+                    addManifestPlaceholders([
+                            'app_name'    :   '项目框架Debug版'
+                    ])
+                }
+
+                _preview.initWith(_debug)
+                _preview {
+                    applicationIdSuffix '.preview'
+                    // 添加清单占位符
+                    addManifestPlaceholders([
+                            'app_name'    :    '项目框架Preview版'
+                    ])
+                }
+
+                _release {
+                    applicationIdSuffix ''
+                    // 添加清单占位符
+                    addManifestPlaceholders([
+                            'app_name'    :    '@string/app_name'
+                    ])
+                }
+            }
+        }else {
+            buildTypes {
+                debug {
+                    // 给包名添加后缀
+                    applicationIdSuffix ''
+                    // 添加清单占位符
+                    addManifestPlaceholders([
+                            'app_name'    :   '项目框架Debug版'
+                    ])
+                }
+
+                preview.initWith(debug)
+                preview {
+                    applicationIdSuffix ''
+                    // 添加清单占位符
+                    addManifestPlaceholders([
+                            'app_name'    :    '项目框架Preview版'
+                    ])
+                }
+
+                release {
+                    applicationIdSuffix ''
+                    // 添加清单占位符
+                    addManifestPlaceholders([
+                            'app_name'    :    '@string/app_name'
+                    ])
+                }
+            }
+        }
+
         // 打包 使用VasDolly替代自己打包
         applicationVariants.configureEach { variant ->
             // apk 输出文件名配置
@@ -106,7 +152,12 @@ android {
                 if (variant.buildType.name == buildTypes.release.getName()) {
                     outputFileName += '_' + new Date().format('MMdd')
                 }*/
-                outputFileName = rootProject.getName() + '_v' + variant.versionName + '_' + variant.buildType.name + '_' + new Date().format('MMdd') + '.apk'
+                if (IS_OPEN_FLAVORS){
+                    outputFileName = rootProject.getName() + '_v' + variant.versionName + variant.flavorName + '_' + new Date().format('MMdd') + '.apk'
+                }else {
+                    outputFileName = rootProject.getName() + '_v' + variant.versionName + '_' + variant.buildType.name + '_' + new Date().format('MMdd') + '.apk'
+                }
+
             }
         }
     }

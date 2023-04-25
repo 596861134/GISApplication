@@ -12,12 +12,14 @@ ext {
     room_version = "2.5.0"
     okdownload_version = "1.0.7"
 
+    /**编译环境*/
     // 测试服
     def SERVER_TYPE_DEBUG = "debug"
     // 预发布服
     def SERVER_TYPE_PREVIEW = "preview"
     // 正式服
     def SERVER_TYPE_RELEASE = "release"
+    /**编译环境*/
 
     def taskName = project.gradle.startParameter.taskNames[0]
     if (taskName == null) {
@@ -57,7 +59,8 @@ ext {
     
     // 是否是线上环境
     IS_RELEASE_PACKAGE = false
-
+    // 是否开启多渠道 ，生效条件：IS_RELEASE_PACKAGE == false
+    IS_OPEN_FLAVORS = true
     switch(serverType) {
         case SERVER_TYPE_DEBUG:
         case SERVER_TYPE_PREVIEW:

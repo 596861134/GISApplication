@@ -42,7 +42,7 @@ class SplashActivity:BaseViewModelActivity<BaseLayoutViewModel, ActivitySplashBi
         }
 
         mBinding.ivSplashDebug.apply {
-            setText(AppConfig.getBuildType().uppercase(Locale.getDefault()))
+            setText(AppConfig.getServerType().uppercase(Locale.getDefault()))
             if (AppConfig.isDebug()){
                 visible()
             }else {

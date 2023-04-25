@@ -24,6 +24,13 @@ object AppConfig {
     }
 
     /**
+     * 获取当前构建的环境
+     */
+    fun getServerType(): String {
+        return BuildConfig.serverType
+    }
+
+    /**
      * 当前是否要开启日志打印功能
      */
     fun isLogEnable(): Boolean {
