@@ -6,8 +6,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import com.czf.gis.databinding.ActivityMainBinding
 import com.gis.common.extension.showToast
 import com.gis.common.mvvm.view.BaseVMRepositoryActivity
-import com.gyf.immersionbar.BarHide
-import com.gyf.immersionbar.ImmersionBar
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
 import com.mapbox.android.gestures.MoveGestureDetector

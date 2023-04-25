@@ -10,7 +10,7 @@ import java.util.*
 
 fun Any.toRequestBody(ignoreNullField:Boolean=false):RequestBody{
 
-   var targetString:String=""
+   var targetString: String
    var gson: Gson
 
    if(this is String){

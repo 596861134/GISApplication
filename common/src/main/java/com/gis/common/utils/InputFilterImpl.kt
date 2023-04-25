@@ -16,7 +16,7 @@ class TelephoneNumberRegexInputFilter: InputFilter {
     override fun filter(
         source: CharSequence, start: Int, end: Int, dest: Spanned?, dstart: Int, dend: Int
     ): CharSequence {
-        val builder =  StringBuilder(dest)
+        val builder =  StringBuilder(dest?:"")
         builder.insert(dstart, source)
         val length = builder.length
         if (length == 1) {

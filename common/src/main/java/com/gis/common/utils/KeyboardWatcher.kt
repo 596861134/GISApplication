@@ -2,10 +2,14 @@ package com.gis.common.utils
 
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
-import android.graphics.*
-import android.os.*
-import android.view.*
+import android.graphics.Rect
+import android.os.Build
+import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.Window
+import android.view.WindowManager
 
 /**
  *    author : Android 轮子哥
@@ -54,7 +58,7 @@ class KeyboardWatcher private constructor(private var activity: Activity) :
         val heightDiff: Int = contentView.rootView.height - (r.bottom - r.top)
         if (!softKeyboardOpened && heightDiff > contentView.rootView.height / 4) {
             softKeyboardOpened = true
-            if ((activity.window.attributes.flags and WindowManager.LayoutParams.FLAG_FULLSCREEN) != WindowManager.LayoutParams.FLAG_FULLSCREEN) {
+            if ((activity.window.attributes.flags and WindowManager.LayoutParams.MATCH_PARENT) != WindowManager.LayoutParams.MATCH_PARENT) {
                 listeners?.onSoftKeyboardOpened(heightDiff - statusBarHeight)
             } else {
                 listeners?.onSoftKeyboardOpened(heightDiff)

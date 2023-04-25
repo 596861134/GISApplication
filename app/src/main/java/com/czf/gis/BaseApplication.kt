@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.multidex.MultiDex
+import com.czf.gis.crash.CrashHandler
 import com.gis.common.CommonUtil
 import com.gis.common.extension.log
 import com.gis.common.widget.MaterialHeader
@@ -37,6 +38,7 @@ open class BaseApplication:Application() {
     override fun onCreate() {
         super.onCreate()
         CommonUtil.init(this@BaseApplication)
+        CrashHandler.register(this@BaseApplication)
 
         // 设置全局的 Header 构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator{ context: Context, _: RefreshLayout ->

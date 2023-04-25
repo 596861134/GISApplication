@@ -47,13 +47,14 @@ class BuildTimeListener implements TaskExecutionListener, BuildListener {
 
     @Override
     void buildFinished(BuildResult buildResult) {
-        if(taskCounts<5) return
+//        if(taskCounts<5) return
         long buildCost = System.currentTimeMillis() - buildStartTime
+        System.out.println("构建结束,总耗时：" + buildCost + "ms")
         sb.append("构建结束----------------------\n")
         sb.append("构建总耗时：" + buildCost + "ms")
         //输出到文件
-        String text = sb.toString()
-        writeToFile(BUILD_LOG_FILE_PATH, text)
+//        String text = sb.toString()
+//        writeToFile(BUILD_LOG_FILE_PATH, text)
     }
 
     @Override
@@ -64,7 +65,7 @@ class BuildTimeListener implements TaskExecutionListener, BuildListener {
     @Override
     void afterExecute(Task task, TaskState taskState) {
         long cost = System.currentTimeMillis() - taskStartTime;
-        System.out.println("任务：" + task.name + "," + task.path + ",耗时：" + cost);
+        System.out.println("任务：" + task.name + "," + task.path + ",耗时：" + cost + "ms")
         sb.append("[" + task.path + "]:" + cost + "ms\n")
         taskCounts++
     }

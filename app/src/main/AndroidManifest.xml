@@ -136,6 +136,19 @@
 
         </activity>
 
+        <!-- 崩溃展示（必须在独立进程） -->
+        <activity
+            android:name=".crash.CrashActivity"
+            android:launchMode="singleTop"
+            android:process=":crash"
+            android:screenOrientation="landscape" />
+
+        <!-- 重启应用（必须在独立进程） -->
+        <activity
+            android:name=".crash.RestartActivity"
+            android:launchMode="singleTop"
+            android:process=":restart" />
+
         <activity
             android:name=".MainActivity"
             android:exported="false">

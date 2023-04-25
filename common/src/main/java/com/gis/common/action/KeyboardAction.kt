@@ -11,40 +11,64 @@ import android.view.inputmethod.InputMethodManager
  *    desc   : 软键盘相关意图
  */
 interface KeyboardAction {
+
+    private fun getInputMethodManager(view: View?): InputMethodManager? {
+        view?.apply {
+            return context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        }
+        return null
+    }
     /**
      * 显示软键盘，需要先 requestFocus 获取焦点，如果是在 Activity Create，那么需要延迟一段时间
      */
     fun showKeyboard(view: View?) {
-        if (view == null) {
-            return
+        view?.apply {
+            getInputMethodManager(this)?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
         }
-        val manager: InputMethodManager = view.context
-            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager? ?: return
-        manager.showSoftInput(view, InputMethodManager.SHOW_FORCED)
     }
 
     /**
      * 隐藏软键盘
      */
     fun hideKeyboard(view: View?) {
-        if (view == null) {
-            return
+        view?.apply {
+            getInputMethodManager(this)?.hideSoftInputFromWindow(windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         }
-        val manager: InputMethodManager = view.context
-            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager? ?: return
-        manager.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     /**
      * 切换软键盘
      */
     fun toggleSoftInput(view: View?) {
-        if (view == null) {
-            return
+        view?.apply {
+            getInputMethodManager(this)?.toggleSoftInput(0, 0)
         }
-        val manager: InputMethodManager = view.context
-            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager? ?: return
-        manager.toggleSoftInput(0, 0)
+    }
+
+    /**
+     * 去除EditText焦点
+     */
+    fun clearEditFocus(view: View?){
+        hideKeyboard(view)
+        view?.apply {
+            isFocusable = false
+            isFocusableInTouchMode = false
+            clearFocus()
+        }
+    }
+
+    /**
+     * 重新获取焦点，通过onClick点击事件调用
+     */
+    fun  requestEditFocus(view: View?){
+        view?.apply {
+            isFocusable = true
+            isFocusableInTouchMode = true
+            requestFocus()
+            findFocus()
+            val imm: InputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 
 }

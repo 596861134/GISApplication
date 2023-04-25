@@ -16,7 +16,6 @@ import com.gis.common.extension.showToast
 import com.gis.common.log.LogHelper
 import com.gis.common.manager.AppActivityManager
 import com.gis.common.manager.MMKVUtil
-import com.gis.common.utils.CrashHandler
 import com.hjq.toast.Toaster
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 
@@ -36,8 +35,6 @@ object CommonUtil {
         AppActivityManager.getInstance().init(application)
         // 初始Toast
         Toaster.init(application)
-        //
-        CrashHandler.getInstance().init(application.applicationContext)
         MMKVUtil.init(application.applicationContext)
         RetrofitUrlManager.getInstance().setGlobalDomain(BuildConfig.HOST_URL)
         registerNet(mContext)

@@ -50,12 +50,11 @@ fun String.caculatTimeDiffer(
     }
 }
 
-fun String.toTime(
-        simpleDateFormat: SimpleDateFormat): Long {
-    try {
-        return simpleDateFormat.parse(this).time
+fun String.toTime(simpleDateFormat: SimpleDateFormat): Long {
+    return try {
+        simpleDateFormat.parse(this)?.time ?: 0
     } catch (e: Exception) {
-        return 0
+        0
     }
 }
 
