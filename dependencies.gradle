@@ -1,7 +1,8 @@
 //配置各个module共用的参数
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'//kotlin语言使用注入框架，dataBinding都需要这个
+//apply plugin: 'kotlin-kapt'//kotlin语言使用注入框架，dataBinding都需要这个
+apply plugin: 'com.google.devtools.ksp' // 替代kapt，但是要使用dataBinding仍要kapt
 apply plugin: 'androidx.navigation.safeargs.kotlin'//用于navigation传参的时候一种安全防护,非空，类型判断等。
 
 android {
@@ -101,7 +102,10 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
+        // dataBinding在KSP上不被支持：
+        // 我们不打算支持 KSP，也不建议在此阶段使用数据绑定，因为 compose 是我们推荐的 UI 解决方案。
+//        dataBinding = true
+        viewBinding true
     }
 
     // 根据AS支持版本适配，但是直接用19也没问题，要用就用最高，jvmTarget也要同步
@@ -225,7 +229,7 @@ dependencies {
 
     //room
     implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
     // optional - Test helpers
@@ -243,7 +247,7 @@ dependencies {
 
     //glide : https://github.com/bumptech/glide
     api "com.github.bumptech.glide:glide:4.15.1"
-    kapt "com.github.bumptech.glide:compiler:4.15.1"
+    ksp "com.github.bumptech.glide:compiler:4.15.1"
 
     //okhttp3 :  https://github.com/square/okhttp
     implementation "com.squareup.okhttp3:okhttp:4.10.0"

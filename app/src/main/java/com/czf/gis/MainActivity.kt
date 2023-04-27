@@ -2,7 +2,9 @@ package com.czf.gis
 
 import android.Manifest
 import android.app.Application
+import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.viewbinding.ViewBindings
 import com.czf.gis.databinding.ActivityMainBinding
 import com.gis.common.extension.showToast
 import com.gis.common.mvvm.view.BaseVMRepositoryActivity
@@ -10,6 +12,7 @@ import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
 import com.mapbox.android.gestures.MoveGestureDetector
 import com.mapbox.maps.CameraOptions
+import com.mapbox.maps.MapView
 import com.mapbox.maps.Style
 import com.mapbox.maps.extension.style.expressions.dsl.generated.interpolate
 import com.mapbox.maps.plugin.LocationPuck2D
@@ -19,7 +22,7 @@ import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListene
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 
-class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>(R.layout.activity_main){
+class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>(){
 
 
     private val onIndicatorBearingChangedListener = OnIndicatorBearingChangedListener {
@@ -63,10 +66,14 @@ class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>
                 }
             }
         })
+
+     setOnClickListener(mBinding.btnOk)
     }
 
     override fun onEvent() {
         super.onEvent()
+        val mapView = ViewBindings.findChildViewById<MapView>(mBinding.root, R.id.mapView)
+
         mRealVM.getUpdateBusinessLiveData().observe(this){
             // 执行回调操作，避免页面关闭操作View
         }
@@ -166,4 +173,15 @@ class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>
     }
 
     override fun getViewModel(app: Application) = MainViewModel(app)
+    override fun getViewBinding(): ActivityMainBinding {
+        return ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    override fun onClick(view: View) {
+        super.onClick(view)
+        when(view){
+            mBinding.btnOk -> startActivity(ScendActivity::class.java)
+        }
+    }
+
 }

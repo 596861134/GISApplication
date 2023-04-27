@@ -1,6 +1,9 @@
 ext {
     kotlin_version = '1.8.20'
 
+    // https://github.com/google/ksp/releases
+    ksp_version = '1.8.20-1.0.11'
+
     /** Android Gradle API 版本 */
     agp_version = '8.0.0'
 

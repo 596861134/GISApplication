@@ -14,8 +14,10 @@ import java.util.*
 /**
  * Created by chengzf on 2023/4/23.
  */
-class SplashActivity:BaseViewModelActivity<BaseLayoutViewModel, ActivitySplashBinding>(
-    R.layout.activity_splash, BaseLayoutViewModel::class.java) {
+class SplashActivity:BaseViewModelActivity<BaseLayoutViewModel, ActivitySplashBinding>(BaseLayoutViewModel::class.java) {
+    override fun getViewBinding(): ActivitySplashBinding {
+        return ActivitySplashBinding.inflate(layoutInflater)
+    }
 
     override fun beforeSetView() {
         super.beforeSetView()
