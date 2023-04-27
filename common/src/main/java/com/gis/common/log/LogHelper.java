@@ -5,7 +5,7 @@ import androidx.annotation.Nullable;
 
 /**
  * @author czf
- * Log封装库
+ * <a href="https://github.com/orhanobut/logger"/>Log封装库</a>
  */
 public class LogHelper {
 
@@ -15,9 +15,15 @@ public class LogHelper {
 
     public static void init(boolean isShowLog, @Nullable String tag) {
         FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
+                // (Optional) 是否显示线程信息。默认为true
                 .showThreadInfo(false)
+                // (Optional) 要显示多少方法行。默认值2，数值越大调用链越清晰
                 .methodCount(0)
-                .methodOffset(7)
+                // (Optional) 跳过堆栈跟踪中的一些方法调用。默认值5
+                .methodOffset(0)
+                // (Optional) 将日志策略更改为打印输出。默认LogCat
+                // .logStrategy(customLog)
+                // (Optional) 每个日志的自定义标记。默认PRETTY_LOGGER
                 .tag(tag)
                 .build();
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy){

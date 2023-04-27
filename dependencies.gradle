@@ -311,6 +311,7 @@ dependencies {
     implementation "com.liulishuo.okdownload:ktx:$okdownload_version"
 
     // AOP 插件库：https://mvnrepository.com/artifact/org.aspectj/aspectjrt
+    // AGP 7.1.3后已失效，保留引用是不想删代码
     implementation 'org.aspectj:aspectjrt:1.9.6'
 
     // 上拉刷新下拉加载框架： https://github.com/scwang90/SmartRefreshLayout

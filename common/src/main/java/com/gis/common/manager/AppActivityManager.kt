@@ -6,6 +6,7 @@ import android.app.Application.ActivityLifecycleCallbacks
 import android.content.Context
 import android.os.Bundle
 import androidx.collection.ArrayMap
+import com.gis.common.extension.LogEnum
 import com.gis.common.extension.log
 import kotlin.system.exitProcess
 
@@ -177,39 +178,39 @@ class AppActivityManager private constructor() : ActivityLifecycleCallbacks {
     }
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-        String.format("%s - onCreate", activity.javaClass.simpleName).log()
+        String.format("%s - onCreate", activity.javaClass.simpleName).log(LogEnum.INFO)
         if (activitySet.size == 0) {
             for (callback: ApplicationLifecycleCallback? in lifecycleCallbacks) {
                 callback?.onApplicationCreate(activity)
             }
-            String.format("%s - onApplicationCreate", activity.javaClass.simpleName).log()
+            String.format("%s - onApplicationCreate", activity.javaClass.simpleName).log(LogEnum.INFO)
         }
         activitySet[getObjectTag(activity)] = activity
         topActivity = activity
     }
 
     override fun onActivityStarted(activity: Activity) {
-        String.format("%s - onStart", activity.javaClass.simpleName).log()
+        String.format("%s - onStart", activity.javaClass.simpleName).log(LogEnum.INFO)
     }
 
     override fun onActivityResumed(activity: Activity) {
-        String.format("%s - onResume", activity.javaClass.simpleName).log()
+        String.format("%s - onResume", activity.javaClass.simpleName).log(LogEnum.INFO)
         if (topActivity === activity && resumedActivity == null) {
             for (callback: ApplicationLifecycleCallback in lifecycleCallbacks) {
                 callback.onApplicationForeground(activity)
             }
-            String.format("%s - onApplicationForeground", activity.javaClass.simpleName).log()
+            String.format("%s - onApplicationForeground", activity.javaClass.simpleName).log(LogEnum.INFO)
         }
         topActivity = activity
         resumedActivity = activity
     }
 
     override fun onActivityPaused(activity: Activity) {
-        String.format("%s - onPause", activity.javaClass.simpleName).log()
+        String.format("%s - onPause", activity.javaClass.simpleName).log(LogEnum.INFO)
     }
 
     override fun onActivityStopped(activity: Activity) {
-        String.format("%s - onStop", activity.javaClass.simpleName).log()
+        String.format("%s - onStop", activity.javaClass.simpleName).log(LogEnum.INFO)
         if (resumedActivity === activity) {
             resumedActivity = null
         }
@@ -217,16 +218,16 @@ class AppActivityManager private constructor() : ActivityLifecycleCallbacks {
             for (callback: ApplicationLifecycleCallback in lifecycleCallbacks) {
                 callback.onApplicationBackground(activity)
             }
-            String.format("%s - onApplicationBackground", activity.javaClass.simpleName).log()
+            String.format("%s - onApplicationBackground", activity.javaClass.simpleName).log(LogEnum.INFO)
         }
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-        String.format("%s - onSaveInstanceState", activity.javaClass.simpleName).log()
+        String.format("%s - onSaveInstanceState", activity.javaClass.simpleName).log(LogEnum.INFO)
     }
 
     override fun onActivityDestroyed(activity: Activity) {
-        String.format("%s - onDestroy", activity.javaClass.simpleName).log()
+        String.format("%s - onDestroy", activity.javaClass.simpleName).log(LogEnum.INFO)
         activitySet.remove(getObjectTag(activity))
         if (topActivity === activity) {
             topActivity = null
@@ -235,7 +236,7 @@ class AppActivityManager private constructor() : ActivityLifecycleCallbacks {
             for (callback: ApplicationLifecycleCallback in lifecycleCallbacks) {
                 callback.onApplicationDestroy(activity)
             }
-            String.format("%s - onApplicationDestroy", activity.javaClass.simpleName).log()
+            String.format("%s - onApplicationDestroy", activity.javaClass.simpleName).log(LogEnum.INFO)
         }
     }
 

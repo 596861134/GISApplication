@@ -1,5 +1,6 @@
 package com.gis.network
 
+import com.gis.common.extension.LogEnum
 import com.gis.common.extension.log
 import com.gis.network.config.CookieInterceptor
 import com.gis.network.config.LocalCookieJar
@@ -42,7 +43,7 @@ object WantService {
         // 使用RetrofitUrlManager动态配置BaseUrl
         val client = RetrofitUrlManager.getInstance().with(getClient()).build()
         val baseUrl = RetrofitUrlManager.getInstance().globalDomain
-        baseUrl.toString().log()
+        baseUrl.toString().log(LogEnum.INFO)
         return mRetrofit ?: Retrofit.Builder()
             .baseUrl(baseUrl)
             .validateEagerly(true)
