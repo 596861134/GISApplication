@@ -18,10 +18,6 @@ android {
 
         multiDexEnabled true
 
-        ndk {
-            abiFilters 'armeabi-v7a'
-        }
-
         // 是否线上环境
         buildConfigField('boolean', 'IS_RELEASE_PACKAGE', '' + IS_RELEASE_PACKAGE + '')
         // 日志打印开关
@@ -92,6 +88,15 @@ android {
             // 签名信息配置
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            ndk {
+                // armeabi：万金油架构平台（占用率：0%）
+                // armeabi-v7a：曾经主流的架构平台（占用率：10%）
+                // arm64-v8a：目前主流架构平台（占用率：95%）
+                abiFilters 'armeabi-v7a','arm64-v8a'
+                // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+//            abiFilters 'arm64-v8a','x86_64' // 64位版本
+            }
         }
     }
 
@@ -99,18 +104,24 @@ android {
         dataBinding = true
     }
 
+    // 根据AS支持版本适配，但是直接用19也没问题，要用就用最高，jvmTarget也要同步
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_19
+        targetCompatibility JavaVersion.VERSION_19
     }
     //使用jetPack的组件，会要求jdk 1.8最好，有的时候会遇到报错，需要配置如下，避免target jvm 1.8的那个报错
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "19"
     }
 
     // 设置存放 so 文件的目录
     sourceSets {
         main {
+            res.srcDirs(
+                    'src/main/res',
+                    // 使用头条屏幕适配方案替代此方案
+//                    'src/main/res-sw'
+            )
             jniLibs.srcDirs = ['libs']
         }
     }
@@ -152,32 +163,34 @@ android {
  * 关闭所有警告
  */
 afterEvaluate {
-    tasks.withType(JavaCompile) {
-        // Try to turn them all off automatically
-        options.compilerArgs << '-Xlint:none'
-        options.compilerArgs << '-nowarn' // same as '-Xlint:none'
+    tasks.withType(JavaCompile).tap {
+        configureEach {
+            // Try to turn them all off automatically
+            options.compilerArgs << '-Xlint:none'
+            options.compilerArgs << '-nowarn' // same as '-Xlint:none'
 
-        // Turn them off manually
-        options.compilerArgs << '-Xlint:-auxiliaryclass'
-        options.compilerArgs << '-Xlint:-cast'
-        options.compilerArgs << '-Xlint:-classfile'
-        options.compilerArgs << '-Xlint:-deprecation'
-        options.compilerArgs << '-Xlint:-dep-ann'
-        options.compilerArgs << '-Xlint:-divzero'
-        options.compilerArgs << '-Xlint:-empty'
-        options.compilerArgs << '-Xlint:-fallthrough'
-        options.compilerArgs << '-Xlint:-finally'
-        options.compilerArgs << '-Xlint:-options'
-        options.compilerArgs << '-Xlint:-overloads'
-        options.compilerArgs << '-Xlint:-overrides'
-        options.compilerArgs << '-Xlint:-path'
-        options.compilerArgs << '-Xlint:-processing'
-        options.compilerArgs << '-Xlint:-rawtypes'
-        options.compilerArgs << '-Xlint:-serial'
-        options.compilerArgs << '-Xlint:-static'
-        options.compilerArgs << '-Xlint:-try'
-        options.compilerArgs << '-Xlint:-unchecked'
-        options.compilerArgs << '-Xlint:-varargs'
+            // Turn them off manually
+            options.compilerArgs << '-Xlint:-auxiliaryclass'
+            options.compilerArgs << '-Xlint:-cast'
+            options.compilerArgs << '-Xlint:-classfile'
+            options.compilerArgs << '-Xlint:-deprecation'
+            options.compilerArgs << '-Xlint:-dep-ann'
+            options.compilerArgs << '-Xlint:-divzero'
+            options.compilerArgs << '-Xlint:-empty'
+            options.compilerArgs << '-Xlint:-fallthrough'
+            options.compilerArgs << '-Xlint:-finally'
+            options.compilerArgs << '-Xlint:-options'
+            options.compilerArgs << '-Xlint:-overloads'
+            options.compilerArgs << '-Xlint:-overrides'
+            options.compilerArgs << '-Xlint:-path'
+            options.compilerArgs << '-Xlint:-processing'
+            options.compilerArgs << '-Xlint:-rawtypes'
+            options.compilerArgs << '-Xlint:-serial'
+            options.compilerArgs << '-Xlint:-static'
+            options.compilerArgs << '-Xlint:-try'
+            options.compilerArgs << '-Xlint:-unchecked'
+            options.compilerArgs << '-Xlint:-varargs'
+        }
     }
 }
 

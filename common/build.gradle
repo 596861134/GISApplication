@@ -7,9 +7,9 @@ apply from: '../dependencies.gradle'
 
 android {
 
+    namespace 'com.gis.common'
+
     defaultConfig {
-        versionCode 1
-        versionName "1.0"
 
         // 清单占位符
         addManifestPlaceholders([
@@ -19,17 +19,6 @@ android {
                 'WX_ID' : WX_APP_ID,
                 'WX_SECRET' : WX_APP_SECRET
         ])
-    }
-
-    sourceSets {
-        main {
-            // res 资源目录配置
-            res.srcDirs(
-                    'src/main/res',
-                    // 使用头条屏幕适配方案替代此方案
-//                    'src/main/res-sw'
-            )
-        }
     }
 
 

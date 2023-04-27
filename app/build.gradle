@@ -47,6 +47,8 @@ if (IS_RELEASE_PACKAGE){
 
 android {
 
+    namespace 'com.czf.gis'
+
     defaultConfig {
         applicationId "com.czf.gis"
         versionCode VERSIONCODE as int
@@ -78,13 +80,6 @@ android {
         }
     }
 
-    sourceSets {
-        main {
-            res.srcDirs(
-                    'src/main/res',
-            )
-        }
-    }
 
     if (!IS_RELEASE_PACKAGE){
         buildTypes {
