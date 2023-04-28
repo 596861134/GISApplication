@@ -1,6 +1,7 @@
 package com.czf.gis
 
 import com.czf.gis.databinding.ActivityScendBinding
+import com.gis.common.manager.FragmentLifecycle
 import com.gis.common.mvvm.view.BaseViewModelActivity
 import com.gis.common.mvvm.viewmodel.BaseLayoutViewModel
 
@@ -11,14 +12,22 @@ class ScendActivity:BaseViewModelActivity<BaseLayoutViewModel, ActivityScendBind
 
     private val mSmallSaleTaskFragment by lazy { MainFragment.newInstance("TASK_LABEL") }
 
+    private val mFragmentManager:FragmentLifecycle by lazy { FragmentLifecycle() }
+
     override fun getViewBinding(): ActivityScendBinding {
         return ActivityScendBinding.inflate(layoutInflater)
     }
 
     override fun onViewInit() {
         super.onViewInit()
-        supportFragmentManager.beginTransaction()
-            .add(mBinding.frameLayout.id, mSmallSaleTaskFragment)
-            .commitNowAllowingStateLoss()
+        supportFragmentManager.apply {
+            beginTransaction().add(mBinding.frameLayout.id, mSmallSaleTaskFragment).commitNowAllowingStateLoss()
+            registerFragmentLifecycleCallbacks(mFragmentManager, true)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        supportFragmentManager.unregisterFragmentLifecycleCallbacks(mFragmentManager)
     }
 }

@@ -7,6 +7,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.viewbinding.ViewBindings
 import com.czf.gis.databinding.ActivityMainBinding
 import com.gis.common.extension.showToast
+import com.gis.common.manager.LifecycleOwnerManager
 import com.gis.common.mvvm.view.BaseVMRepositoryActivity
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
@@ -24,6 +25,7 @@ import com.mapbox.maps.plugin.locationcomponent.location
 
 class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>(){
 
+    private val mLifecycle: LifecycleOwnerManager by lazy { LifecycleOwnerManager() }
 
     private val onIndicatorBearingChangedListener = OnIndicatorBearingChangedListener {
         mBinding.mapView.getMapboxMap().setCamera(CameraOptions.Builder().bearing(it).build())
@@ -66,8 +68,8 @@ class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>
                 }
             }
         })
-
-     setOnClickListener(mBinding.btnOk)
+        setOnClickListener(mBinding.btnOk)
+        lifecycle.addObserver(mLifecycle)
     }
 
     override fun onEvent() {

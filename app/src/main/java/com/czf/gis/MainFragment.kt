@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.czf.gis.databinding.FragmentMainBinding
+import com.gis.common.manager.LifecycleManager
 import com.gis.common.mvvm.view.BaseViewModelFragment
 import com.gis.common.mvvm.viewmodel.BaseLayoutViewModel
 
@@ -13,6 +14,9 @@ import com.gis.common.mvvm.viewmodel.BaseLayoutViewModel
 class MainFragment:BaseViewModelFragment<BaseLayoutViewModel, FragmentMainBinding>(BaseLayoutViewModel::class.java) {
 
     private val mLabel:String by lazy { arguments?.getString("viewSource") ?: "" }
+
+    private val mLifecycleManager: LifecycleManager by lazy { LifecycleManager() }
+
     companion object{
 
         @JvmStatic
@@ -29,6 +33,11 @@ class MainFragment:BaseViewModelFragment<BaseLayoutViewModel, FragmentMainBindin
         container: ViewGroup?
     ): FragmentMainBinding {
         return FragmentMainBinding.inflate(inflater, container, false)
+    }
+
+    override fun onViewInit() {
+        super.onViewInit()
+        lifecycle.addObserver(mLifecycleManager)
     }
 
     override fun onEvent() {
