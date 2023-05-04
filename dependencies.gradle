@@ -29,6 +29,10 @@ android {
         buildConfigField('String', 'HOST_URL', '"' + HOST_URL + '"')
         // 编译环境
         buildConfigField('String', 'serverType', '"' + serverType + '"')
+        // 版本名称
+        buildConfigField('String', 'VERSIONNAME', '"' + VERSIONNAME + '"')
+        // 版本号
+        buildConfigField('int', 'VERSIONCODE', VERSIONCODE)
     }
 
     signingConfigs {

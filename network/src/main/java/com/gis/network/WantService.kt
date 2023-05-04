@@ -2,9 +2,9 @@ package com.gis.network
 
 import com.gis.common.extension.LogEnum
 import com.gis.common.extension.log
-import com.gis.network.config.CookieInterceptor
-import com.gis.network.config.LocalCookieJar
 import com.gis.network.config.LogInterceptor
+import com.gis.network.config.TokenInterceptor
+import com.gis.network.impl.CookieImpl
 import io.reactivex.rxjava3.schedulers.Schedulers
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 import okhttp3.OkHttpClient
@@ -31,8 +31,10 @@ object WantService {
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-            .cookieJar(LocalCookieJar())
-            .addNetworkInterceptor(CookieInterceptor())
+//            .cookieJar(LocalCookieJar())
+//            .addNetworkInterceptor(CookieInterceptor())
+            .cookieJar(CookieImpl.getCookieJar())
+            .addInterceptor(TokenInterceptor())
             .addNetworkInterceptor(LogInterceptor {
                 logLevel(LogInterceptor.LogLevel.BODY)
             })

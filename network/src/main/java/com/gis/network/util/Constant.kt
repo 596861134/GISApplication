@@ -7,4 +7,7 @@ object Constant {
     //登录cookie
     const val KEY_COOKIE = "key_cookie"
 
+    //登录token
+    const val ACCESS_TOKEN = "key_access_token"
+
 }

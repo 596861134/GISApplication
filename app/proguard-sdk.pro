@@ -40,5 +40,19 @@
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
 
- -keep class com.gyf.immersionbar.* {*;}
- -dontwarn com.gyf.immersionbar.**
+#immersionbar
+-keep class com.gyf.immersionbar.* {*;}
+-dontwarn com.gyf.immersionbar.**
+
+#persistentcookiejar
+-dontwarn com.gis.network.config.persistentcookiejar.**
+-keep class com.gis.network.config.persistentcookiejar.**
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    !static !transient <fields>;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
