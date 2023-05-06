@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import com.gis.common.mvvm.livedata.UnPeekLiveData
 import java.io.Serializable
 
@@ -13,7 +14,8 @@ import java.io.Serializable
  */
 open class BaseViewModel(app:Application) :AndroidViewModel(app) {
 
-    var isDialogShow = UnPeekLiveData<Boolean>()
+    // Dialog监听使用MutableLiveData，Base中已自动记录调用次数
+    var isDialogShow = MutableLiveData<Boolean>()
     var isFinish = UnPeekLiveData<Boolean>()
 
     lateinit var mBundle: Bundle
