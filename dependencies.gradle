@@ -58,6 +58,7 @@ android {
     // Android Gradle使用总结: https://blog.51cto.com/zhaoyanjun/3815153
     /**
      * 编译环境
+     * 编译环境配置后，会在Build Variants和Gradle（的other下）两个侧边栏中出现对应的环境
      */
     buildTypes {
         debug {
@@ -212,14 +213,14 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "androidx.concurrent:concurrent-futures-ktx:1.1.0"
     implementation "androidx.appcompat:appcompat:1.6.1"
-    implementation "androidx.core:core-ktx:1.10.0"
+    implementation "androidx.core:core-ktx:1.10.1"
     implementation "androidx.fragment:fragment-ktx:1.5.7"
     implementation "androidx.activity:activity-ktx:1.7.1"
     implementation "androidx.constraintlayout:constraintlayout:2.1.4"
     implementation 'androidx.annotation:annotation:1.6.0'
     implementation 'androidx.multidex:multidex:2.0.1'
 
-    implementation "com.google.android.material:material:1.8.0"
+    implementation "com.google.android.material:material:1.9.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation "androidx.recyclerview:recyclerview:1.3.0"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"

@@ -22,7 +22,7 @@ ext {
 /**
  * 正式包
  */
-task buildAppUploadRelease() {
+tasks.register('buildAppUploadRelease') {
     group '项目框架'
     dependsOn("assembleRelease")
     doLast {
@@ -36,7 +36,7 @@ task buildAppUploadRelease() {
 /**
  * 预发包
  */
-task buildAppUploadPreview() {
+tasks.register('buildAppUploadPreview') {
     group '项目框架'
     dependsOn("assemblePreview")
     doLast {
@@ -50,7 +50,7 @@ task buildAppUploadPreview() {
 /**
  * 打包测试环境apk 上传蒲公英
  */
-task buildAppUploadDebug() {
+tasks.register('buildAppUploadDebug') {
     group '项目框架'
     //生成debug包
     dependsOn("assembleDebug")
