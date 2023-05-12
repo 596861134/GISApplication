@@ -2,7 +2,14 @@ package com.gis.common.utils
 
 import android.content.ContentResolver
 import android.content.ContentValues
-import android.graphics.*
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Shader
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -125,4 +132,33 @@ object ImageUtils {
         val suffix = setOf("png", "jpg", "jpeg")
         return suffix.contains(imgArr.last())
     }
+
+    /**
+     * 设置水印图片在左上角：
+     * createWaterMaskBitmap(src, watermark,
+     *                      DensityUtil.dip2px(context, paddingLeft), DensityUtil.dip2px(context, paddingTop))
+     *
+     * 设置水印图片到右上角：
+     * createWaterMaskBitmap(src, watermark,
+     *                 src.getWidth() - watermark.getWidth() - DensityUtil.dip2px(context, paddingRight),
+     *                 DensityUtil.dip2px(context, paddingTop))
+     *
+     * 其他角类似
+     */
+    fun createWaterMaskBitmap(context: Context, src:Bitmap?, watermark:Bitmap, paddingLeft:Float, paddingTop:Float):Bitmap?{
+        return src?.let {
+            val width = it.width
+            val height = it.height
+            val newBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(newBitmap)
+            canvas.drawBitmap(it, 0F, 0F, null)
+            canvas.drawBitmap(watermark, paddingLeft, paddingTop, null)
+            canvas.save()
+            canvas.restore()
+            return newBitmap
+        }?:kotlin.run {
+            null
+        }
+    }
+
 }

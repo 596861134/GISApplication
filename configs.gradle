@@ -20,7 +20,15 @@ ext {
     lifecycle_version = "2.5.1"
     navigation_version = "2.5.3"
     room_version = "2.5.0"
+
+    glide_version = "4.15.1"
+    okhttp_version = "4.10.0"
+    retrofit_version = "2.9.0"
+
     okdownload_version = "1.0.7"
+    vasdolly_version = "3.0.6"
+    picture_version = "v3.11.1"
+    dslTab_version = "3.5.3"
 
     /**编译环境*/
     // 测试服

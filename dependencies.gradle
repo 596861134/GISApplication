@@ -251,17 +251,17 @@ dependencies {
     implementation "com.google.code.gson:gson:2.10.1"
 
     //glide : https://github.com/bumptech/glide
-    api "com.github.bumptech.glide:glide:4.15.1"
-    ksp "com.github.bumptech.glide:compiler:4.15.1"
+    api "com.github.bumptech.glide:glide:$glide_version"
+    ksp "com.github.bumptech.glide:compiler:$glide_version"
 
     //okhttp3 :  https://github.com/square/okhttp
-    implementation "com.squareup.okhttp3:okhttp:4.10.0"
-    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
 
     //retrofit  https://github.com/square/retrofit
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:adapter-rxjava3:2.9.0"
-    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
     //rxjava3 :  https://github.com/ReactiveX/RxJava
     implementation "io.reactivex.rxjava3:rxjava:3.1.6"
@@ -277,16 +277,16 @@ dependencies {
     implementation "me.jessyan:retrofit-url-manager:1.4.0"
 
     // BaseRecyclerViewAdapterHelper https://github.com/CymChad/BaseRecyclerViewAdapterHelper/wiki
-    implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper:4.0.0-beta04"
+    implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper:4.0.0-beta10"
 
     // dslTablayout
     // 链接：https://github.com/angcyo/DslTabLayout
     // 文档：https://angcyo.gitee.io/doc/tablayout/
-    implementation "com.github.angcyo.DslTablayout:TabLayout:3.5.3"
+    implementation "com.github.angcyo.DslTablayout:TabLayout:$dslTab_version"
     //可选
-    implementation "com.github.angcyo.DslTablayout:ViewPager1Delegate:3.5.3"
+    implementation "com.github.angcyo.DslTablayout:ViewPager1Delegate:$dslTab_version"
     //可选
-    implementation "com.github.angcyo.DslTablayout:ViewPager2Delegate:3.5.3"
+    implementation "com.github.angcyo.DslTablayout:ViewPager2Delegate:$dslTab_version"
 
     //时间转换框架 https://github.com/dlew/joda-time-android
     implementation "net.danlew:android.joda:2.12.5"
@@ -313,13 +313,13 @@ dependencies {
     implementation "com.geyifeng.immersionbar:immersionbar:3.2.2"
 
     // PictureSelector 基础 (必须) https://github.com/LuckSiege/PictureSelector
-    implementation 'io.github.lucksiege:pictureselector:v3.11.0'
+    implementation "io.github.lucksiege:pictureselector:$picture_version"
     // 图片压缩 (按需引入)
-    implementation 'io.github.lucksiege:compress:v3.10.9'
+    implementation "io.github.lucksiege:compress:$picture_version"
     // 图片裁剪 (按需引入)
-    implementation 'io.github.lucksiege:ucrop:v3.10.9'
+    implementation "io.github.lucksiege:ucrop:$picture_version"
     // 自定义相机 (按需引入)
-    implementation 'io.github.lucksiege:camerax:v3.10.9'
+    implementation "io.github.lucksiege:camerax:$picture_version"
 
     // core  https://github.com/lingochamp/okdownload
     implementation "com.liulishuo.okdownload:okdownload:$okdownload_version"
@@ -347,7 +347,7 @@ dependencies {
     }
 
     // 多渠道打包：https://github.com/Tencent/VasDolly
-    implementation 'com.tencent.vasdolly:helper:3.0.6'
+    implementation "com.tencent.vasdolly:helper:$vasdolly_version"
 
     testImplementation "junit:junit:4.13.2"
     androidTestImplementation "androidx.test.ext:junit:1.1.5"
