@@ -1,5 +1,8 @@
 package com.czf.gis
 
+import android.app.WallpaperManager
+import android.content.ComponentName
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,6 +17,7 @@ import com.gis.common.mvvm.viewmodel.BaseLayoutViewModel
 class MainFragment:BaseViewModelFragment<BaseLayoutViewModel, FragmentMainBinding>(BaseLayoutViewModel::class.java) {
 
     private val mLabel:String by lazy { arguments?.getString("viewSource") ?: "" }
+
 
     private val mLifecycleManager: LifecycleManager by lazy { LifecycleManager() }
 
@@ -38,10 +42,34 @@ class MainFragment:BaseViewModelFragment<BaseLayoutViewModel, FragmentMainBindin
     override fun onViewInit() {
         super.onViewInit()
         lifecycle.addObserver(mLifecycleManager)
+        mActivity.getStatusBarConfig().statusBarDarkFont(false).init()
     }
 
     override fun onEvent() {
         super.onEvent()
-        mBinding.tvView.text = mLabel
+//        mBinding.tvView.text = mLabel
+        lifecycle.addObserver(mBinding.clockView)
+
+        /**
+         * 设置桌面壁纸
+         */
+        mBinding.btnClick.setOnClickListener {
+            val intent = Intent().apply {
+                action = WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER
+                // 在Android 11后，Google限制了访问锁屏壁纸的权限，因此无法像更早的版本中那样直接使用
+                // WallpaperManager.ACTION_SET_LOCK_SCREEN 来设置锁屏壁纸。
+                // 目前在Android 11及更高版本中，只能支持设置桌面壁纸，而无法直接设置锁屏壁纸
+//                action = WallpaperManager.ACTION_SET_LOCK_SCREEN
+                putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, ComponentName(mActivity, TextClockWallpaperService::class.java))
+            }
+            startActivity(intent)
+        }
+
+        /**
+         * 还原桌面壁纸
+         */
+        mBinding.btnReset.setOnClickListener {
+            WallpaperManager.getInstance(mActivity).clear()
+        }
     }
 }
