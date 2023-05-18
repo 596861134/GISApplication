@@ -1,9 +1,13 @@
 //配置各个module共用的参数
 apply plugin: 'kotlin-android'
+// 使用@Parcelize注解必备
 apply plugin: 'kotlin-parcelize'
-//apply plugin: 'kotlin-kapt'//kotlin语言使用注入框架，dataBinding都需要这个
-apply plugin: 'com.google.devtools.ksp' // 替代kapt，但是要使用dataBinding仍要kapt
-apply plugin: 'androidx.navigation.safeargs.kotlin'//用于navigation传参的时候一种安全防护,非空，类型判断等。
+//kotlin语言使用注入框架，dataBinding都需要这个，某些情况下已被ksp替代"
+//apply plugin: 'kotlin-kapt'
+// 替代kapt，但是要使用dataBinding仍要kapt
+apply plugin: 'com.google.devtools.ksp'
+//用于navigation传参的时候一种安全防护,非空，类型判断等。
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
     compileSdk compile_sdk_version
@@ -16,9 +20,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // 混淆配置
         proguardFiles 'proguard-sdk.pro', 'proguard-app.pro'
-
+        // 解决应用程序方法数超过限制的问题，允许应用程序使用多个 dex 文件
         multiDexEnabled true
 
+        // 动态向BuildConfig.java中写入值
         // 是否线上环境
         buildConfigField('boolean', 'IS_RELEASE_PACKAGE', '' + IS_RELEASE_PACKAGE + '')
         // 日志打印开关
@@ -139,31 +144,35 @@ android {
      * 忽略警告
      */
     lint {
+        // 表示 Lint 不会在出现错误时停止构建过程，而是继续构建其他的内容
         abortOnError false
+        // 表示 Lint 不会检查代码中的所有警告，只检查 Android 官方文档中公认的警告
         checkAllWarnings false
+        // 表示 Lint 不会对 Release 版本的 APK 进行检查，只对 Debug 版本进行检查
         checkReleaseBuilds false
+        // 表示 Lint 忽略代码中的所有警告和建议，并且开始编译构建
         ignoreWarnings true
+        // 表示 Lint 不会在控制台上输出任何消息或警告信息，只会在编译报告中显示
         quiet true
     }
 
     packagingOptions {
         jniLibs {
+            //常见的引入的so库重复，pickFirst当有多个匹配项的时候匹配到第一个就可以了
+            pickFirsts += ['lib/armeabi-v7a/libavdevice.so', 'lib/armeabi-v7a/libavcodec.so',
+                           'lib/armeabi-v7a/libavfilter.so', 'lib/armeabi-v7a/libavformat.so',
+                           'lib/armeabi-v7a/libavutil.so', 'lib/armeabi-v7a/libswresample.so',
+                           'lib/armeabi-v7a/libswscale.so', 'lib/armeabi-v7a/libpostproc.so',
+                           'lib/armeabi-v7a/libstlport_shared.so', 'lib/armeabi/libstlport_shared.so',
+                           '**/libc++_shared.so']
+            // 配置混淆工具ProGuard在优化 APK 时保留这些特定的库文件中的调试符号
             keepDebugSymbols += ['*/x86/*.so', '*/armeabi/*.so', '*/armeabi-v7a/*.so']
+            // 配置混淆工具 ProGuard 在优化 APK 时排除掉所有的 META-INF 目录下的文件，以避免签名校验失败和应用程序无法安装等问题。
             excludes += ['META-INF/*******']
         }
         resources {
-            excludes += [
-                    'META-INF/*******'
-//                    'META-INF/ASL2.0',
-//                    'META-INF/com.android.tools/proguard/coroutines.pro',
-//                    'META-INF/parcelize-runtime.kotlin_module',
-//                    'META-INF/DEPENDENCIES.txt',
-//                    'META-INF/LICENSE.txt',
-//                    'META-INF/NOTICE.txt',
-//                    'META-INF/NOTICE',
-//                    'META-INF/LICENSE',
-//                    'META-INF/DEPENDENCIES'
-            ]
+            // 配置混淆工具 ProGuard 在优化 APK 时排除掉所有的 META-INF 目录下的文件，以避免签名校验失败和应用程序无法安装等问题。
+            excludes += ['META-INF/*******']
         }
     }
 }
