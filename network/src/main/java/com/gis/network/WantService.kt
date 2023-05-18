@@ -5,6 +5,7 @@ import com.gis.common.extension.log
 import com.gis.network.config.LogInterceptor
 import com.gis.network.config.TokenInterceptor
 import com.gis.network.impl.CookieImpl
+import com.gis.network.impl.NetRepository
 import io.reactivex.rxjava3.schedulers.Schedulers
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 import okhttp3.OkHttpClient
@@ -23,9 +24,13 @@ object WantService {
     private const val CONNECT_TIMEOUT = 30L
 
     private var mRetrofit: Retrofit? = null
+    private var mOkHttpBuilder: OkHttpClient.Builder? = null
 
+    /**
+     * 创建OkHttpClient
+     */
     private fun getClient(): OkHttpClient.Builder {
-        return OkHttpClient.Builder()
+        return mOkHttpBuilder ?: OkHttpClient.Builder()
             .retryOnConnectionFailure(true)
             .callTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
@@ -38,9 +43,13 @@ object WantService {
             .addNetworkInterceptor(LogInterceptor {
                 logLevel(LogInterceptor.LogLevel.BODY)
             })
+            .also { mOkHttpBuilder = it }
 //            .build()
     }
 
+    /**
+     * 创建Retrofit
+     */
     fun getRetrofit(): Retrofit {
         // 使用RetrofitUrlManager动态配置BaseUrl
         val client = RetrofitUrlManager.getInstance().with(getClient()).build()
@@ -54,6 +63,15 @@ object WantService {
             .client(client)
             .build()
             .also { mRetrofit = it }
+    }
+
+    /**
+     * 使用RetrofitUrlManager切换环境后，需要清空Retrofit缓存
+     */
+    fun clearCache(){
+        mOkHttpBuilder = null
+        mRetrofit = null
+        NetRepository.getInstance().cleanCache()
     }
 
     inline fun <reified T> create(): T = getRetrofit().create(T::class.java)

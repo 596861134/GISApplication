@@ -9,5 +9,5 @@ import retrofit2.http.Body
  */
 class MainRepository:NetRepository() {
 
-    suspend fun userLogout(@Body body: RequestBody) = api.userLogout(body)
+    suspend fun userLogout(@Body body: RequestBody) = getBaeApi().userLogout(body)
 }
