@@ -6,9 +6,13 @@ import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.viewbinding.ViewBindings
 import com.czf.gis.databinding.ActivityMainBinding
+import com.gis.common.action.StatusAction
+import com.gis.common.extension.gone
 import com.gis.common.extension.showToast
+import com.gis.common.extension.visible
 import com.gis.common.manager.LifecycleOwnerManager
 import com.gis.common.mvvm.view.BaseVMRepositoryActivity
+import com.gis.common.widget.StatusLayout
 import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.XXPermissions
 import com.mapbox.android.gestures.MoveGestureDetector
@@ -23,7 +27,7 @@ import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListene
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 
-class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>(){
+class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>(), StatusAction{
 
     private val mLifecycle: LifecycleOwnerManager by lazy { LifecycleOwnerManager() }
 
@@ -50,6 +54,13 @@ class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>
 
     override fun onViewInit() {
         super.onViewInit()
+        mBinding.conView.gone()
+        showLoadingView()
+        setOnClickListener(mBinding.btnOk)
+        lifecycle.addObserver(mLifecycle)
+    }
+
+    private fun requestPermissions(){
         XXPermissions.with(this).permission(
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -59,6 +70,8 @@ class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>
         ).request(object : OnPermissionCallback {
             override fun onGranted(permissions: List<String>, all: Boolean) {
                 if (!all) return
+                showComplete()
+                mBinding.conView.visible()
                 initMap()
             }
 
@@ -68,18 +81,20 @@ class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>
                 }
             }
         })
-        setOnClickListener(mBinding.btnOk)
-        lifecycle.addObserver(mLifecycle)
     }
 
     override fun onEvent() {
         super.onEvent()
         val mapView = ViewBindings.findChildViewById<MapView>(mBinding.root, R.id.mapView)
-
         mRealVM.getUpdateBusinessLiveData().observe(this){
             // 执行回调操作，避免页面关闭操作View
+            showError(object : StatusLayout.OnRetryListener{
+                override fun onRetry(layout: StatusLayout) {
+                    "重新加载".showToast()
+                    requestPermissions()
+                }
+            })
         }
-
         mRealVM.userLogout()
     }
 
@@ -174,6 +189,7 @@ class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>
         mBinding.mapView.onDestroy()
     }
 
+    override fun getStatusLayout(): StatusLayout = mBinding.statusView
     override fun getViewModel(app: Application) = MainViewModel(app)
     override fun getViewBinding(): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)

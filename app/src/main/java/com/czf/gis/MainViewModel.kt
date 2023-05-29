@@ -1,6 +1,7 @@
 package com.czf.gis
 
 import android.app.Application
+import com.chad.library.adapter.base.loadState.LoadState
 import com.gis.common.extension.emptyBody
 import com.gis.common.mvvm.livedata.UnPeekLiveData
 import com.gis.common.mvvm.viewmodel.BaseRepositoryViewModel
@@ -20,11 +21,12 @@ class MainViewModel(app:Application):BaseRepositoryViewModel<MainRepository>(app
     }
 
     fun userLogout(){
-        launch(true){
+        launch(true, finish = {
+            mUpdateBusinessLiveData.value = ObjectAnyBean(LoadState.None)
+        }){
             response(mRepo.userLogout(emptyBody)){
                 mUpdateBusinessLiveData.value = this
             }
         }
-
     }
 }
