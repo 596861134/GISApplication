@@ -49,10 +49,7 @@ class StatusLayout @JvmOverloads constructor(
      */
     private val clickWrapper: OnClickListener by lazy { OnClickListener { listener?.onRetry(this@StatusLayout) } }
 
-    private val mBinging by lazy { getViewBinding() }
-    private fun getViewBinding(): WidgetStatusLayoutBinding {
-        return WidgetStatusLayoutBinding.inflate(LayoutInflater.from(mContext), this, false)
-    }
+    private val mBinging by lazy { WidgetStatusLayoutBinding.inflate(LayoutInflater.from(mContext), this, false) }
 
     /**
      * 初始化提示的布局
