@@ -53,6 +53,7 @@ class SplashADView : AppActivityManager.ApplicationLifecycleCallback {
     // 广告页的view
     private var mAdView: View? = null
     private var mBinding: WidgetSplashViewBinding? = null
+
     // 资源ID
     private var mResourceID: Int = 0
 
@@ -77,7 +78,7 @@ class SplashADView : AppActivityManager.ApplicationLifecycleCallback {
         mBinding?.splashImg?.setBackgroundResource(mResourceID)
         mBinding?.splashText?.setOnClickListener {
             if (it.doubleClick()) return@setOnClickListener
-            if (AppActivityManager.getInstance().isForeground()){
+            if (AppActivityManager.getInstance().isForeground()) {
                 activity.windowManager.removeViewImmediate(mAdView)
             }
             stopTimer()
@@ -137,14 +138,16 @@ class SplashADView : AppActivityManager.ApplicationLifecycleCallback {
             override fun onNext(@NonNull o: Long) {
                 val ss = mADDuration - (o.toInt() * 1000)
                 mBinding?.splashText?.text = "跳过 ${ss / 1000}s"
-                if (ss == 0L && AppActivityManager.getInstance().isForeground()) {
-                    activity.windowManager.removeViewImmediate(mAdView)
+                if (ss == 0L) {
+                    if (AppActivityManager.getInstance().isForeground()) {
+                        activity.windowManager.removeViewImmediate(mAdView)
+                    }
+                    stopTimer()
                 }
             }
 
             override fun onError(@NonNull e: Throwable) {}
-            override fun onComplete() {
-            }
+            override fun onComplete() {}
         }
     }
 
