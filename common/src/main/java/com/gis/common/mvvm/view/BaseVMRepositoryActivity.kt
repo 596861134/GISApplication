@@ -18,19 +18,18 @@ abstract class BaseVMRepositoryActivity<VM: BaseRepositoryViewModel<*>, T: ViewB
     lateinit var mBinding: T
     abstract fun getViewModel(app: Application): VM
 
-    abstract fun getViewBinding():T
+    /**
+     * ActivityMainBinding.inflate(layoutInflater)
+     */
+    abstract fun getLayoutId():T
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         beforeSetView()
         val vm = getViewModel(application)
         mRealVM = ViewModelProvider(this, BaseViewModelFactory(application,vm))[vm::class.java]
-        mBinding = getViewBinding()
+        mBinding = getLayoutId()
         setContentView(mBinding.root)
-//        mBinding = DataBindingUtil.setContentView(this,layoutId)
-//        mBinding.lifecycleOwner = this
-//        mBinding.setVariable(mRealVM.id(),mRealVM)
-//        mBinding.executePendingBindings()
         onViewInit()
         mRealVM.setBundle(intent.extras ?: Bundle())
         mRealVM.onModelBind()

@@ -191,7 +191,7 @@ class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>
 
     override fun getStatusLayout(): StatusLayout = mBinding.statusView
     override fun getViewModel(app: Application) = MainViewModel(app)
-    override fun getViewBinding(): ActivityMainBinding {
+    override fun getLayoutId(): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
     }
 

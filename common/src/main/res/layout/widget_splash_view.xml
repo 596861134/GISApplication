@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.gis.common.widget.SplashADView">
+
+    <ImageView
+        android:id="@+id/splash_img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <com.hjq.shape.view.ShapeTextView
+        android:id="@+id/splash_text"
+        android:layout_width="68dp"
+        android:layout_height="28dp"
+        android:layout_gravity="right|top"
+        android:layout_marginTop="@dimen/dp_55"
+        android:layout_marginRight="@dimen/dp_20"
+        android:gravity="center"
+        android:text="跳过"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        app:shape_radius="3dp"
+        app:shape_solidColor="#3316191e" />
+
+    <com.hjq.shape.view.ShapeTextView
+        android:id="@+id/tv_event"
+        android:layout_width="@dimen/dp_25"
+        android:layout_height="@dimen/dp_25"
+        android:layout_gravity="left|bottom"
+        android:layout_marginLeft="@dimen/dp_18"
+        android:layout_marginBottom="@dimen/dp_18"
+        android:gravity="center"
+        android:text="广告"
+        android:textColor="@color/white"
+        android:textSize="8sp"
+        android:visibility="invisible"
+        app:shape_radius="3dp"
+        app:shape_solidColor="#3316191e" />
+
+</FrameLayout>
+

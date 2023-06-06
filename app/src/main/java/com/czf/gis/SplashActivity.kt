@@ -15,7 +15,7 @@ import java.util.*
  * Created by chengzf on 2023/4/23.
  */
 class SplashActivity:BaseViewModelActivity<BaseLayoutViewModel, ActivitySplashBinding>(BaseLayoutViewModel::class.java) {
-    override fun getViewBinding(): ActivitySplashBinding {
+    override fun getLayoutId(): ActivitySplashBinding {
         return ActivitySplashBinding.inflate(layoutInflater)
     }
 

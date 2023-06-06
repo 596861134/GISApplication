@@ -9,6 +9,7 @@ import com.gis.common.CommonUtil
 import com.gis.common.extension.log
 import com.gis.common.widget.MaterialHeader
 import com.gis.common.widget.SmartBallPulseFooter
+import com.gis.common.widget.SplashADView
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.tencent.vasdolly.helper.ChannelReaderUtil
@@ -39,6 +40,7 @@ open class BaseApplication:Application() {
         super.onCreate()
         CommonUtil.init(this@BaseApplication)
         CrashHandler.register(this@BaseApplication)
+        SplashADView.getInstance().register(R.mipmap.splash_preview)
 
         // 设置全局的 Header 构建器
         SmartRefreshLayout.setDefaultRefreshHeaderCreator{ context: Context, _: RefreshLayout ->

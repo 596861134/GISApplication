@@ -77,7 +77,7 @@ class CrashActivity : BaseViewModelActivity<BaseLayoutViewModel, CrashActivityBi
     private val infoView: TextView? by lazy { mBinding.tvCrashInfo }
     private val messageView: TextView? by lazy { mBinding.tvCrashMessage }
     private var stackTrace: String? = null
-    override fun getViewBinding(): CrashActivityBinding {
+    override fun getLayoutId(): CrashActivityBinding {
         return CrashActivityBinding.inflate(layoutInflater)
     }
 

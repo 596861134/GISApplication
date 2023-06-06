@@ -32,7 +32,7 @@ class MainFragment:BaseViewModelFragment<BaseLayoutViewModel, FragmentMainBindin
         }
     }
 
-    override fun getViewBinding(
+    override fun getLayoutId(
         inflater: LayoutInflater,
         container: ViewGroup?
     ): FragmentMainBinding {

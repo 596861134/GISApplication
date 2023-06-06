@@ -21,20 +21,16 @@ abstract class BaseVMRepositoryFragment<VM: BaseRepositoryViewModel<*>, T: ViewB
     lateinit var mBinding: T
     abstract fun getViewModel(app: Application): VM
 
-    abstract fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ): T
+    /**
+     * return FragmentMainBinding.inflate(inflater, container, false)
+     */
+    abstract fun getLayoutId(inflater: LayoutInflater, container: ViewGroup?): T
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         beforeSetView()
         val vm = getViewModel(mActivity.application)
         mRealVM = ViewModelProvider(this, BaseViewModelFactory(mActivity.application,vm))[vm::class.java]
-        mBinding = getViewBinding(inflater, container)
-//        mBinding = DataBindingUtil.inflate(inflater,layoutId,container,false)
-//        mBinding.lifecycleOwner = this
-//        mBinding.setVariable(mRealVM.id(),mRealVM)
-//        mBinding.executePendingBindings()
+        mBinding = getLayoutId(inflater, container)
         return mBinding.root
     }
 

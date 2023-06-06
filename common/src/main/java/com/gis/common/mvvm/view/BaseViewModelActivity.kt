@@ -15,17 +15,17 @@ abstract class BaseViewModelActivity<VM: BaseLayoutViewModel, T: ViewBinding>(pr
     lateinit var mRealVM: VM
     lateinit var mBinding: T
 
-    abstract fun getViewBinding():T
+    /**
+     * ActivityMainBinding.inflate(layoutInflater)
+     */
+    abstract fun getLayoutId(): T
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         beforeSetView()
         mRealVM = ViewModelProvider(this)[clazz]
-        mBinding = getViewBinding()
+        mBinding = getLayoutId()
         setContentView(mBinding.root)
-//        mBinding = DataBindingUtil.setContentView(this, layoutId)
-//        mBinding.setVariable(mRealVM.id(), mRealVM)
-//        mBinding.lifecycleOwner = this
-//        mBinding.executePendingBindings()
         onViewInit()
         mRealVM.setBundle(intent.extras ?: Bundle())
         mRealVM.onModelBind()

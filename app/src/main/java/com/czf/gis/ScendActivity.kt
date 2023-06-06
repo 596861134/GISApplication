@@ -14,7 +14,7 @@ class ScendActivity:BaseViewModelActivity<BaseLayoutViewModel, ActivityScendBind
 
     private val mFragmentManager:FragmentLifecycle by lazy { FragmentLifecycle() }
 
-    override fun getViewBinding(): ActivityScendBinding {
+    override fun getLayoutId(): ActivityScendBinding {
         return ActivityScendBinding.inflate(layoutInflater)
     }
 

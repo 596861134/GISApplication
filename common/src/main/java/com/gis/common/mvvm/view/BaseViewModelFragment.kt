@@ -17,19 +17,15 @@ abstract class BaseViewModelFragment<VM: BaseLayoutViewModel, T: ViewBinding>(pr
     lateinit var mRealVM: VM
     lateinit var mBinding: T
 
-    abstract fun getViewBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ): T
+    /**
+     * return FragmentMainBinding.inflate(inflater, container, false)
+     */
+    abstract fun getLayoutId(inflater: LayoutInflater, container: ViewGroup?): T
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         beforeSetView()
         mRealVM = ViewModelProvider(this)[clazz]
-        mBinding = getViewBinding(inflater, container)
-//        mBinding = DataBindingUtil.inflate(inflater,layoutId,container,false)
-//        mBinding.lifecycleOwner = this
-//        mBinding.setVariable(mRealVM.id(),mRealVM)
-//        mBinding.executePendingBindings()
+        mBinding = getLayoutId(inflater, container)
         return mBinding.root
     }
 
