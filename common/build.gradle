@@ -21,6 +21,16 @@ android {
         ])
     }
 
+    sourceSets {
+        main {
+            // res 资源目录配置
+            res.srcDirs(
+                    'src/main/res',
+                    'src/main/res-sw',
+            )
+        }
+    }
+
 
 }
 
