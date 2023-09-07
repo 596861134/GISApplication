@@ -136,9 +136,9 @@ class TextClockView @JvmOverloads constructor(
         }
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas?.let {
+        canvas.let {
             it.drawColor(Color.BLACK)
             it.save()
             it.translate(mWidth / 2 , mHeight / 2)

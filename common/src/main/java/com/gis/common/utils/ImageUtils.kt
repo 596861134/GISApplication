@@ -53,13 +53,15 @@ object ImageUtils {
             val imageUri = resolver.insert(tableUri, value)
             if (imageUri != null) {
                 val os = resolver.openOutputStream(imageUri)
-                // 图片压缩保存
-                if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os)) {
-                    "图片保存成功".showToast()
-                } else {
-                    "图片保存失败".showToast()
+                os?.let {
+                    // 图片压缩保存
+                    if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, it)) {
+                        "图片保存成功".showToast()
+                    } else {
+                        "图片保存失败".showToast()
+                    }
+                    it.close()
                 }
-                os?.close()
             } else {
                 "图片保存失败".showToast()
             }
