@@ -92,7 +92,7 @@ def uploadApk(File apkDir) {
     def end = "\r\n"
 
     //蒲公英API上传接口   https://www.pgyer.com/doc/view/api#uploadApp  官方文档地址
-    def conn = new URL("https://www.pgyer.com/apiv2/app/upload").openConnection()
+    def conn = new URL("https://www.xcxwo.com/apiv2/app/upload").openConnection()
     conn.setRequestMethod("POST")
     conn.setRequestProperty("Connection", "Keep-Alive")
     conn.setRequestProperty("Charset", "UTF-8")
