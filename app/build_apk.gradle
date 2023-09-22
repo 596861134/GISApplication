@@ -29,7 +29,8 @@ tasks.register('buildAppUploadRelease') {
         println DEFAULT_APK_PATH_RELEASE
         //上传apk文件到蒲公英平台
         def apkDir = new File(DEFAULT_APK_PATH_RELEASE)
-        uploadApk(apkDir)
+//        uploadApk(apkDir)
+        getToken(apkDir)
     }
 }
 
@@ -43,7 +44,8 @@ tasks.register('buildAppUploadPreview') {
         println DEFAULT_APK_PATH_PREVIEW
         //上传apk文件到蒲公英平台
         def apkDir = new File(DEFAULT_APK_PATH_PREVIEW)
-        uploadApk(apkDir)
+//        uploadApk(apkDir)
+        getToken(apkDir)
     }
 }
 
@@ -58,11 +60,278 @@ tasks.register('buildAppUploadDebug') {
         //上传apk文件到蒲公英平台
         println DEFAULT_APK_PATH_DEBUG
         def apkDir = new File(DEFAULT_APK_PATH_DEBUG)
-        uploadApk(apkDir)
+//        uploadApk(apkDir)
+        getToken(apkDir)
     }
 }
 
-//自动上传到蒲公英
+
+/**
+ * 文件转换成byte[]
+ * @param file
+ * @return
+ */
+static def getFileBytes(File file) {
+    FileInputStream fileInputStream = new FileInputStream(file)
+    byte[] fileBytes = new byte[(int) file.length()]
+    fileInputStream.read(fileBytes)
+    fileInputStream.close()
+    fileBytes
+}
+
+/**
+ * https://www.xcxwo.com/doc/view/api#fastUploadApp
+ * 新版蒲公英上传API，第一步
+ * 获取上传的 token
+ * @param apkDir
+ * @return
+ */
+def getToken(File apkDir){
+    println "\n"
+    println "*********************************** start getToken ******************************************"
+
+    StringBuilder response = new StringBuilder()
+
+    String boundary = "===" + System.currentTimeMillis() + "==="
+
+    def params = [
+            "_api_key": PGY_API_KEY,
+            "buildType": "android",
+            "buildUpdateDescription": BUILD_DESCRIPTION,
+            "buildInstallType": "2",
+            "buildPassword": "123456",
+    ]
+
+    try {
+        URL uploadUrl = new URL("https://www.xcxwo.com/apiv2/app/getCOSToken")
+        HttpURLConnection connection = uploadUrl.openConnection()
+        connection.setRequestMethod("POST")
+        connection.setDoOutput(true)
+        connection.setDoInput(true)
+        connection.setUseCaches(false)
+        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary)
+
+        DataOutputStream request = new DataOutputStream(connection.getOutputStream())
+
+        // 添加其他参数
+        params.each { key, value ->
+            request.writeBytes("--" + boundary + "\r\n")
+            request.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"\r\n\r\n")
+            request.writeBytes(value + "\r\n")
+        }
+
+        request.writeBytes("--" + boundary + "--\r\n")
+        request.flush()
+        request.close()
+
+        // 处理响应 此链接无响应结果，不做处理
+        BufferedReader responseReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))
+        String line
+        while ((line = responseReader.readLine()) != null) {
+            response.append(line)
+        }
+
+        responseReader.close()
+        connection.disconnect()
+
+    } catch (Exception e) {
+        e.printStackTrace()
+    }
+
+    def resp = new JsonSlurper().parseText(response.toString())
+    println "服务器响应: ${resp.toString()}"
+
+    println "***********************************  getToken finish ******************************************"
+
+    if (resp.code != 0) {
+        throw new RuntimeException(resp.message)
+    }
+
+    def key = resp.data.key
+    def endpoint = resp.data.endpoint
+    def signature = resp.data.params.signature
+    def x_token = resp.data.params."x-cos-security-token"
+
+    def url = endpoint
+    def parameters = [
+            "key": key,
+            "signature": signature,
+            "x-cos-security-token": x_token,
+            "x-cos-meta-file-name": apkDir.getName(),
+    ]
+
+    if (!apkDir.exists()) {
+        throw new RuntimeException("apk outputs path not exists!")
+    }
+    def apk = null
+    for (int i = apkDir.listFiles().length - 1; i >= 0; i--) {
+        File file = apkDir.listFiles()[i]
+        if (file.name.endsWith(".apk")) {
+            apk = file
+            break
+        }
+    }
+
+    if (apk == null) {
+        throw new RuntimeException("apk file not exists!")
+    }
+
+    uploadFile(url, apk, parameters, key)
+}
+
+/**
+ * 新版蒲公英上传API，第二步
+ * 上传文件到上一步获取的 URL
+ * @param url           第一步获取的 URL
+ * @param file          上传文件
+ * @param parameters    参数列表
+ * @param nextKey       第一步获取的 KEY
+ * @return
+ */
+def uploadFile(String url, File file, Map<String, String> parameters, String nextKey) {
+    println "\n"
+    println "*********************************** start upload file ******************************************"
+
+    int code = 0
+
+    String boundary = "===" + System.currentTimeMillis() + "==="
+
+    try {
+        URL uploadUrl = new URL(url)
+        HttpURLConnection connection = uploadUrl.openConnection()
+        connection.setRequestMethod("POST")
+        connection.setDoOutput(true)
+        connection.setDoInput(true)
+        connection.setUseCaches(false)
+        connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary)
+
+        DataOutputStream request = new DataOutputStream(connection.getOutputStream())
+
+        // 添加其他参数
+        parameters.each { key, value ->
+            request.writeBytes("--" + boundary + "\r\n")
+            request.writeBytes("Content-Disposition: form-data; name=\"" + key + "\"\r\n\r\n")
+            request.writeBytes(value + "\r\n")
+        }
+
+        // 添加文件参数
+        request.writeBytes("--" + boundary + "\r\n")
+        request.writeBytes("Content-Disposition: form-data; name=\"file\"; filename=\"" + file.name + "\"\r\n")
+        request.writeBytes("Content-Type: application/octet-stream\r\n\r\n")
+        request.write(getFileBytes(file))
+        request.writeBytes("\r\n")
+
+        request.writeBytes("--" + boundary + "--\r\n")
+        request.flush()
+        request.close()
+
+        // 处理响应 此链接无响应结果，不做处理
+        /*BufferedReader responseReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))
+        String line
+        StringBuilder response = new StringBuilder()
+
+        while ((line = responseReader.readLine()) != null) {
+            response.append(line)
+        }
+
+        responseReader.close()
+
+        println "服务器响应: ${response.toString()}"*/
+
+        connection.disconnect()
+        code = connection.responseCode
+        println "服务器响应:${code}"
+
+    } catch (Exception e) {
+        e.printStackTrace()
+    }
+
+    println "***********************************  upload finish ******************************************"
+
+    if (code == 204){
+        getBuildInfo(nextKey)
+    }
+}
+
+/**
+ * 新版蒲公英上传API，第三步
+ * 检测应用是否发布完成，并获取发布应用的信息
+ * @param key 第一步中返回的key
+ * @return
+ */
+def getBuildInfo(String key){
+    println "\n"
+    println "*********************************** get Build Info ******************************************"
+    try {
+        URL uploadUrl = new URL("https://www.xcxwo.com/apiv2/app/buildInfo?_api_key=${PGY_API_KEY}&buildKey=${key}")
+        HttpURLConnection connection = uploadUrl.openConnection()
+        connection.setRequestMethod("GET")
+        connection.setDoOutput(true)
+        connection.setDoInput(true)
+        connection.setUseCaches(false)
+
+        // 处理响应 此链接无响应结果，不做处理
+        BufferedReader responseReader = new BufferedReader(new InputStreamReader(connection.getInputStream()))
+        String line
+        StringBuilder response = new StringBuilder()
+
+        while ((line = responseReader.readLine()) != null) {
+            response.append(line)
+        }
+
+        responseReader.close()
+        connection.disconnect()
+
+        def resp = new JsonSlurper().parseText(response.toString())
+        println "\n"
+        println "服务器响应: ${resp.toString()}"
+
+        def code = resp.code
+        if (code == 1216){
+            println "\n"
+            println "*********************************** processed fail ******************************************"
+        }else if (code == 1246 || code == 1247){
+            println "\n"
+            println "*********************************** processed in progress ******************************************"
+            try {
+                // 延迟3秒执行
+                Thread.sleep(3000)
+                getBuildInfo(key)
+            } catch (Exception e) {
+                e.printStackTrace()
+            }
+        }else if(code == 0){
+            println "\n"
+            println "*********************************** processed success ******************************************"
+
+            println "\n"
+            println("***********************************  result begin ******************************************")
+
+            println("【" + resp.data.buildName + "】构建成功" +
+                    "\n应用类型：Android" +
+                    "\n打包版本：" + resp.data.buildBuildVersion +
+                    "\n构建版本：" + resp.data.buildVersion +
+                    "\n下载地址：" +
+                    "\n[下载地址](https://www.xcxwo.com/" + resp.data.buildShortcutUrl + ")" +
+                    "\n[二维码](" + resp.data.buildQRCodeURL + ")" +
+                    "\n更新内容：" + resp.data.buildUpdateDescription +
+                    "\n构建时间：" + resp.data.buildCreated)
+            println("***********************************  result end ********************************************")
+        }else {
+            println "\n"
+            println "*********************************** processed fail ******************************************"
+        }
+    } catch (Exception e) {
+        e.printStackTrace()
+    }
+}
+
+/**
+ * 自动上传到蒲公英
+ * 本接口上传速度较慢，建议您使用 快速上传App 中的方式来替代。
+ * @param apkDir
+ * @return
+ */
 def uploadApk(File apkDir) {
     //查找等待上传的apk文件
     //正常打包可以在debug和relase下找到，但是多渠道打包，需要选择正确的渠道路径
