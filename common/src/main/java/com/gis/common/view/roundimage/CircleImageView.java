@@ -5,8 +5,10 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 
 /**
- * Created by chenliu on 2016/8/19.<br/>
- * 描述：
+ *
+ * @author chengzf
+ * @date 2016/8/19
+ * 描述：圆形图片控件
  * </br>
  */
 public class CircleImageView extends AbsRoundImageView {

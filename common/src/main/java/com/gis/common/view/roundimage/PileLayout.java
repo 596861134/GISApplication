@@ -10,10 +10,11 @@ import android.view.ViewGroup;
 import com.gis.common.R;
 
 /**
- * 描述：
+ * @author chengzf
+ * @date 2016/8/19
+ * 描述：横向折叠列表图片
  * </br>
  *
- * 横向折叠列表图片
  *
  * 1.占位
  * <com.gis.common.view.roundimage.roundimage.PileLayout

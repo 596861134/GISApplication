@@ -10,8 +10,10 @@ import com.gis.common.R;
 
 
 /**
- * Created by chenliu on 2016/8/19.<br/>
- * 描述：
+ *
+ * @author chengzf
+ * @date 2016/8/19
+ * 描述：可分别设置4个圆角大小的圆角图片控件
  * </br>
  */
 public class RoundImageView extends AbsRoundImageView {

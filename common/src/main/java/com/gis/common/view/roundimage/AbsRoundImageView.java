@@ -19,7 +19,9 @@ import com.gis.common.R;
 
 
 /**
- * Created by chenliu on 2016/8/19.<br/>
+ *
+ * @author chengzf
+ * @date 2016/8/19
  * 描述：
  * </br>
  */
