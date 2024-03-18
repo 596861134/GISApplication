@@ -1,7 +1,7 @@
 package com.czf.gis
 
 import android.app.Application
-import com.chad.library.adapter.base.loadState.LoadState
+import com.chad.library.adapter4.loadState.LoadState
 import com.gis.common.extension.emptyBody
 import com.gis.common.mvvm.livedata.UnPeekLiveData
 import com.gis.common.mvvm.viewmodel.BaseRepositoryViewModel
