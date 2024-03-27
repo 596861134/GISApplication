@@ -381,5 +381,7 @@ dependencies {
     // 隐私调用监控：https://github.com/huage2580/PermissionMonitor
     // 动画解析库：https://github.com/airbnb/lottie-android
     // 动画资源：https://lottiefiles.com、https://icons8.com/animated-icons
+    // 引导层： https://github.com/huburt-Hu/NewbieGuide
+    // 日历： https://github.com/huanghaibin-dev/CalendarView
 
 }

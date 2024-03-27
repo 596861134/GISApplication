@@ -6,7 +6,7 @@ ext {
     ksp_version = '1.9.23-1.0.19'
 
     /** Android Gradle API 版本 */
-    agp_version = '8.1.4'
+    agp_version = '8.3.1'
 
     /** 当xml中没有代码提示时把版本改成32 */
     /** compileSdkVersion>=targetSdkVersion>minSdkVersion */
