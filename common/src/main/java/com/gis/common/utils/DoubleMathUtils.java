@@ -1,6 +1,12 @@
 package com.gis.common.utils;
 
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+
+import com.gis.common.CommonUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -341,10 +347,163 @@ public class DoubleMathUtils {
         BigDecimal b2 = new BigDecimal(v2);
         int bj = b1.compareTo(b2);
         boolean res;
-        if (bj > 0)
+        if (bj > 0) {
             res = true;
-        else
+        } else {
             res = false;
+        }
         return res;
+    }
+
+
+    /**
+     * 给double数值添加千分位分隔符，
+     * 支持正负数，
+     * 支持保留2位小数四舍五入，
+     * 支持设置小数点后面数字字体的大小
+     * 支持设置自动装换为万
+     *
+     * @param num               源数据
+     * @param decimalFontSize   小数字体大小
+     * @param isConverter       是否进制转换
+     * @return  格式化字符
+     */
+    public static SpannableString formatDoubleWithSeparator(double num, int decimalFontSize, boolean isConverter) {
+        // 转换为万
+        double formattedNum = num;
+        String unit = "";
+
+        if (isConverter){
+            int base = 10000;
+            if (Math.abs(formattedNum) >= base) {
+                formattedNum = formattedNum / base;
+                unit = "万";
+            }
+        }
+
+        // 保留2位小数
+        String formattedNumber = DoubleMathUtils.formatDouble2(formattedNum);
+
+        // 检查负号
+        String sign = "";
+        if (num < 0) {
+            sign = "-";
+            // 去掉负号进行处理
+            formattedNumber = formattedNumber.substring(1);
+        }
+
+        // 分割整数和小数部分
+        String[] parts = formattedNumber.split("\\.");
+        String integerPart = parts[0];
+        String decimalPart = parts.length > 1 ? "." + parts[1] : "";
+
+        // 给整数部分添加千分位分隔符
+        StringBuilder result = new StringBuilder();
+        for (int i = integerPart.length() - 1, count = 0; i >= 0; i--) {
+            result.insert(0, integerPart.charAt(i));
+            if (++count % 3 == 0 && i > 0) {
+                result.insert(0, ",");
+            }
+        }
+
+        // 创建具有不同字体大小的 SpannableStringBuilder
+        SpannableString spannable = new SpannableString(sign + result + decimalPart + unit);
+        // 有小数点 或有单位， 且有设置字体大小
+        boolean condition = (formattedNumber.contains(".") || !unit.isEmpty()) && decimalFontSize > 0;
+        if (condition) {
+            // 设置小数点后面数字字体大小，若不需要处理单位，结束位 end = spannable.length() - unit.length()
+            int start = sign.length() + result.length();
+            int end = spannable.length();
+            spannable.setSpan(new AbsoluteSizeSpan(DisplayUtil.sp2px(CommonUtil.mContext, decimalFontSize)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        return spannable;
+    }
+
+    /**
+     * 用逗号(,)把字符串隔开 默认隔开首个小数点前面的
+     * eg: 123456.00  -> 123,456.000
+     * 重写使其支持正负数
+     *
+     * @return
+     */
+    public static String spitByComma(String target) {
+        if (null == target || TextUtils.isEmpty(target)) {
+            return "";
+        }
+
+        // 检查负号
+        boolean isNegative = false;
+        if (target.startsWith("-")) {
+            isNegative = true;
+            // 移除负号
+            target = target.substring(1);
+        }
+
+        // 分割整数和小数部分
+        String[] parts = target.split("\\.");
+        String integerPart = parts[0];
+        String decimalPart = parts.length > 1 ? "." + parts[1] : "";
+
+        // 给整数部分添加千分位分隔符
+        StringBuilder result = new StringBuilder();
+        for (int i = integerPart.length() - 1, count = 0; i >= 0; i--) {
+            result.insert(0, integerPart.charAt(i));
+            if (++count % 3 == 0 && i > 0) {
+                result.insert(0, ",");
+            }
+        }
+
+        // 添加负号（如果有）
+        if (isNegative) {
+            result.insert(0, "-");
+        }
+
+        // 返回结果
+        return result.toString() + decimalPart;
+    }
+
+
+    /**
+     * 商品价格、单位格式化 兼容formatPrice(double price, int decSize)
+     *
+     * @param price      商品价格
+     * @param unitString 商品单位
+     * @param decSize    小数字体大小
+     * @return SpannableStringBuilder
+     */
+    public static SpannableStringBuilder formatPrice(String price, int decSize, String unitString) {
+        SpannableStringBuilder builder = new SpannableStringBuilder();
+        // 小数处理
+        SpannableString spannableString = formatPrice(Double.parseDouble(price), decSize);
+        // 拼接
+        builder.append(spannableString);
+        if (!TextUtils.isEmpty(unitString)) {
+            // 单位处理
+            SpannableString unitSpannable = new SpannableString("/" + unitString);
+            unitSpannable.setSpan(new AbsoluteSizeSpan(DisplayUtil.sp2px(CommonUtil.mContext, decSize)), 0, unitSpannable.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            // 拼接
+            builder.append(unitSpannable);
+        }
+        return builder;
+    }
+
+    /**
+     * 商品价格格式化
+     *
+     * @param price   商品价格
+     * @param decSize 小数字体大小
+     * @return
+     */
+    public static SpannableString formatPrice(double price, int decSize) {
+        String target = DoubleMathUtils.formatDouble2(price);
+        SpannableString spannableString = new SpannableString(target);
+        if (target.contains(".")) {
+            xTextSize(spannableString, decSize, target.indexOf("."), target.length());
+        }
+        return spannableString;
+    }
+
+    public static void xTextSize(SpannableString spannableString, int textSpSize, int start, int end) {
+        spannableString.setSpan(new AbsoluteSizeSpan(DisplayUtil.sp2px(CommonUtil.mContext, textSpSize)), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 }

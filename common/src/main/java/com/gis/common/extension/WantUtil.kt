@@ -1,9 +1,9 @@
 package com.gis.common.extension
 
+import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearSmoothScroller
@@ -12,12 +12,15 @@ import com.gis.common.BuildConfig
 import com.gis.common.CommonUtil
 import com.gis.common.log.LogHelper
 import com.gis.common.utils.DisplayUtil
-import com.gis.common.utils.DoubleMathUtils
 import com.hjq.toast.Toaster
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.schedulers.Schedulers
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
+import java.io.File
 import java.util.Locale
 import java.util.UUID
 import kotlin.random.Random
@@ -77,30 +80,6 @@ fun Float.sp2px(context:Context? = null) =
 fun Float.px2sp(context:Context? = null) =
     if (context.isNotNull()) DisplayUtil.px2sp(context,this) else DisplayUtil.px2sp(this)
 
-/**
- * 保留2位小数
- */
-fun Double?.formatDouble2() = DoubleMathUtils.formatDouble2(this ?: 0.0)
-
-/**
- * 设置TextView drawable
- * @param res 资源
- * @param orientation 0-left,1-top,2-right,3-bottom
- */
-fun TextView.setDrawable(res:Int, orientation: Int = 0) {
-    if (res == 0){
-        setCompoundDrawables(null, null, null, null)
-    }else {
-        val drawable = ContextCompat.getDrawable(this.context, res)
-        drawable?.setBounds(0,0, drawable.minimumWidth, drawable.minimumHeight)
-        when(orientation){
-            0 -> setCompoundDrawables(drawable, null, null, null)
-            1 -> setCompoundDrawables(null, drawable, null, null)
-            2 -> setCompoundDrawables(null, null, drawable, null)
-            3 -> setCompoundDrawables(null, null, null, drawable)
-        }
-    }
-}
 
 fun Any?.isNull() = this == null
 
@@ -139,76 +118,19 @@ fun String.logWithTag(tag: String, logEnum: LogEnum = LogEnum.ERROR) {
 }
 
 /**
+ * 获取对应格式的当前时间
+ */
+fun getCurrentTime(format:String):String{
+    val dateTime = DateTime()
+    val formatter: DateTimeFormatter = DateTimeFormat.forPattern(format)
+    return formatter.print(dateTime)
+}
+
+
+/**
  * 获取UUID
  */
 fun getUUID() = UUID.randomUUID().toString().uppercase(Locale.getDefault())
-
-/**
- * 默认头像
- *//*
-
-private val mUserIcon = arrayOf(
-    R.mipmap.info_icon3,
-    R.mipmap.info_icon1,
-    R.mipmap.info_icon2,
-    R.mipmap.info_icon3,
-    R.mipmap.info_icon4,
-    R.mipmap.info_icon5
-)
-
-*/
-/**
- * 获取随机头像
- *//*
-
-fun getRandomIcon() = mUserIcon[mUserIcon.size.randomInt()]
-
-*/
-/**
- * 获取排行榜头像
- *//*
-
-fun getRankingImage(img:String?):Any{
-    return when {
-        img.isNullOrEmpty() -> mUserIcon[0]
-        img.startsWith("http") -> img
-        else -> {
-            try {
-                when(img.toInt()){
-                    in 0..5 -> mUserIcon[img.toInt()]
-                    else -> mUserIcon[0]
-                }
-            }catch (e:Exception){
-                e.printStackTrace()
-                getRandomIcon()
-            }
-        }
-    }
-}
-
-*/
-/**
- * 获取用户头像
- *//*
-
-fun getUnicornImage(img:String?):String{
-    return when {
-        img.isNullOrEmpty() -> Uri.parse("android.resource://com.want.hotkidclub.ceo/mipmap/info_icon3").toString()
-        img.startsWith("http") -> img
-        else -> {
-            try {
-                when(img.toInt()){
-                    in 1..5 -> Uri.parse("android.resource://com.want.hotkidclub.ceo/mipmap/info_icon${img.toInt()}").toString()
-                    else -> Uri.parse("android.resource://com.want.hotkidclub.ceo/mipmap/info_icon3").toString()
-                }
-            }catch (e:Exception){
-                e.printStackTrace()
-                Uri.parse("android.resource://com.want.hotkidclub.ceo/mipmap/info_icon3").toString()
-            }
-        }
-    }
-}
-*/
 
 /**
  * 滑动到指定位置，并使指定位置位于列表最上面
@@ -221,6 +143,17 @@ fun RecyclerView.scrollItemToTop(position: Int) {
     }
     smoothScroller.targetPosition = position
     layoutManager?.startSmoothScroll(smoothScroller)
+}
+
+/**
+ * 获取缓存路径
+ * /storage/emulated/0/Android/media/com.want.hotkidclub.ceo/造旺计划/
+ */
+fun Activity.getOutputDirectory(appName:String): File {
+    val mediaDir = externalMediaDirs.firstOrNull()?.let {
+        File(it, appName).apply { mkdirs() }
+    }
+    return if (mediaDir != null && mediaDir.exists()) mediaDir else filesDir
 }
 
 /**
