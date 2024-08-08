@@ -7,7 +7,7 @@ apply from: 'buildTrace.gradle'
 apply from: '../dependencies.gradle'
 
 
-if (IS_RELEASE_PACKAGE){
+if (IS_RELEASE_PACKAGE.toBoolean()){
 
     apply plugin: 'com.tencent.vasdolly'
 
@@ -72,7 +72,7 @@ android {
         }
 
 
-        if (IS_RELEASE_PACKAGE){
+        if (IS_RELEASE_PACKAGE.toBoolean()){
             applicationIdSuffix ''
             // 添加清单占位符
             addManifestPlaceholders([
@@ -89,7 +89,7 @@ android {
     }
 
 
-    if (!IS_RELEASE_PACKAGE){
+    if (!IS_RELEASE_PACKAGE.toBoolean()){
         buildTypes {
             debug {
                 // 给包名添加后缀
