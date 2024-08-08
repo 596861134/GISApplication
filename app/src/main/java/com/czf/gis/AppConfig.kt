@@ -27,7 +27,7 @@ object AppConfig {
      * 获取当前构建的环境
      */
     fun getServerType(): String {
-        return BuildConfig.serverType
+        return BuildConfig.FLAVOR
     }
 
     /**
@@ -62,6 +62,6 @@ object AppConfig {
      * 获取服务器主机地址
      */
     fun getHostUrl(): String {
-        return BuildConfig.HOST_URL
+        return BuildConfig.HOST
     }
 }

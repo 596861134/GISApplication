@@ -1,6 +1,6 @@
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 apply from: 'buildTrace.gradle'
@@ -49,10 +49,15 @@ android {
 
     namespace 'com.czf.gis'
 
+    compileSdk compile_sdk_version
+
     defaultConfig {
         applicationId "com.czf.gis"
-        versionCode VERSIONCODE as int
+        versionCode VERSIONCODE.toInteger()
         versionName VERSIONNAME
+
+        minSdk min_sdk_verion
+        targetSdk target_sdk_version
 
         // 动态向string.xml中写入值
         resValue "string", "build_config_package", "${applicationId}"
@@ -61,21 +66,24 @@ android {
         // 仅保留 xxhdpi 图片资源（目前主流分辨率 1920 * 1080）
         resourceConfigurations += ['zh', 'xxhdpi']
 
-        /*javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += mapOf(
-                        "room.schemaLocation" to "$projectDir/schemas",
-                        "room.incremental" to "true"
-                )
-            }
-        }*/
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+
 
         if (IS_RELEASE_PACKAGE){
             applicationIdSuffix ''
             // 添加清单占位符
             addManifestPlaceholders([
                     'app_name'    :    '@string/app_name',
-                    'icon_launcher' : '@mipmap/ic_launcher_release'
+                    'icon_launcher' : '@mipmap/ic_launcher_release',
+                    'network_security_config' : '@xml/network_security_config',
+                    'UM_KEY' : UMENG_APP_KEY,
+                    'QQ_ID' : QQ_APP_ID,
+                    'QQ_SECRET' : QQ_APP_SECRET,
+                    'WX_ID' : WX_APP_ID,
+                    'WX_SECRET' : WX_APP_SECRET
             ])
         }
     }
@@ -89,7 +97,13 @@ android {
                 // 添加清单占位符
                 addManifestPlaceholders([
                         'app_name'    :   '项目框架Debug版',
-                        'icon_launcher' : '@mipmap/ic_launcher'
+                        'icon_launcher' : '@mipmap/ic_launcher',
+                        'network_security_config' : '@xml/network_security_config_debug',
+                        'UM_KEY' : UMENG_APP_KEY,
+                        'QQ_ID' : QQ_APP_ID,
+                        'QQ_SECRET' : QQ_APP_SECRET,
+                        'WX_ID' : WX_APP_ID,
+                        'WX_SECRET' : WX_APP_SECRET
                 ])
             }
 
@@ -99,7 +113,13 @@ android {
                 // 添加清单占位符
                 addManifestPlaceholders([
                         'app_name'    :    '项目框架Preview版',
-                        'icon_launcher' : '@mipmap/ic_launcher_preview'
+                        'icon_launcher' : '@mipmap/ic_launcher_preview',
+                        'network_security_config' : '@xml/network_security_config_debug',
+                        'UM_KEY' : UMENG_APP_KEY,
+                        'QQ_ID' : QQ_APP_ID,
+                        'QQ_SECRET' : QQ_APP_SECRET,
+                        'WX_ID' : WX_APP_ID,
+                        'WX_SECRET' : WX_APP_SECRET
                 ])
             }
 
@@ -108,9 +128,19 @@ android {
                 // 添加清单占位符
                 addManifestPlaceholders([
                         'app_name'    :    '@string/app_name',
-                        icon_launcher : '@mipmap/ic_launcher_release'
+                        'icon_launcher' : '@mipmap/ic_launcher_release',
+                        'network_security_config' : '@xml/network_security_config',
+                        'UM_KEY' : UMENG_APP_KEY,
+                        'QQ_ID' : QQ_APP_ID,
+                        'QQ_SECRET' : QQ_APP_SECRET,
+                        'WX_ID' : WX_APP_ID,
+                        'WX_SECRET' : WX_APP_SECRET
                 ])
             }
+        }
+
+        productFlavors.configureEach { flavor ->
+            flavor.manifestPlaceholders = [CHANNEL_VALUE: name]
         }
 
         // 打包 使用VasDolly替代自己打包
@@ -131,5 +161,31 @@ android {
 }
 
 dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     implementation project(":network")
+
+    implementation libs.lifecycle.livedata.ktx
+    implementation libs.lifecycle.viewmodel.ktx
+    implementation libs.lifecycle.viewmodel.savedstate
+    implementation libs.lifecycle.runtime.ktx
+    implementation libs.lifecycle.common.java8
+
+    implementation libs.navigation.ui
+    implementation libs.navigation.ui.ktx
+    implementation libs.navigation.fragment
+    implementation libs.navigation.fragment.ktx
+    implementation libs.navigation.runtime
+
+    implementation libs.room.runtime
+    annotationProcessor libs.room.compiler
+    ksp libs.room.compiler
+    implementation libs.room.ktx
+    implementation libs.room.rxjava3
+
+    implementation libs.vasdolly
+
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
 }

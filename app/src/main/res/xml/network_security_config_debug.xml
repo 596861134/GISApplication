@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <!-- 可选的基本配置 -->
+        <trust-anchors>
+            <!-- 系统证书 -->
+            <certificates
+                overridePins="true"
+                src="system" />
+            <!-- 用户证书 -->
+            <certificates
+                overridePins="true"
+                src="user" />
+        </trust-anchors>
+    </base-config>
+
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- 域名或主机名的网络安全配置 -->
+        <domain includeSubdomains="true">sit-wzwp-std-oss.oss-cn-shanghai.aliyuncs.com</domain>
+        <domain includeSubdomains="true">stg-wzwp-std-oss.oss-cn-shanghai.aliyuncs.com</domain>
+        <domain includeSubdomains="true">prd-wzwp-std-oss.oss-cn-shanghai.aliyuncs.com</domain>
+    </domain-config>
+</network-security-config>

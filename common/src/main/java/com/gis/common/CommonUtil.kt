@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ViewModelStore
 import com.gis.common.extension.showToast
 import com.gis.common.log.LogHelper
 import com.gis.common.manager.AppActivityManager
@@ -27,8 +28,11 @@ object CommonUtil {
 
     lateinit var mContext: Context
 
-    fun init(application: Application) {
+    lateinit var mViewModelStore: ViewModelStore
+
+    fun init(application: Application, viewModelStore: ViewModelStore) {
         mContext = application.applicationContext
+        mViewModelStore = viewModelStore
         // 初始化日志打印
         LogHelper.init(BuildConfig.LOG_ENABLE, BuildConfig.LOG_TAG)
         // 初始化页面管理
@@ -36,7 +40,7 @@ object CommonUtil {
         // 初始Toast
         Toaster.init(application)
         MMKVUtil.init(application.applicationContext)
-        RetrofitUrlManager.getInstance().setGlobalDomain(BuildConfig.HOST_URL)
+        RetrofitUrlManager.getInstance().setGlobalDomain(BuildConfig.HOST)
         registerNet(mContext)
     }
 

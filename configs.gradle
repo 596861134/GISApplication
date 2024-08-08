@@ -1,35 +1,15 @@
 ext {
-    kotlin_version = '1.9.23'
-
-    //  大版本务必选择与项目的 Kotlin 版本一致的 KSP 版本
-    // https://github.com/google/ksp/releases
-    ksp_version = '1.9.23-1.0.19'
-
-    /** Android Gradle API 版本 */
-    agp_version = '8.3.1'
 
     /** 当xml中没有代码提示时把版本改成32 */
     /** compileSdkVersion>=targetSdkVersion>minSdkVersion */
     /** 编译APP 时使用的 Android API 版本 */
     compile_sdk_version = 34
-//    build_tools_version = '33.0.2'
+    /** 构建工具的版本，其中包括了打包工具aapt、dx等等。*/
+    build_tools_version = "34.0.0"
     /** 应用程序支持的最低 API 版本 */
-    min_sdk_verion = 21
+    min_sdk_verion = 23
     /** 目标版本 */
-    target_sdk_version = 32
-
-    lifecycle_version = "2.7.0"
-    navigation_version = "2.7.7"
-    room_version = "2.6.1"
-
-    glide_version = "4.16.0"
-    okhttp_version = "4.12.0"
-    retrofit_version = "2.9.0"
-
-    okdownload_version = "1.0.7"
-    vasdolly_version = "3.0.6"
-    picture_version = "v3.11.2"
-    dslTab_version = "3.5.5"
+    target_sdk_version = 30
 
     /**编译环境*/
     // 测试服
@@ -55,8 +35,10 @@ ext {
         serverType = SERVER_TYPE_DEBUG
     } else if (taskName.endsWith("Preview")) {
         serverType = SERVER_TYPE_PREVIEW
-    }else {
+    }else if (taskName.endsWith("Release")) {
         serverType = SERVER_TYPE_RELEASE
+    } else {
+        serverType = SERVER_TYPE_DEBUG
     }
 
     // 从 Gradle 命令中读取参数配置，例如：./gradlew assembleRelease -P ServerType="test"
@@ -68,24 +50,72 @@ ext {
     // 打印当前服务器配置
     println "GradleLog ServerTypeOutput " + serverType
 
+    // 是否走阿里云配置
+    CHECK_ALIYUN = true
+
+    LOG_ENABLE = !IS_RELEASE_PACKAGE.toBoolean()
     // 根据编译环境配置HOST_URL等环境变量
-    switch(serverType) {
-        case SERVER_TYPE_DEBUG:
-        case SERVER_TYPE_PREVIEW:
-            LOG_ENABLE = true
-            // 不同环境的key 可以在这里配 如：BUGLY_ID = "测试 AppID"
-            if (serverType == SERVER_TYPE_PREVIEW) {
-                HOST_URL = "https://www.wanandroid.com/prerelease/"
-            } else {
-                HOST_URL = "https://www.wanandroid.com/debug/"
-            }
-            break
-        case SERVER_TYPE_RELEASE:
-            LOG_ENABLE = !IS_RELEASE_PACKAGE
-            // 不同环境的key 可以在这里配 如：BUGLY_ID = "正式 AppID"
-            HOST_URL = "https://www.wanandroid.com/release/"
-            break
-        default :
-            break
+    if (IS_RELEASE_PACKAGE.toBoolean()){
+        HOST = "https://static.hotkidceo.com"
+        APP_CONFIG_SERVER_IP = "https://srv.hotkidceo.com"
+        APP_RES_URL = "https://img.hotkidceo.com/res"
+        MEMBER_CENTER_URL = "https://srv.hotkidceo.com/ceo/h5Buygift/511/prodGift"
+        APP_EVENT_IP = "http://115.159.99.127:32186/api/v1/client_logs"
+        APP_SHARE_IP = "https://h0w.co/q/1Z"
+        if(CHECK_ALIYUN.toBoolean() == true) {
+            DOMAIN_FILE_URL = "https://prd-static.hotkidceo.com"
+        } else {
+            DOMAIN_FILE_URL = "https://hotkidceo-1251330842.file.myqcloud.com"
+        }
+        APP_SHARE_TYPE = true
+    }else {
+        // 不同环境的key 可以在这里配
+        switch(serverType) {
+            case SERVER_TYPE_DEBUG:
+                HOST = "http://dev-static.hotkidceo.com"
+                APP_CONFIG_SERVER_IP = "https://dev-api.hotkidceo.com"
+                APP_RES_URL = "http://dev-static.hotkidceo.com/res"
+                MEMBER_CENTER_URL = "https://dev-api.hotkidceo.com/ceo/h5Buygift/511/prodGift"
+                APP_EVENT_IP = "http://115.159.99.127:32186/api/v1/client_logs"
+                APP_SHARE_IP = "https://dev-api.hotkidceo.com/store/"
+                if(CHECK_ALIYUN.toBoolean() == true) {
+                    DOMAIN_FILE_URL = "https://sit-static.hotkidceo.com"
+                } else {
+                    DOMAIN_FILE_URL = "https://hotkidceo-1251330842.file.myqcloud.com"
+                }
+                APP_SHARE_TYPE = false
+                break
+            case SERVER_TYPE_PREVIEW:
+                HOST = "https://stg-static.hotkidceo.com"
+                APP_CONFIG_SERVER_IP = "https://stg-srv.hotkidceo.com"
+                APP_RES_URL = "https://stg-img.hotkidceo.com/res"
+                MEMBER_CENTER_URL = "https://srv.hotkidceo.com/ceo/h5Buygift/511/prodGift"
+                APP_EVENT_IP = "http://115.159.99.127:32186/api/v1/client_logs"
+                APP_SHARE_IP = "https://h0w.co/q/1Z"
+                if(CHECK_ALIYUN.toBoolean() == true) {
+                    DOMAIN_FILE_URL = "https://stg-static.hotkidceo.com"
+                } else {
+                    DOMAIN_FILE_URL = "https://hotkidceo-1251330842.file.myqcloud.com"
+                }
+                APP_SHARE_TYPE = false
+                break
+            case SERVER_TYPE_RELEASE:
+                HOST = "https://static.hotkidceo.com"
+                APP_CONFIG_SERVER_IP = "https://srv.hotkidceo.com"
+                APP_RES_URL = "https://img.hotkidceo.com/res"
+                MEMBER_CENTER_URL = "https://srv.hotkidceo.com/ceo/h5Buygift/511/prodGift"
+                APP_EVENT_IP = "http://115.159.99.127:32186/api/v1/client_logs"
+                APP_SHARE_IP = "https://h0w.co/q/1Z"
+                if(CHECK_ALIYUN.toBoolean() == true) {
+                    DOMAIN_FILE_URL = "https://prd-static.hotkidceo.com"
+                } else {
+                    DOMAIN_FILE_URL = "https://hotkidceo-1251330842.file.myqcloud.com"
+                }
+                APP_SHARE_TYPE = true
+                break
+            default :
+                break
+        }
     }
+
 }

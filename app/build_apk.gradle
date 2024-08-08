@@ -9,13 +9,13 @@ ext {
     //源代码文件路径
     SOURCE_PATH = "${project.projectDir}"
     //源apk文件路径
-    SOURCE_APK_PATH = "${project.buildDir}"
+    SOURCE_APK_PATH = "${project.getLayout().getBuildDirectory().getAsFile().get()}"
     //默认release文件路径
-    DEFAULT_APK_PATH_RELEASE = "${project.buildDir}/outputs/apk/release"
+    DEFAULT_APK_PATH_RELEASE = "${SOURCE_APK_PATH}/outputs/apk/release"
     //默认preview文件路径
-    DEFAULT_APK_PATH_PREVIEW = "${project.buildDir}/outputs/apk/preview"
+    DEFAULT_APK_PATH_PREVIEW = "${SOURCE_APK_PATH}/outputs/apk/preview"
     //默认debug文件路径
-    DEFAULT_APK_PATH_DEBUG = "${project.buildDir}/outputs/apk/debug"
+    DEFAULT_APK_PATH_DEBUG = "${SOURCE_APK_PATH}/outputs/apk/debug"
 
 }
 
@@ -80,6 +80,28 @@ static def getFileBytes(File file) {
 }
 
 /**
+ * 获取编译环境
+ * @return
+ */
+String getBuildType(){
+    def flavor = ""
+    switch (serverType){
+        case "debug":
+            flavor = "测试环境包"
+            break
+        case "preview":
+            flavor = "预发布环境包"
+            break
+        case "release":
+            flavor = "正式包"
+            break
+        default :
+            break
+    }
+    return flavor
+}
+
+/**
  * https://www.xcxwo.com/doc/view/api#fastUploadApp
  * 新版蒲公英上传API，第一步
  * 获取上传的 token
@@ -94,10 +116,14 @@ def getToken(File apkDir){
 
     String boundary = "===" + System.currentTimeMillis() + "==="
 
+    // 直接传输String会被转义，需要转成 ISO-8859-1
+    String encodedString = new String(getBuildType().getBytes("UTF-8"), "ISO-8859-1")
+    String description = encodedString + " " + VERSIONNAME + " " + BUILD_DESCRIPTION
+
     def params = [
             "_api_key": PGY_API_KEY,
             "buildType": "android",
-            "buildUpdateDescription": BUILD_DESCRIPTION,
+            "buildUpdateDescription": description,
             "buildInstallType": "2",
             "buildPassword": "123456",
     ]

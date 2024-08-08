@@ -4,9 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.os.PersistableBundle
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,8 +23,9 @@ import com.gis.common.dialog.BaseDialog
 import com.gis.common.dialog.impl.WaitDialog
 import com.gis.common.extension.delay
 import com.gis.common.extension.falsely
+import com.gis.common.extension.isNotNull
 import com.gis.common.extension.truely
-import com.gyf.immersionbar.BarHide
+import com.gis.common.utils.KeyboardStatusDetector
 import com.gyf.immersionbar.ImmersionBar
 import java.io.Serializable
 
@@ -44,6 +46,11 @@ open class BaseActivity: AppCompatActivity(),
 
     /** ActivityResult回调 */
     var onForResult: ((ActivityResult) -> Unit)? = null
+
+    /**
+     * 得到InputMethodManager的实例
+     */
+    val mInputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
 
     /**
      * 当前加载对话框是否在显示中
@@ -125,6 +132,44 @@ open class BaseActivity: AppCompatActivity(),
             .autoDarkModeEnable(true, 0.2f) // 状态栏字体和导航栏内容自动变色，必须指定状态栏颜色和导航栏颜色才可以自动变色
     }
 
+    /**
+     * 隐藏键盘
+     *
+     * @param view
+     */
+    open fun hiddenKeyBoard(view: View? = null) {
+        if (view.isNotNull()){
+            if (KeyboardStatusDetector.isKeyBoardShow(view)) {
+                view?.windowToken?.let {
+                    mInputMethodManager.hideSoftInputFromWindow(it, InputMethodManager.HIDE_NOT_ALWAYS)
+                }
+            }
+        }else {
+            if (mInputMethodManager.isActive.truely() && currentFocus.isNotNull()) {
+                //拿到view的token 不为空
+                currentFocus?.windowToken?.let {
+                    //表示软键盘窗口总是隐藏，除非开始时以SHOW_FORCED显示。
+                    mInputMethodManager.hideSoftInputFromWindow(it, InputMethodManager.HIDE_NOT_ALWAYS)
+                }
+            }
+        }
+    }
+
+    /**
+     * 显示键盘
+     */
+    open fun showKeyBoard(view: View? = null){
+        if (view.isNotNull()){
+            view?.let {
+                mInputMethodManager.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }else {
+            currentFocus?.let {
+                mInputMethodManager.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
+    }
+
     fun getContext(): Context {
         return this
     }
@@ -178,7 +223,7 @@ open class BaseActivity: AppCompatActivity(),
     /**
      * 如果当前的 Activity（singleTop 启动模式） 被复用时会回调
      */
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         // 设置为当前的 Intent，避免 Activity 被杀死后重启 Intent 还是最原先的那个
         setIntent(intent)

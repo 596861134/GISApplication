@@ -9,16 +9,18 @@ android {
 
     namespace 'com.gis.common'
 
-    defaultConfig {
+    compileSdk compile_sdk_version
 
-        // 清单占位符
-        addManifestPlaceholders([
-                'UM_KEY' : UMENG_APP_KEY,
-                'QQ_ID' : QQ_APP_ID,
-                'QQ_SECRET' : QQ_APP_SECRET,
-                'WX_ID' : WX_APP_ID,
-                'WX_SECRET' : WX_APP_SECRET
-        ])
+    defaultConfig {
+        minSdk min_sdk_verion
+        targetSdk target_sdk_version
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // 混淆配置
+        proguardFiles 'proguard-sdk.pro', 'proguard-app.pro'
+        // 解决应用程序方法数超过限制的问题，允许应用程序使用多个 dex 文件
+        multiDexEnabled true
+
     }
 
     sourceSets {
@@ -31,9 +33,79 @@ android {
         }
     }
 
-
 }
 
 dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api libs.androidx.core.ktx
+    api libs.annotation
+    api libs.appcompat
+    api libs.fragment.ktx
+    api libs.activity.ktx
+    api libs.kotlin.stdlib
+    api libs.kotlin.stdlib.jdk8
+    api libs.kotlinx.coroutines.core
+    api libs.kotlinx.coroutines.android
+    api libs.multidex
+    api libs.material
 
+    api libs.cardview
+    api libs.constraintlayout
+    api libs.viewpager2
+    api libs.recyclerview
+    api libs.swiperefreshlayout
+    api libs.legacy.support.v4
+
+    api libs.gson
+    api libs.glide
+    ksp libs.compiler.ksp
+    api libs.okhttp
+    api libs.logging.interceptor
+    api libs.retrofit
+    api libs.retrofit.url.manager
+    api libs.adapter.rxjava3
+    api libs.converter.gson
+    api libs.rxjava
+    api libs.rxandroid
+
+    api libs.mmkv
+    api libs.xx.permissions
+    api libs.toast.utils
+    api libs.shape.view
+    api libs.joda.time
+    api libs.immersionBar
+    api libs.viewStatue
+    api libs.zxing
+    api libs.baseRecyclerViewAdapterHelper
+
+    api libs.picture.selector
+    api libs.picture.compress
+    api libs.picture.ucrop
+    api libs.picture.camerax
+
+    api libs.okd.okdownload
+    api libs.okd.sqlite
+    api libs.okd.okhttp
+    api libs.okd.filedownloader
+    api libs.okd.ktx
+
+    api libs.refresh.layout.kernel
+    api libs.refresh.header.classics
+    api libs.refresh.header.radar
+    api libs.refresh.header.falsify
+    api libs.refresh.header.material
+    api libs.refresh.header.two.level
+    api libs.refresh.footer.ball
+    api libs.refresh.footer.classics
+
+    api libs.lottie
+    api libs.utilcodex
+
+    api(libs.maps){
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
+
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
 }

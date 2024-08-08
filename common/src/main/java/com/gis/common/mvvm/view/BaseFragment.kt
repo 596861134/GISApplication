@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +17,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.gis.common.action.BundleAction
 import com.gis.common.action.HandlerAction
 import com.gis.common.action.KeyboardAction
+import com.gis.common.extension.isNotNull
+import com.gis.common.extension.truely
+import com.gis.common.utils.KeyboardStatusDetector
 import java.io.Serializable
 
 /**
@@ -29,6 +34,12 @@ open class BaseFragment:Fragment(),
 
     /** ActivityResult回调 */
     var onForResult: ((ActivityResult) -> Unit)? = null
+
+    /**
+     * 得到InputMethodManager的实例
+     */
+    val mInputMethodManager by lazy { mActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
+
 
     /**
      * 这个 Fragment 是否已经加载过了
@@ -90,13 +101,6 @@ open class BaseFragment:Fragment(),
         getAttachActivity().dismissDialog()
     }
 
-    /**
-     * 获取指定ViewModel
-     */
-    fun <T: ViewModel>getAppointViewModel(viewModel: Class<T>): T {
-        return ViewModelProvider(this)[viewModel]
-    }
-
     override fun getBundle(): Bundle? {
         return arguments
     }
@@ -133,6 +137,51 @@ open class BaseFragment:Fragment(),
         super.onDetach()
 //        mActivity = null
     }
+
+    /**
+     * 隐藏键盘
+     *
+     * @param view
+     */
+    open fun hideKeyBoard(view: View? = null) {
+        if (view.isNotNull()){
+            if (KeyboardStatusDetector.isKeyBoardShow(view)) {
+                view?.windowToken?.let {
+                    mInputMethodManager.hideSoftInputFromWindow(it, InputMethodManager.HIDE_NOT_ALWAYS)
+                }
+            }
+        }else {
+            if (mInputMethodManager.isActive.truely() && mActivity.currentFocus.isNotNull()) {
+                //拿到view的token 不为空
+                mActivity.currentFocus?.windowToken?.let {
+                    mInputMethodManager.hideSoftInputFromWindow(it, InputMethodManager.HIDE_NOT_ALWAYS)
+                }
+            }
+        }
+    }
+
+    /**
+     * 显示键盘
+     */
+    open fun showKeyBoard(view: View? = null){
+        if (view.isNotNull()){
+            view?.let {
+                mInputMethodManager.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }else {
+            mActivity.currentFocus?.let {
+                mInputMethodManager.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
+    }
+
+    /**
+     * 获取指定ViewModel，仅当前页面生效
+     */
+    fun <T: ViewModel>getAppointViewModel(viewModel: Class<T>): T {
+        return ViewModelProvider(this)[viewModel]
+    }
+
 
     /**
      * 销毁当前 Fragment 所在的 Activity

@@ -1,6 +1,7 @@
 package com.czf.gis.crash
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Intent
 import android.content.pm.PackageInfo
@@ -22,7 +23,6 @@ import androidx.lifecycle.lifecycleScope
 import com.czf.gis.AppConfig
 import com.czf.gis.R
 import com.czf.gis.databinding.CrashActivityBinding
-import com.gis.common.aop.SingleClick
 import com.gis.common.extension.showToast
 import com.gis.common.mvvm.view.BaseViewModelActivity
 import com.gis.common.mvvm.viewmodel.BaseLayoutViewModel
@@ -255,7 +255,6 @@ class CrashActivity : BaseViewModelActivity<BaseLayoutViewModel, CrashActivityBi
         }
     }
 
-    @SingleClick
     override fun onClick(view: View) {
         when (view.id) {
             R.id.iv_crash_info -> {
@@ -275,6 +274,7 @@ class CrashActivity : BaseViewModelActivity<BaseLayoutViewModel, CrashActivityBi
         }
     }
 
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         // 重启应用
         RestartActivity.restart(this)

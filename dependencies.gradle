@@ -10,12 +10,8 @@ apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 android {
-    compileSdk compile_sdk_version
-//    buildToolsVersion build_tools_version
 
     defaultConfig {
-        minSdk min_sdk_verion
-        targetSdk target_sdk_version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // 混淆配置
@@ -30,31 +26,47 @@ android {
         buildConfigField('boolean', 'LOG_ENABLE', '' + LOG_ENABLE + '')
         // log tag
         buildConfigField('String', 'LOG_TAG', '"' + 'CZF_TAG' + '"')
-        // 服务器的主机地址
-        buildConfigField('String', 'HOST_URL', '"' + HOST_URL + '"')
         // 编译环境
-        buildConfigField('String', 'serverType', '"' + serverType + '"')
+        buildConfigField('String', 'FLAVOR', '"' + serverType + '"')
         // 版本名称
         buildConfigField('String', 'VERSIONNAME', '"' + VERSIONNAME + '"')
         // 版本号
         buildConfigField('int', 'VERSIONCODE', VERSIONCODE)
+        // host
+        buildConfigField('String', 'HOST', '"' + HOST + '"')
+        // baseurl
+        buildConfigField('String', 'APP_CONFIG_SERVER_IP', '"' + APP_CONFIG_SERVER_IP + '"')
+        // b端资源
+        buildConfigField('String', 'APP_RES_URL', '"' + APP_RES_URL + '"')
+        // ceo购买H5 地址
+        buildConfigField('String', 'MEMBER_CENTER_URL', '"' + MEMBER_CENTER_URL + '"')
+        // 事件地址
+        buildConfigField('String', 'APP_EVENT_IP', '"' + APP_EVENT_IP + '"')
+        // 分享地址
+        buildConfigField('String', 'APP_SHARE_IP', '"' + APP_SHARE_IP + '"')
+        // 文件服务器地址
+        buildConfigField('String', 'DOMAIN_FILE_URL', '"' + DOMAIN_FILE_URL + '"')
+        // 分享类型 是不是 线上的
+        buildConfigField('boolean', 'APP_SHARE_TYPE', '' + APP_SHARE_TYPE + '')
+        // 是否走阿里云配置
+        buildConfigField('boolean', 'CHECK_ALIYUN', '' + CHECK_ALIYUN + '')
     }
 
     signingConfigs {
         debug {
-            storeFile file(StoreFile)
-            storePassword StorePassword
-            keyAlias KeyAlias
-            keyPassword KeyPassword
+            storeFile file(RELEASE_STOREFILE)
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+            storePassword RELEASE_STOREPASSWORD
             v1SigningEnabled true
             v2SigningEnabled true
         }
 
         release {
-            storeFile file(StoreFile)
-            storePassword StorePassword
-            keyAlias KeyAlias
-            keyPassword KeyPassword
+            storeFile file(RELEASE_STOREFILE)
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+            storePassword RELEASE_STOREPASSWORD
             v1SigningEnabled true
             v2SigningEnabled true
         }
@@ -116,6 +128,9 @@ android {
         // 我们不打算支持 KSP，也不建议在此阶段使用数据绑定，因为 compose 是我们推荐的 UI 解决方案。
 //        dataBinding = true
         viewBinding true
+
+        // 允许动态向BuildConfig.java中写入值
+        buildConfig = true
     }
 
     // 根据AS支持版本适配，但是直接用19也没问题，要用就用最高，jvmTarget也要同步
@@ -214,7 +229,7 @@ afterEvaluate {
 
 // 添加构建依赖项：https://developer.android.google.cn/studio/build/dependencies
 // api 与 implementation 的区别：https://www.jianshu.com/p/8962d6ba936e
-dependencies {
+/*dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // 平台相关的基础库 : https://developer.android.google.cn/jetpack/androidx/explorer?hl=zh-cn
@@ -384,4 +399,4 @@ dependencies {
     // 引导层： https://github.com/huburt-Hu/NewbieGuide
     // 日历： https://github.com/huanghaibin-dev/CalendarView
 
-}
+}*/

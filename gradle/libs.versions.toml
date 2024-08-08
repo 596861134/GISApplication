@@ -1,0 +1,328 @@
+[versions]
+# Android Gradle Plugin：Android Gradle API 版本
+# https://mvnrepository.com/artifact/com.android.tools.build/gradle
+agp_version = "8.5.1"
+# Kotlin 版
+# https://github.com/JetBrains/kotlin
+kotlin_version = "2.0.10"
+# 大版本务必选择与项目的 Kotlin 版本一致的 KSP 版本
+# https://github.com/google/ksp/releases
+ksp_version = "2.0.10-1.0.24"
+apt_version = "1.8"
+vasdolly_version = "3.0.6"
+
+coreKtx = "1.13.1"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+
+multidex = "2.0.1"
+appcompat = "1.7.0"
+fragmentKtx = "1.8.2"
+activityKtx = "1.9.1"
+constraintlayout = "2.1.4"
+annotation = "1.8.1"
+coroutinesKtx = "1.8.1"
+
+material = "1.12.0"
+viewpager2 = "1.1.0"
+recyclerview = "1.3.2"
+swiperefreshlayout = "1.1.0"
+cardview = "1.0.0"
+legacySupportV4 = "1.0.0"
+lifecycle_version = "2.8.4"
+navigation_version = "2.7.7"
+room_version = "2.6.1"
+smoothNavigation = "4.0.0"
+
+gson = "2.11.0"
+glide_version = "4.16.0"
+okhttp_version = "4.12.0"
+retrofit_version = "2.11.0"
+retrofitUrlManager = "1.4.0"
+rxJava = "3.1.8"
+rxAndroid = "3.0.2"
+mpandroidchart = "v3.1.0"
+mpandroidchartutil = "1.0.3"
+conscrypt = "2.5.2"
+persistentCookieJar = "v1.0.1"
+mmkv = "1.3.9"
+toastUtils = "12.6"
+roundedimage = "2.3.0"
+xxPermissions = "20.0"
+androidAutoSize = "v1.2.1"
+greendao = "3.3.0"
+immersionbar = "3.2.2"
+gloading = "1.0.0"
+zxing = "3.5.3"
+badgeview = "1.1.1"
+flycoTabLayout = "3.0.0"
+hyman = "1.1.2"
+subsampling = "3.10.0"
+angcyo = "3.5.5"
+joda = "2.12.7"
+haibin = "3.7.1"
+alipay = "15.8.17"
+wechat = "6.8.28"
+jsbridge = "1.0.4"
+banner = "2.2.3"
+adapterHelper = "4.1.6"
+shapeView = "9.2"
+filedownloader = "1.0.7"
+pictureselector = "v3.11.2"
+smartrefresh = "2.1.0"
+maps = "10.12.1"
+lottie = "6.4.0"
+utilcodex = "1.31.1"
+
+
+[libraries]
+# 项目相关基础库 项目根目录build.gradle-》dependencies
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin_version" }
+kotlin-parcelize-runtime-plugin = { module = "org.jetbrains.kotlin:kotlin-parcelize-runtime", version.ref = "kotlin_version" }
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp_version" }
+tencent-vasdolly-plugin = { module = "com.tencent.vasdolly:plugin", version.ref = "vasdolly_version" }
+android-apt-plugin = { module = "com.neenbedankt.gradle.plugins:android-apt", version.ref = "apt_version" }
+greendao-gradle-plugin = { module = "org.greenrobot:greendao-gradle-plugin", version.ref = "greendao" }
+navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigation_version" }
+
+
+
+# 添加构建依赖项：https://developer.android.google.cn/studio/build/dependencies
+# api 与 implementation 的区别：https://www.jianshu.com/p/8962d6ba936e
+# 平台相关的基础库 : https://developer.android.google.cn/jetpack/androidx/explorer?hl=zh-cn
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragmentKtx" }
+activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
+multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
+recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
+legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
+cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin_version" }
+kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin_version" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesKtx" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesKtx" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+
+# lifecycle
+lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle_version" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle_version" }
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle_version" }
+lifecycle-viewmodel-savedstate = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-savedstate", version.ref = "lifecycle_version" }
+lifecycle-common-java8 = { group = "androidx.lifecycle", name = "lifecycle-common-java8", version.ref = "lifecycle_version" }
+
+# navigation
+navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigation_version" }
+navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation_version" }
+navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigation_version" }
+navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation_version" }
+navigation-runtime = { group = "androidx.navigation", name = "navigation-runtime", version.ref = "navigation_version" }
+navigation-smooth = { group = "com.kunminx.arch", name = "smooth-navigation", version.ref = "smoothNavigation" }
+
+# room
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room_version" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room_version" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room_version" }
+room-rxjava3 = { group = "androidx.room", name = "room-rxjava3", version.ref = "room_version" }
+room-guava = { group = "androidx.room", name = "room-guava", version.ref = "room_version" }
+room-testing = { group = "androidx.room", name = "room-testing", version.ref = "room_version" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room_version" }
+
+
+#util
+
+#https://github.com/google/gson
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+
+#glide : https://github.com/bumptech/glide
+glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide_version" }
+compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide_version" }
+compiler-ksp = { group = "com.github.bumptech.glide", name = "ksp", version.ref = "glide_version" }
+
+#okhttp3 :  https://github.com/square/okhttp
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp_version" }
+logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp_version" }
+
+#retrofit  https://github.com/square/retrofit
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit_version" }
+adapter-rxjava3 = { group = "com.squareup.retrofit2", name = "adapter-rxjava3", version.ref = "retrofit_version" }
+converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit_version" }
+
+#RetrofitUrlManager
+# https://github.com/JessYanCoding/RetrofitUrlManager
+retrofit-url-manager = { group = "me.jessyan", name = "retrofit-url-manager", version.ref = "retrofitUrlManager" }
+
+#rxjava3 :  https://github.com/ReactiveX/RxJava
+rxjava = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxJava" }
+rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = "rxAndroid" }
+
+# https://github.com/PhilJay/MPAndroidChart
+mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
+
+# https://github.com/huzipiaopiao/MPAndroidChartFix
+mpandroidchartutil = { group = "com.teaanddogdog", name = "mpandroidchartutil", version.ref = "mpandroidchartutil" }
+
+# https://github.com/google/conscrypt
+conscrypt = { group = "org.conscrypt", name = "conscrypt-android", version.ref = "conscrypt" }
+
+# https://github.com/franmontiel/PersistentCookieJar
+#"persistent_cookie"             : "com.github.franmontiel:PersistentCookieJar:v1.0.1",
+persistent-cookie = { group = "com.github.franmontiel", name = "PersistentCookieJar", version.ref = "persistentCookieJar" }
+
+# https://github.com/vinc3m1/RoundedImageView
+roundedimageview = { group = "com.makeramen", name = "roundedimageview", version.ref = "roundedimage" }
+
+# https://github.com/Tencent/MMKV
+mmkv = { group = "com.tencent", name = "mmkv", version.ref = "mmkv" }
+
+# 吐司框架：https://github.com/getActivity/ToastUtils
+toast-utils = { group = "com.github.getActivity", name = "Toaster", version.ref = "toastUtils" }
+
+# XXPermissions：https://github.com/getActivity/XXPermissions
+xx-permissions = { group = "com.github.getActivity", name = "XXPermissions", version.ref = "xxPermissions" }
+
+# https://github.com/JessYanCoding/AndroidAutoSize
+autoSize = { group = "com.github.JessYanCoding", name = "AndroidAutoSize", version.ref = "androidAutoSize" }
+
+# https://github.com/greenrobot/greenDAO
+greenDao = { group = "org.greenrobot", name = "greendao", version.ref = "greendao" }
+
+# https://github.com/gyf-dev/ImmersionBar
+immersionBar = { group = "com.geyifeng.immersionbar", name = "immersionbar", version.ref = "immersionbar" }
+
+# https://github.com/luckybilly/Gloading
+viewStatue = { group = "com.billy.android", name = "gloading", version.ref = "gloading" }
+
+# https://github.com/zxing/zxing
+zxing = { group = "com.google.zxing", name = "core", version.ref = "zxing" }
+
+# https://github.com/AlexLiuSheng/BadgeView
+badgeview = { group = "com.allenliu.badgeview", name = "library", version.ref = "badgeview" }
+
+# FlycoTabLayout: https://github.com/H07000223/FlycoTabLayout
+flycoTabLayout-lib = { group = "io.github.h07000223", name = "flycoTabLayout", version.ref = "flycoTabLayout" }
+
+# https://github.com/hongyangAndroid/FlowLayout
+flowlayout-lib = { group = "com.hyman", name = "flowlayout-lib", version.ref = "hyman" }
+
+# https://github.com/davemorrissey/subsampling-scale-image-view
+scale-image-view = { group = "com.davemorrissey.labs", name = "subsampling-scale-image-view-androidx", version.ref = "subsampling" }
+
+# dslTablayout
+# 链接：https://github.com/angcyo/DslTabLayout
+# 文档：https://angcyo.gitee.io/doc/tablayout/
+#"dslTablayout"           : "com.github.angcyo.DslTablayout:TabLayout:3.5.3",
+dslTablayout = { group = "com.github.angcyo.DslTablayout", name = "TabLayout", version.ref = "angcyo" }
+# 可选
+dslTablayout-viewpager1 = { group = "com.github.angcyo.DslTablayout", name = "ViewPager1Delegate", version.ref = "angcyo" }
+dslTablayout-viewpager2 = { group = "com.github.angcyo.DslTablayout", name = "ViewPager2Delegate", version.ref = "angcyo" }
+
+# https://github.com/youth5201314/banner
+banner = { group = "io.github.youth5201314", name = "banner", version.ref = "banner" }
+
+#时间转换框架 https://github.com/dlew/joda-time-android
+joda-time = { group = "net.danlew", name = "android.joda", version.ref = "joda" }
+
+# https://github.com/huanghaibin-dev/CalendarView
+calenddarview = { group = "com.haibin", name = "calendarview", version.ref = "haibin" }
+
+# https://github.com/uknownothingsnow/JsBridge
+jsbridge = { group = "com.github.lzyzsd", name = "jsbridge", version.ref = "jsbridge" }
+
+#
+#//支付宝
+#// https://opendocs.alipay.com/open/204/105296?pathHash=22ed0058
+#// https://opendocs.alipay.com/common/02km9l
+alipaysdk = { group = "com.alipay.sdk", name = "alipaysdk-android", version.ref = "alipay" }
+
+#//微信支付
+#// https://developers.weixin.qq.com/doc/oplatform/Mobile_App/Access_Guide/Android.html
+wechat = { group = "com.tencent.mm.opensdk", name = "wechat-sdk-android", version.ref = "wechat" }
+
+# 多渠道打包：https://github.com/Tencent/VasDolly
+vasdolly = { group = "com.tencent.vasdolly", name = "helper", version.ref = "vasdolly_version" }
+
+# https://github.com/lingochamp/FileDownloader
+okd-okdownload = { group = "com.liulishuo.okdownload", name = "okdownload", version.ref = "filedownloader" }
+okd-sqlite = { group = "com.liulishuo.okdownload", name = "sqlite", version.ref = "filedownloader" }
+okd-okhttp = { group = "com.liulishuo.okdownload", name = "okhttp", version.ref = "filedownloader" }
+okd-filedownloader = { group = "com.liulishuo.okdownload", name = "filedownloader", version.ref = "filedownloader" }
+okd-ktx = { group = "com.liulishuo.okdownload", name = "ktx", version.ref = "filedownloader" }
+
+# https://github.com/LuckSiege/PictureSelector
+picture-selector = { group = "io.github.lucksiege", name = "pictureselector", version.ref = "pictureselector" }
+picture-compress = { group = "io.github.lucksiege", name = "compress", version.ref = "pictureselector" }
+picture-ucrop = { group = "io.github.lucksiege", name = "ucrop", version.ref = "pictureselector" }
+picture-camerax = { group = "io.github.lucksiege", name = "camerax", version.ref = "pictureselector" }
+
+# Shape 框架：https://github.com/getActivity/ShapeView
+shape-view = { group = "com.github.getActivity", name = "ShapeView", version.ref = "shapeView" }
+
+# https://github.com/CymChad/BaseRecyclerViewAdapterHelper
+baseRecyclerViewAdapterHelper = { group = "io.github.cymchad", name = "BaseRecyclerViewAdapterHelper4", version.ref = "adapterHelper" }
+
+# https://github.com/scwang90/SmartRefreshLayout
+#核心必须依赖
+refresh-layout-kernel = { group = "io.github.scwang90", name = "refresh-layout-kernel", version.ref = "smartrefresh" }
+#经典刷新头
+refresh-header-classics = { group = "io.github.scwang90", name = "refresh-header-classics", version.ref = "smartrefresh" }
+#雷达刷新头
+refresh-header-radar = { group = "io.github.scwang90", name = "refresh-header-radar", version.ref = "smartrefresh" }
+#虚拟刷新头
+refresh-header-falsify = { group = "io.github.scwang90", name = "refresh-header-falsify", version.ref = "smartrefresh" }
+#谷歌刷新头
+refresh-header-material = { group = "io.github.scwang90", name = "refresh-header-material", version.ref = "smartrefresh" }
+#二级刷新头
+refresh-header-two-level = { group = "io.github.scwang90", name = "refresh-header-two-level", version.ref = "smartrefresh" }
+#球脉冲加载
+refresh-footer-ball = { group = "io.github.scwang90", name = "refresh-footer-ball", version.ref = "smartrefresh" }
+#经典加载
+refresh-footer-classics = { group = "io.github.scwang90", name = "refresh-footer-classics", version.ref = "smartrefresh" }
+
+# https://docs.mapbox.com/android/maps/guides/install/
+maps = { group = "com.mapbox.maps", name = "android", version.ref = "maps" }
+
+# utils  https://github.com/Blankj/AndroidUtilCode
+# https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
+utilcodex = { group = "com.blankj", name = "utilcodex", version.ref = "utilcodex" }
+
+# https://github.com/airbnb/lottie-android
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
+
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+
+# 多语种：https://github.com/getActivity/MultiLanguages
+# 悬浮窗：https://github.com/getActivity/XToast
+# 日志输出：https://github.com/getActivity/Logcat
+# 工具类：https://github.com/Blankj/AndroidUtilCode
+# 轮播图：https://github.com/bingoogolapple/BGABanner-Android
+# 二维码：https://github.com/bingoogolapple/BGAQRCode-Android
+# 跑马灯：https://github.com/sunfusheng/MarqueeView
+# 对象注解：https://www.jianshu.com/p/f1f888e4a35f
+# 对象存储：https://github.com/leavesC/DoKV
+# 多渠道打包：https://github.com/Meituan-Dianping/walle
+# 设备唯一标识：http://msa-alliance.cn/col.jsp?id=120
+# 嵌套滚动容器：https://github.com/donkingliang/ConsecutiveScroller
+# 手势缩放 ImageView：https://github.com/Baseflow/PhotoView
+# 隐私调用监控：https://github.com/huage2580/PermissionMonitor
+# 动画解析库：https://github.com/airbnb/lottie-android
+# 动画资源：https://lottiefiles.com、https://icons8.com/animated-icons
+# 引导层： https://github.com/huburt-Hu/NewbieGuide
+# 日历： https://github.com/huanghaibin-dev/CalendarView
+
+# 类似的引用： apply plugin: 'google-devtools-ksp'
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp_version" }
+android-library = { id = "com.android.library", version.ref = "agp_version" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin_version" }
+# 大版本务必选择与项目的 Kotlin 版本一致的 KSP 版本
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp_version" }

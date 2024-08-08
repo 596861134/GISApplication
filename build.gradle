@@ -3,30 +3,30 @@ buildscript {
     apply from: 'configs.gradle'
 
     dependencies {
-        // 使用navigation需要导入
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
         // 使用kotlin
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        // 使用@Parcelize注解需要导入
-        classpath "org.jetbrains.kotlin:kotlin-parcelize-runtime:$kotlin_version"
-        // 多渠道打包：https://github.com/Tencent/VasDolly
-        classpath "com.android.tools.build:gradle:$agp_version"
-        classpath "com.tencent.vasdolly:plugin:$vasdolly_version"
-        // AOP 配置插件：https://github.com/HujiangTechnology/gradle_plugin_android_aspectjx
-//        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
-//        classpath 'io.github.wurensen:gradle-android-plugin-aspectjx:3.3.2'
+        classpath libs.kotlin.gradle.plugin
+        // kotlin使用@Parcelize注解需要导入
+        classpath libs.kotlin.parcelize.runtime.plugin
+        // agp
+        classpath libs.android.gradle.plugin
+        // vasdolly 多渠道打包：https://github.com/Tencent/VasDolly
+        classpath libs.tencent.vasdolly.plugin
+        // apt
+        classpath libs.android.apt.plugin
+        // greendao
+        classpath libs.greendao.gradle.plugin
+        // 使用navigation需要导入
+        classpath libs.navigation.safe.args.gradle.plugin
     }
 
 }
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    // https://mvnrepository.com/artifact/com.android.application/com.android.application.gradle.plugin
-    id 'com.android.application' version "$agp_version" apply false
-    id 'com.android.library' version "$agp_version" apply false
-    id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
-    // 大版本务必选择与项目的 Kotlin 版本一致的 KSP 版本
-    id 'com.google.devtools.ksp' version "$ksp_version" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.google.devtools.ksp) apply false
 }
 
 allprojects {
@@ -46,10 +46,10 @@ allprojects {
     }
 
     // 将构建文件统一输出到项目根目录下的 build 文件夹
-    setBuildDir(new File(rootDir, "build/${path.replaceAll(':', '/')}"))
+    getLayout().setBuildDirectory(new File(rootDir, "build/${path.replaceAll(':', '/')}"))
 }
 
 
 tasks.register('clean', Delete) {
-    delete rootProject.buildDir
+    delete rootProject.getLayout().getBuildDirectory()
 }

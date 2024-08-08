@@ -2,13 +2,16 @@ package com.gis.network.config
 
 import com.gis.common.log.LogHelper
 import com.gis.network.util.JsonUtil
+
 import okhttp3.*
 import okio.Buffer
 import okio.BufferedSource
+import org.joda.time.DateTime
+import org.joda.time.Interval
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 import java.net.URLDecoder
 import java.nio.charset.Charset
-import java.text.SimpleDateFormat
-import java.util.*
 
 class LogInterceptor(block: (LogInterceptor.() -> Unit)? = null) : Interceptor {
     private var logLevel: LogLevel = LogLevel.NONE//打印日期的标记
@@ -162,10 +165,21 @@ class LogInterceptor(block: (LogInterceptor.() -> Unit)? = null) : Interceptor {
     }
 
     private fun logBasicRsp(sb: StringBuilder, response: Response) {
+        val time1 = DateTime(response.sentRequestAtMillis) // 根据时间戳创建DateTime对象
+        val time2 = DateTime(response.receivedResponseAtMillis) // 根据时间戳创建DateTime对象
+        val interval = Interval(time1, time2) // 创建表示时间间隔的Interval对象
+        // 两个时间戳之间的时间间隔，并按照时、分、秒和毫秒对应地获得相应的值
+        val years = interval.toPeriod().years
+        val days = interval.toPeriod().days
+        val hours = interval.toPeriod().hours
+        val minutes = interval.toPeriod().minutes
+        val seconds = interval.toPeriod().seconds
+        val millis = interval.toPeriod().millis
         sb.appendLine("响应 protocol: ${response.protocol} code: ${response.code} message: ${response.message}")
             .appendLine("响应 request Url: ${decodeUrlStr(response.request.url.toString())}")
             .appendLine("响应 sentRequestTime: ${toDateTimeStr(response.sentRequestAtMillis, MILLIS_PATTERN)}")
             .appendLine("响应 receivedResponseTime: ${toDateTimeStr(response.receivedResponseAtMillis, MILLIS_PATTERN)}")
+            .appendLine("响应 requestDuration: ${seconds}s ${millis}ms")
     }
 
     //endregion
@@ -228,11 +242,17 @@ class LogInterceptor(block: (LogInterceptor.() -> Unit)? = null) : Interceptor {
         private const val TAG = "<NetWork>"//默认的TAG
 
         //时间格式化
-        const val MILLIS_PATTERN = "yyyy-MM-dd HH:mm:ss.SSSXXX"
+        const val MILLIS_PATTERN = "yyyy-MM-dd HH:mm:ss.SSSZ"
 
-        //转化为格式化的时间字符串
+        //转化为格式化的时间字符串S
         fun toDateTimeStr(millis: Long, pattern: String): String {
-            return SimpleDateFormat(pattern, Locale.getDefault()).format(millis)
+//            return SimpleDateFormat(pattern, Locale.getDefault()).format(millis)
+            // 根据时间戳创建DateTime对象
+            val dateTime = DateTime(millis)
+            // 定义所需的时间格式
+            val formatter: DateTimeFormatter = DateTimeFormat.forPattern(pattern)
+            // 将DateTime对象按照指定时间格式转换为字符串
+            return dateTime.toString(formatter)
         }
     }
 

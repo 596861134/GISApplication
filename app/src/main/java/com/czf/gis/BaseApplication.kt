@@ -3,6 +3,10 @@ package com.czf.gis
 import android.app.Application
 import android.content.Context
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStore
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.multidex.MultiDex
 import com.czf.gis.crash.CrashHandler
 import com.gis.common.CommonUtil
@@ -17,7 +21,7 @@ import com.tencent.vasdolly.helper.ChannelReaderUtil
 /**
  * Created by chengzf on 2021/5/12.
  */
-open class BaseApplication:Application() {
+open class BaseApplication :Application(), ViewModelStoreOwner {
 
 
     companion object{
@@ -31,6 +35,8 @@ open class BaseApplication:Application() {
 
     }
 
+    override val viewModelStore: ViewModelStore = ViewModelStore()
+
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         MultiDex.install(base)
@@ -38,7 +44,7 @@ open class BaseApplication:Application() {
 
     override fun onCreate() {
         super.onCreate()
-        CommonUtil.init(this@BaseApplication)
+        CommonUtil.init(this@BaseApplication, viewModelStore)
         CrashHandler.register(this@BaseApplication)
         SplashADView.getInstance().register(R.mipmap.splash_preview)
 
@@ -68,6 +74,13 @@ open class BaseApplication:Application() {
 
     fun getChannel():String{
         return ChannelReaderUtil.getChannel(this@BaseApplication)
+    }
+
+    /**
+     * 获取应用程序级ViewModel，通常用来做消息通信
+     */
+    fun <T: ViewModel>getApplicationScopeViewModel(viewModel: Class<T>): T {
+        return ViewModelProvider(this)[viewModel]
     }
 
 }
