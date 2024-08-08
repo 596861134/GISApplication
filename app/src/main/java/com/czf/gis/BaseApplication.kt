@@ -44,7 +44,7 @@ open class BaseApplication :Application(), ViewModelStoreOwner {
 
     override fun onCreate() {
         super.onCreate()
-        CommonUtil.init(this@BaseApplication, viewModelStore)
+        CommonUtil.init(this@BaseApplication)
         CrashHandler.register(this@BaseApplication)
         SplashADView.getInstance().register(R.mipmap.splash_preview)
 
