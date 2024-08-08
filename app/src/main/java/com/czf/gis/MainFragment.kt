@@ -4,8 +4,6 @@ import android.app.WallpaperManager
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import com.czf.gis.databinding.FragmentMainBinding
 import com.gis.common.manager.LifecycleManager
 import com.gis.common.mvvm.view.BaseViewModelFragment
@@ -14,7 +12,10 @@ import com.gis.common.mvvm.viewmodel.BaseLayoutViewModel
 /**
  * Created by chengzf on 2023/4/27.
  */
-class MainFragment:BaseViewModelFragment<BaseLayoutViewModel, FragmentMainBinding>(BaseLayoutViewModel::class.java) {
+class MainFragment : BaseViewModelFragment<BaseLayoutViewModel, FragmentMainBinding>(
+    FragmentMainBinding::inflate,
+    BaseLayoutViewModel::class.java
+) {
 
     private val mLabel:String by lazy { arguments?.getString("viewSource") ?: "" }
 
@@ -30,13 +31,6 @@ class MainFragment:BaseViewModelFragment<BaseLayoutViewModel, FragmentMainBindin
             }
             arguments = bundle
         }
-    }
-
-    override fun getLayoutId(
-        inflater: LayoutInflater,
-        container: ViewGroup?
-    ): FragmentMainBinding {
-        return FragmentMainBinding.inflate(inflater, container, false)
     }
 
     override fun onViewInit() {

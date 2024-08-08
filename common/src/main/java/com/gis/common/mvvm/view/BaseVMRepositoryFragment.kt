@@ -14,23 +14,20 @@ import com.gis.common.mvvm.viewmodel.BaseViewModelFactory
 /**
  * Created by chengzf on 2021/5/13.
  */
-abstract class BaseVMRepositoryFragment<VM : BaseRepositoryViewModel<*>, T : ViewBinding>(private val ownerActivity: Boolean = false) :
+abstract class BaseVMRepositoryFragment<VM : BaseRepositoryViewModel<*>, T : ViewBinding>(
+    private val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> T,
+    private val ownerActivity: Boolean = false) :
     BaseFragment(), ViewState {
 
     lateinit var mRealVM: VM
     lateinit var mBinding: T
     abstract fun getViewModel(app: Application): VM
 
-    /**
-     * return FragmentMainBinding.inflate(inflater, container, false)
-     */
-    abstract fun getLayoutId(inflater: LayoutInflater, container: ViewGroup?): T
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         beforeSetView()
         val vm = getViewModel(mActivity.application)
         mRealVM = ViewModelProvider(if(ownerActivity) mActivity else this, BaseViewModelFactory(mActivity.application, vm))[vm::class.java]
-        mBinding = getLayoutId(inflater, container)
+        mBinding = bindingInflater(inflater, container, false)
         return mBinding.root
     }
 

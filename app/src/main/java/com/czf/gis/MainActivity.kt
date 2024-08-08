@@ -27,7 +27,7 @@ import com.mapbox.maps.plugin.locationcomponent.OnIndicatorBearingChangedListene
 import com.mapbox.maps.plugin.locationcomponent.OnIndicatorPositionChangedListener
 import com.mapbox.maps.plugin.locationcomponent.location
 
-class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>(), StatusAction{
+class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>(ActivityMainBinding::inflate), StatusAction{
 
     private val mLifecycle: LifecycleOwnerManager by lazy { LifecycleOwnerManager() }
 
@@ -191,9 +191,9 @@ class MainActivity: BaseVMRepositoryActivity<MainViewModel, ActivityMainBinding>
 
     override fun getStatusLayout(): StatusLayout = mBinding.statusView
     override fun getViewModel(app: Application) = MainViewModel(app)
-    override fun getLayoutId(): ActivityMainBinding {
+    /*override fun getLayoutId(): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
-    }
+    }*/
 
     override fun onClick(view: View) {
         super.onClick(view)

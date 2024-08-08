@@ -48,7 +48,7 @@ import kotlin.math.min
  *    time   : 2019/06/27
  *    desc   : 崩溃捕捉界面
  */
-class CrashActivity : BaseViewModelActivity<BaseLayoutViewModel, CrashActivityBinding>(BaseLayoutViewModel::class.java) {
+class CrashActivity : BaseViewModelActivity<BaseLayoutViewModel, CrashActivityBinding>(CrashActivityBinding::inflate, BaseLayoutViewModel::class.java) {
 
     companion object {
 
@@ -77,10 +77,6 @@ class CrashActivity : BaseViewModelActivity<BaseLayoutViewModel, CrashActivityBi
     private val infoView: TextView? by lazy { mBinding.tvCrashInfo }
     private val messageView: TextView? by lazy { mBinding.tvCrashMessage }
     private var stackTrace: String? = null
-    override fun getLayoutId(): CrashActivityBinding {
-        return CrashActivityBinding.inflate(layoutInflater)
-    }
-
 
     override fun onViewInit() {
         super.onViewInit()

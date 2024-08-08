@@ -9,15 +9,12 @@ import com.gis.common.mvvm.view.BaseViewModelActivity
 import com.gis.common.mvvm.viewmodel.BaseLayoutViewModel
 import com.gyf.immersionbar.BarHide
 import com.gyf.immersionbar.ImmersionBar
-import java.util.*
+import java.util.Locale
 
 /**
  * Created by chengzf on 2023/4/23.
  */
-class SplashActivity:BaseViewModelActivity<BaseLayoutViewModel, ActivitySplashBinding>(BaseLayoutViewModel::class.java) {
-    override fun getLayoutId(): ActivitySplashBinding {
-        return ActivitySplashBinding.inflate(layoutInflater)
-    }
+class SplashActivity:BaseViewModelActivity<BaseLayoutViewModel, ActivitySplashBinding>(ActivitySplashBinding::inflate, BaseLayoutViewModel::class.java) {
 
     override fun beforeSetView() {
         super.beforeSetView()

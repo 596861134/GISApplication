@@ -12,20 +12,17 @@ import com.gis.common.mvvm.viewmodel.BaseLayoutViewModel
 /**
  * Created by chengzf on 2021/5/13.
  */
-abstract class BaseViewModelFragment<VM: BaseLayoutViewModel, T: ViewBinding>(private val clazz:Class<VM>):
-    BaseFragment(), ViewState {
+abstract class BaseViewModelFragment<VM : BaseLayoutViewModel, T : ViewBinding>(
+    private val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> T,
+    private val clazz: Class<VM>
+) : BaseFragment(), ViewState {
     lateinit var mRealVM: VM
     lateinit var mBinding: T
-
-    /**
-     * return FragmentMainBinding.inflate(inflater, container, false)
-     */
-    abstract fun getLayoutId(inflater: LayoutInflater, container: ViewGroup?): T
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         beforeSetView()
         mRealVM = ViewModelProvider(this)[clazz]
-        mBinding = getLayoutId(inflater, container)
+        mBinding = bindingInflater(inflater, container, false)
         return mBinding.root
     }
 

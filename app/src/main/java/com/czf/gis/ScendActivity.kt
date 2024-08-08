@@ -8,15 +8,11 @@ import com.gis.common.mvvm.viewmodel.BaseLayoutViewModel
 /**
  * Created by chengzf on 2023/4/27.
  */
-class ScendActivity:BaseViewModelActivity<BaseLayoutViewModel, ActivityScendBinding>(BaseLayoutViewModel::class.java) {
+class ScendActivity:BaseViewModelActivity<BaseLayoutViewModel, ActivityScendBinding>(ActivityScendBinding::inflate, BaseLayoutViewModel::class.java) {
 
     private val mSmallSaleTaskFragment by lazy { MainFragment.newInstance("TASK_LABEL") }
 
     private val mFragmentManager:FragmentLifecycle by lazy { FragmentLifecycle() }
-
-    override fun getLayoutId(): ActivityScendBinding {
-        return ActivityScendBinding.inflate(layoutInflater)
-    }
 
     override fun onViewInit() {
         super.onViewInit()
