@@ -1,7 +1,7 @@
 [versions]
 # Android Gradle Plugin：Android Gradle API 版本
 # https://mvnrepository.com/artifact/com.android.tools.build/gradle
-agp_version = "8.5.1"
+agp_version = "8.5.2"
 # Kotlin 版
 # https://github.com/JetBrains/kotlin
 kotlin_version = "2.0.10"
@@ -21,7 +21,7 @@ appcompat = "1.7.0"
 fragmentKtx = "1.8.2"
 activityKtx = "1.9.1"
 constraintlayout = "2.1.4"
-annotation = "1.8.1"
+annotation = "1.8.2"
 coroutinesKtx = "1.8.1"
 
 material = "1.12.0"
