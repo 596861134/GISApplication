@@ -98,6 +98,8 @@ dependencies {
     api libs.refresh.footer.ball
     api libs.refresh.footer.classics
 
+    api libs.alipaysdk
+    api libs.wechat
     api libs.lottie
     api libs.utilcodex
 
