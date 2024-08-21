@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
@@ -43,10 +42,6 @@ fun Any.showToast(isLong:Boolean = false){
  */
 fun Int.randomInt() = Random.nextInt(0, this)
 
-fun Int.getDrawable() = ActivityCompat.getDrawable(CommonUtil.mContext, this)
-
-fun Int.getResString() = CommonUtil.mContext.getString(this)
-
 fun <T : Any> Observable<T>.subIoObsMain(observer: Observer<T>) {
     this
         .subscribeOn(Schedulers.io())
@@ -57,6 +52,8 @@ fun <T : Any> Observable<T>.subIoObsMain(observer: Observer<T>) {
 fun Int.delay(runnable: Runnable) {
     Handler(Looper.getMainLooper()).postDelayed(runnable, this.toLong())
 }
+
+fun Int.getResString() = ContextCompat.getString(CommonUtil.mContext, this)
 
 fun Int.getResDimen() = CommonUtil.mContext.resources.getDimension(this)
 
@@ -84,6 +81,8 @@ fun Float.px2sp(context:Context? = null) =
 fun Any?.isNull() = this == null
 
 fun Any?.isNotNull() = !isNull()
+
+fun Any?.isAnyNullOrEmpty() = this.isNull() || this?.toString()?.isEmpty().truely()
 
 fun Boolean?.truely() = this != null && this
 
