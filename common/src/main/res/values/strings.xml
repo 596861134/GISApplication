@@ -17,4 +17,7 @@
     <string name="status_layout_error_request">请求出错，请重试</string>
     <string name="status_layout_error_network">网络错误，请重试</string>
     <string name="status_layout_retry">重试</string>
+
+    <string name="app_space">Common</string>
+    <string name="granted_faild">申请权限失败</string>
 </resources>

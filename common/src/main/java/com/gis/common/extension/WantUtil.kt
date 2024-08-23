@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.gis.common.BuildConfig
 import com.gis.common.CommonUtil
+import com.gis.common.R
 import com.gis.common.log.LogHelper
 import com.gis.common.utils.DisplayUtil
 import com.hjq.toast.Toaster
@@ -148,9 +149,9 @@ fun RecyclerView.scrollItemToTop(position: Int) {
  * 获取缓存路径
  * /storage/emulated/0/Android/media/com.want.hotkidclub.ceo/造旺计划/
  */
-fun Activity.getOutputDirectory(appName:String): File {
+fun Activity.getOutputDirectory(): File {
     val mediaDir = externalMediaDirs.firstOrNull()?.let {
-        File(it, appName).apply { mkdirs() }
+        File(it, R.string.app_space.getResString()).apply { mkdirs() }
     }
     return if (mediaDir != null && mediaDir.exists()) mediaDir else filesDir
 }

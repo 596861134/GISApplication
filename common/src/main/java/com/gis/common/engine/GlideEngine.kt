@@ -5,36 +5,55 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.target.Target
-import com.gis.common.R
+import com.luck.picture.lib.R
 import com.luck.picture.lib.engine.ImageEngine
-import java.io.File
+import com.luck.picture.lib.utils.ActivityCompatHelper
+
 
 /**
- * Created by chengzf on 2023/5/12.
- * https://github.com/LuckSiege/PictureSelector/blob/version_component/app/src/main/java/com/luck/pictureselector/GlideEngine.java
+ * @author：luck
+ * @date：2019-11-13 17:02
+ * @describe：Glide加载引擎
  */
-class GlideEngine: ImageEngine {
+class GlideEngine : ImageEngine {
 
     companion object{
 
         private val mGlideEngine: GlideEngine by lazy { GlideEngine() }
 
         @JvmStatic
-        fun getInstance(): GlideEngine {
+        fun createGlideEngine(): GlideEngine {
             return mGlideEngine
         }
 
     }
+
+    /**
+     * 加载图片
+     *
+     * @param context   上下文
+     * @param url       资源url
+     * @param imageView 图片承载控件
+     */
     override fun loadImage(context: Context, url: String, imageView: ImageView) {
-        if (!ActivityCompatHelper.assertValidRequest(context))return
+        if (!ActivityCompatHelper.assertValidRequest(context)) {
+            return
+        }
         Glide.with(context)
             .load(url)
             .into(imageView)
     }
 
-    override fun loadImage(context: Context, imageView: ImageView, url: String, maxWidth: Int, maxHeight: Int) {
-        if (!ActivityCompatHelper.assertValidRequest(context))return
+    override fun loadImage(
+        context: Context,
+        imageView: ImageView,
+        url: String,
+        maxWidth: Int,
+        maxHeight: Int
+    ) {
+        if (!ActivityCompatHelper.assertValidRequest(context)) {
+            return
+        }
         Glide.with(context)
             .load(url)
             .override(maxWidth, maxHeight)
@@ -43,9 +62,15 @@ class GlideEngine: ImageEngine {
 
     /**
      * 加载相册目录封面
+     *
+     * @param context   上下文
+     * @param url       图片路径
+     * @param imageView 承载图片ImageView
      */
     override fun loadAlbumCover(context: Context, url: String, imageView: ImageView) {
-        if (!ActivityCompatHelper.assertValidRequest(context))return
+        if (!ActivityCompatHelper.assertValidRequest(context)) {
+            return
+        }
         Glide.with(context)
             .asBitmap()
             .load(url)
@@ -56,11 +81,18 @@ class GlideEngine: ImageEngine {
             .into(imageView)
     }
 
+
     /**
-     * 加载相册目录封面
+     * 加载图片列表图片
+     *
+     * @param context   上下文
+     * @param url       图片路径
+     * @param imageView 承载图片ImageView
      */
     override fun loadGridImage(context: Context, url: String, imageView: ImageView) {
-        if (!ActivityCompatHelper.assertValidRequest(context))return
+        if (!ActivityCompatHelper.assertValidRequest(context)) {
+            return
+        }
         Glide.with(context)
             .load(url)
             .override(200, 200)
@@ -70,49 +102,17 @@ class GlideEngine: ImageEngine {
     }
 
     override fun pauseRequests(context: Context) {
-        if (!ActivityCompatHelper.assertValidRequest(context))return
+        if (!ActivityCompatHelper.assertValidRequest(context)) {
+            return
+        }
         Glide.with(context).pauseRequests()
     }
 
     override fun resumeRequests(context: Context) {
-        if (!ActivityCompatHelper.assertValidRequest(context))return
+        if (!ActivityCompatHelper.assertValidRequest(context)) {
+            return
+        }
         Glide.with(context).resumeRequests()
-    }
-
-    /**
-     * 根据url获取图片缓存
-     * Glide 4.x请调用此方法
-     * 注意：此方法必须在子线程中进行
-     *
-     * @param context
-     * @param url
-     * @return
-     */
-    fun getCacheFileTo4x(context: Context, url: String):File?{
-        return try {
-            Glide.with(context).downloadOnly().load(url).submit().get()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    /**
-     * 根据url获取图片缓存
-     * Glide 3.x请调用此方法
-     * 注意：此方法必须在子线程中进行
-     *
-     * @param context
-     * @param url
-     * @return
-     */
-    fun getCacheFileTo3x(context: Context, url: String):File?{
-        return try {
-            Glide.with(context).load(url).downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).get()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
     }
 
 }
