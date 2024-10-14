@@ -1,13 +1,13 @@
 [versions]
 # Android Gradle Plugin：Android Gradle API 版本
 # https://mvnrepository.com/artifact/com.android.tools.build/gradle
-agp_version = "8.6.1"
+agp_version = "8.7.0"
 # Kotlin 版
 # https://github.com/JetBrains/kotlin
-kotlin_version = "2.0.20"
+kotlin_version = "2.0.21"
 # 大版本务必选择与项目的 Kotlin 版本一致的 KSP 版本
 # https://github.com/google/ksp/releases
-ksp_version = "2.0.20-1.0.25"
+ksp_version = "2.0.21-1.0.25"
 apt_version = "1.8"
 vasdolly_version = "3.0.6"
 
