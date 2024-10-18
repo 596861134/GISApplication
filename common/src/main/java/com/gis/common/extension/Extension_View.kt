@@ -25,6 +25,9 @@ fun View.inVisible() {
 fun View.doubleClick() =  (DoubleCLickUtils.isFastDoubleClick(this))
 
 
+fun View.doubleTimeClick(time: Long) = (DoubleCLickUtils.isFastDoubleClick(this, time))
+
+
 fun View.getWindowLocation(offsetX: Int = 0, offsetY: Int = 0): IntArray {
     val intArray = IntArray(2)
     this.getLocationInWindow(intArray)

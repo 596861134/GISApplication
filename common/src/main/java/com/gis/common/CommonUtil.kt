@@ -13,12 +13,7 @@ import androidx.core.content.pm.PackageInfoCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.gis.common.extension.showToast
-import com.gis.common.log.LogHelper
 import com.gis.common.manager.AppActivityManager
-import com.gis.common.manager.MMKVUtil
-import com.gis.common.permissions.PermissionInterceptor
-import com.hjq.permissions.XXPermissions
-import com.hjq.toast.Toaster
 import me.jessyan.retrofiturlmanager.RetrofitUrlManager
 
 
@@ -31,16 +26,9 @@ object CommonUtil {
 
     fun init(application: Application) {
         mContext = application.applicationContext
-        // 初始化日志打印
-        LogHelper.init(BuildConfig.LOG_ENABLE, BuildConfig.LOG_TAG)
-        // 初始化页面管理
-        AppActivityManager.getInstance().init(application)
-        // 初始Toast
-        Toaster.init(application)
-        // 初始化MMKV
-        MMKVUtil.init(application.applicationContext)
-        // 设置权限请求拦截器（全局设置）
-        XXPermissions.setInterceptor(PermissionInterceptor())
+    }
+
+    fun initContinue() {
         RetrofitUrlManager.getInstance().setGlobalDomain(BuildConfig.HOST)
         registerNet(mContext)
     }

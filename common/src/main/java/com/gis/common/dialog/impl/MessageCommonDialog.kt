@@ -12,7 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.gis.common.CommonUtil.mContext
+import com.gis.common.CommonUtil
 import com.gis.common.R
 import com.gis.common.action.AnimAction
 import com.gis.common.databinding.DialogCommonViewBinding
@@ -24,24 +24,31 @@ import com.gis.common.utils.ScreenUtils
  */
 class MessageCommonDialog {
 
-    class Builder(mContext: Context) : BaseDialog.Builder<Builder>(mContext) {
+    class Builder(context: Context) : BaseDialog.Builder<Builder>(context) {
 
-        private val mBinding: DialogCommonViewBinding = DialogCommonViewBinding.inflate(LayoutInflater.from(mContext))
+        private var mTvContent:TextView
+        private var mIvContent:ImageView
+        private var mTitle:TextView
+        private var tvConform: Button
+        private var tvCancel: Button
+        private var ivClose: ImageView
 
-        private val mTvContent:TextView by lazy { mBinding.tvContent }
-        private val mIvContent:ImageView by lazy { mBinding.ivContent }
-        private val mTitle:TextView by lazy { mBinding.tvTitle }
-        private val tvConform: Button by lazy { mBinding.btnConform }
-        private val tvCancel: Button by lazy { mBinding.btnCancel }
-        private val ivClose: ImageView by lazy { mBinding.ivClose }
+        private val mBinding: DialogCommonViewBinding = DialogCommonViewBinding.inflate(LayoutInflater.from(getContext()))
 
         init {
-            setContentView(R.layout.dialog_common_view)
+            setContentView(mBinding.root)
             setAnimStyle(AnimAction.ANIM_IOS)
             setBackgroundDimEnabled(true)
             setCanceledOnTouchOutside(false)
             setCancelable(false)
-            setWidth((ScreenUtils.getScreenWidth(getActivity()) / 4 * 3))
+            setWidth((ScreenUtils.getScreenWidth(getContext()) / 4 * 3))
+
+            mTvContent = mBinding.tvContent
+            mIvContent = mBinding.ivContent
+            mTitle = mBinding.tvTitle
+            tvConform = mBinding.btnConform
+            tvCancel = mBinding.btnCancel
+            ivClose = mBinding.ivClose
 
             tvConform.setOnClickListener { dismiss() }
             tvCancel.setOnClickListener { dismiss() }
@@ -52,7 +59,7 @@ class MessageCommonDialog {
         }
 
         fun setFullWidth():Builder = also {
-            this.setWidth(ScreenUtils.getScreenWidth(getActivity()))
+            this.setWidth(ScreenUtils.getScreenWidth(getContext()))
         }
 
         fun setAnimBottomStyle() :Builder = also {
@@ -64,10 +71,10 @@ class MessageCommonDialog {
          */
         fun setTitle(title:String): Builder = also {
             if (title.isEmpty()){
-                mTitle?.visibility = View.GONE
+                mTitle.visibility = View.GONE
             }else {
-                mTitle?.visibility = View.VISIBLE
-                mTitle?.text = title
+                mTitle.visibility = View.VISIBLE
+                mTitle.text = title
             }
         }
 
@@ -108,8 +115,8 @@ class MessageCommonDialog {
         /**
          * 设置文本内容颜色
          */
-        fun setTipsTextColor(color:Int):Builder = also {
-            mTvContent.setTextColor(ContextCompat.getColor(mContext, color))
+        fun setTipsTextColor(colorId:Int):Builder = also {
+            mTvContent.setTextColor(ContextCompat.getColor(getContext(), colorId))
         }
 
         /**
@@ -135,7 +142,7 @@ class MessageCommonDialog {
                 mIvContent.visibility = View.GONE
             }else {
                 mIvContent.visibility = View.VISIBLE
-                Glide.with(mContext).load(src).into(mIvContent)
+                Glide.with(getContext()).load(src).into(mIvContent)
             }
         }
 

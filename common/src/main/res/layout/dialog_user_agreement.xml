@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@mipmap/bg_agreement_dialog"
+    android:orientation="vertical"
+    android:padding="@dimen/dp_24">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_60"
+        android:gravity="center"
+        android:text="用户隐私保护提示"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_17"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E4E8ED"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="@dimen/dp_3"
+            android:text="@string/agreement_text"
+            android:textColor="@color/color_8C95A3"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_agreemen_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_30"
+            android:lineSpacingExtra="@dimen/dp_3"
+            android:textColor="@color/color_8C95A3"
+            android:textSize="@dimen/sp_13"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_30"
+        android:orientation="horizontal">
+
+        <com.hjq.shape.view.ShapeButton
+            android:id="@+id/tv_cancel"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_40"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="不同意退出"
+            android:textColor="@color/color_8C95A3"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            app:shape_radius="@dimen/dp_20"
+            app:shape_solidColor="@color/color_EBEFF7" />
+
+        <com.hjq.shape.view.ShapeButton
+            android:id="@+id/tv_agree"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_40"
+            android:layout_marginLeft="@dimen/dp_20"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="同意"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            app:shape_radius="@dimen/dp_20"
+            app:shape_solidColor="@color/color_416FFC" />
+
+    </LinearLayout>
+
+</LinearLayout>

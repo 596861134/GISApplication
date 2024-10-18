@@ -20,4 +20,8 @@
 
     <string name="app_space">Common</string>
     <string name="granted_faild">申请权限失败</string>
+
+    <string name="agreement_text">欢迎使用造旺计划APP！在您使用我们的产品/服务时，需要连接移动网络或WLAN产生的流量费用请咨询当地运营商。</string>
+    <string name="agreement_text1">造旺计划为了更好的保护您的隐私和信息安全，根据国家相关法律法规订制了</string>
+    <string name="agreement_text2">，请您在使用前务必仔细阅读并透彻理解，您同意并接受全部条款后再开始使用我们的产品/服务。</string>
 </resources>

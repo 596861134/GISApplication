@@ -1,6 +1,7 @@
 package com.gis.network.config
 
 import com.gis.common.manager.MMKVUtil
+import com.gis.common.utils.FileHelper
 import com.gis.network.BuildConfig
 import com.gis.network.util.Constant
 import okhttp3.Interceptor
@@ -19,6 +20,7 @@ class TokenInterceptor: Interceptor {
         }
         builder.addHeader("OS","Android")
         builder.addHeader("APP_VERSION", BuildConfig.VERSIONNAME)
+        builder.addHeader("DEVICE_ID", FileHelper.getInstance().getUdtId())
         return chain.proceed(builder.build())
     }
 }
