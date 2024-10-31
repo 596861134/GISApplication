@@ -71,25 +71,9 @@ android {
             useSupportLibrary true
         }
 
-
-        if (IS_RELEASE_PACKAGE.toBoolean()){
-            applicationIdSuffix ''
-            // 添加清单占位符
-            addManifestPlaceholders([
-                    'app_name'    :    '@string/app_name',
-                    'icon_launcher' : '@mipmap/ic_launcher_release',
-                    'network_security_config' : '@xml/network_security_config',
-                    'UM_KEY' : UMENG_APP_KEY,
-                    'QQ_ID' : QQ_APP_ID,
-                    'QQ_SECRET' : QQ_APP_SECRET,
-                    'WX_ID' : WX_APP_ID,
-                    'WX_SECRET' : WX_APP_SECRET
-            ])
-        }
     }
 
-
-    if (!IS_RELEASE_PACKAGE.toBoolean()){
+    if (IS_RELEASE_PACKAGE.toBoolean()){
         buildTypes {
             debug {
                 // 给包名添加后缀
@@ -105,6 +89,100 @@ android {
                         'WX_ID' : WX_APP_ID,
                         'WX_SECRET' : WX_APP_SECRET
                 ])
+
+                // 调试模式开关
+                debuggable true
+                // 调试模式开关
+                jniDebuggable true
+                // 压缩对齐开关
+                zipAlignEnabled false
+                // 移除无用的资源
+//            shrinkResources false
+                // 代码混淆开关
+                minifyEnabled false
+                // 签名信息配置
+                signingConfig signingConfigs.debug
+                // 调试模式下只保留一种架构的 so 库，提升打包速度
+                ndk {
+                    abiFilters 'arm64-v8a'
+                }
+            }
+
+            release {
+                applicationIdSuffix ''
+                // 添加清单占位符
+                addManifestPlaceholders([
+                        'app_name'    :    '@string/app_name',
+                        'icon_launcher' : '@mipmap/ic_launcher_release',
+                        'network_security_config' : '@xml/network_security_config',
+                        'UM_KEY' : UMENG_APP_KEY,
+                        'QQ_ID' : QQ_APP_ID,
+                        'QQ_SECRET' : QQ_APP_SECRET,
+                        'WX_ID' : WX_APP_ID,
+                        'WX_SECRET' : WX_APP_SECRET
+                ])
+
+                debuggable false
+                // 调试模式开关
+                jniDebuggable false
+                // 压缩对齐开关
+                zipAlignEnabled true
+                // 移除无用的资源
+//            shrinkResources true
+                // 代码混淆开关
+                minifyEnabled true
+                // 签名信息配置
+                signingConfig signingConfigs.release
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+                ndk {
+                    // armeabi：万金油架构平台（占用率：0%）
+                    // armeabi-v7a：曾经主流的架构平台（占用率：10%）
+                    // arm64-v8a：目前主流架构平台（占用率：95%）
+                    abiFilters 'armeabi-v7a','arm64-v8a'
+                    // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+                    //  abiFilters 'arm64-v8a','x86_64' // 64位版本
+                }
+            }
+        }
+
+        productFlavors.configureEach { flavor ->
+            flavor.manifestPlaceholders = [CHANNEL_VALUE: name]
+        }
+
+    }else {
+        buildTypes {
+            debug {
+                // 给包名添加后缀
+                applicationIdSuffix '.debug'
+                // 添加清单占位符
+                addManifestPlaceholders([
+                        'app_name'    :   '项目框架Debug版',
+                        'icon_launcher' : '@mipmap/ic_launcher',
+                        'network_security_config' : '@xml/network_security_config_debug',
+                        'UM_KEY' : UMENG_APP_KEY,
+                        'QQ_ID' : QQ_APP_ID,
+                        'QQ_SECRET' : QQ_APP_SECRET,
+                        'WX_ID' : WX_APP_ID,
+                        'WX_SECRET' : WX_APP_SECRET
+                ])
+
+                // 调试模式开关
+                debuggable true
+                // 调试模式开关
+                jniDebuggable true
+                // 压缩对齐开关
+                zipAlignEnabled false
+                // 移除无用的资源
+//            shrinkResources false
+                // 代码混淆开关
+                minifyEnabled false
+                // 签名信息配置
+                signingConfig signingConfigs.debug
+                // 调试模式下只保留一种架构的 so 库，提升打包速度
+                ndk {
+                    abiFilters 'arm64-v8a'
+                }
             }
 
             preview.initWith(debug)
@@ -136,11 +214,39 @@ android {
                         'WX_ID' : WX_APP_ID,
                         'WX_SECRET' : WX_APP_SECRET
                 ])
-            }
-        }
 
-        productFlavors.configureEach { flavor ->
-            flavor.manifestPlaceholders = [CHANNEL_VALUE: name]
+                // 调试模式开关
+                debuggable false
+                // 调试模式开关
+                jniDebuggable false
+                // 压缩对齐开关
+                zipAlignEnabled true
+                // 移除无用的资源
+//            shrinkResources true
+                // 代码混淆开关
+                minifyEnabled true
+                // 签名信息配置
+                signingConfig signingConfigs.release
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+                ndk {
+                    // armeabi：万金油架构平台（占用率：0%）
+                    // armeabi-v7a：曾经主流的架构平台（占用率：10%）
+                    // arm64-v8a：目前主流架构平台（占用率：95%）
+                    abiFilters 'armeabi-v7a','arm64-v8a'
+                    // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+                    //  abiFilters 'arm64-v8a','x86_64' // 64位版本
+                }
+            }
+
+            prerelease.initWith(release)
+            prerelease {
+                // 调试模式开关
+                debuggable true
+                // 调试模式开关
+                jniDebuggable true
+                minifyEnabled false
+            }
         }
 
         // 打包 使用VasDolly替代自己打包

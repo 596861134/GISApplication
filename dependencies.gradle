@@ -77,48 +77,109 @@ android {
      * 编译环境
      * 编译环境配置后，会在Build Variants和Gradle（的other下）两个侧边栏中出现对应的环境
      */
-    buildTypes {
-        debug {
-            // 调试模式开关
-            jniDebuggable true
-            // 压缩对齐开关
-            zipAlignEnabled false
-            // 移除无用的资源
+    if (IS_RELEASE_PACKAGE.toBoolean()){
+        buildTypes {
+            debug {
+                // 调试模式开关
+                debuggable true
+                // 调试模式开关
+                jniDebuggable true
+                // 压缩对齐开关
+                zipAlignEnabled false
+                // 移除无用的资源
 //            shrinkResources false
-            // 代码混淆开关
-            minifyEnabled false
-            // 签名信息配置
-            signingConfig signingConfigs.debug
-            // 调试模式下只保留一种架构的 so 库，提升打包速度
-            ndk {
-                abiFilters 'arm64-v8a'
+                // 代码混淆开关
+                minifyEnabled false
+                // 签名信息配置
+                signingConfig signingConfigs.debug
+                // 调试模式下只保留一种架构的 so 库，提升打包速度
+                ndk {
+                    abiFilters 'arm64-v8a'
+                }
+            }
+
+            release {
+                // 调试模式开关
+                debuggable false
+                // 调试模式开关
+                jniDebuggable false
+                // 压缩对齐开关
+                zipAlignEnabled true
+                // 移除无用的资源
+//            shrinkResources true
+                // 代码混淆开关
+                minifyEnabled true
+                // 签名信息配置
+                signingConfig signingConfigs.release
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+                ndk {
+                    // armeabi：万金油架构平台（占用率：0%）
+                    // armeabi-v7a：曾经主流的架构平台（占用率：10%）
+                    // arm64-v8a：目前主流架构平台（占用率：95%）
+                    abiFilters 'armeabi-v7a','arm64-v8a'
+                    // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+//            abiFilters 'arm64-v8a','x86_64' // 64位版本
+                }
             }
         }
+    }else {
+        buildTypes {
+            debug {
+                // 调试模式开关
+                debuggable true
+                // 调试模式开关
+                jniDebuggable true
+                // 压缩对齐开关
+                zipAlignEnabled false
+                // 移除无用的资源
+//            shrinkResources false
+                // 代码混淆开关
+                minifyEnabled false
+                // 签名信息配置
+                signingConfig signingConfigs.debug
+                // 调试模式下只保留一种架构的 so 库，提升打包速度
+                ndk {
+                    abiFilters 'arm64-v8a'
+                }
+            }
 
-        preview.initWith(debug)
-        preview {
-        }
+            preview.initWith(debug)
+            preview {
+            }
 
-        release {
-            // 调试模式开关
-            jniDebuggable false
-            // 压缩对齐开关
-            zipAlignEnabled true
-            // 移除无用的资源
+            release {
+                // 调试模式开关
+                debuggable false
+                // 调试模式开关
+                jniDebuggable false
+                // 压缩对齐开关
+                zipAlignEnabled true
+                // 移除无用的资源
 //            shrinkResources true
-            // 代码混淆开关
-            minifyEnabled true
-            // 签名信息配置
-            signingConfig signingConfigs.release
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                // 代码混淆开关
+                minifyEnabled true
+                // 签名信息配置
+                signingConfig signingConfigs.release
+                proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            ndk {
-                // armeabi：万金油架构平台（占用率：0%）
-                // armeabi-v7a：曾经主流的架构平台（占用率：10%）
-                // arm64-v8a：目前主流架构平台（占用率：95%）
-                abiFilters 'armeabi-v7a','arm64-v8a'
-                // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
+                ndk {
+                    // armeabi：万金油架构平台（占用率：0%）
+                    // armeabi-v7a：曾经主流的架构平台（占用率：10%）
+                    // arm64-v8a：目前主流架构平台（占用率：95%）
+                    abiFilters 'armeabi-v7a','arm64-v8a'
+                    // 还可以添加 'x86', 'x86_64', 'mips', 'mips64'
 //            abiFilters 'arm64-v8a','x86_64' // 64位版本
+                }
+            }
+
+            prerelease.initWith(release)
+            prerelease {
+                // 调试模式开关
+                debuggable true
+                // 调试模式开关
+                jniDebuggable true
+                minifyEnabled false
             }
         }
     }

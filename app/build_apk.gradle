@@ -14,9 +14,28 @@ ext {
     DEFAULT_APK_PATH_RELEASE = "${SOURCE_APK_PATH}/outputs/apk/release"
     //默认preview文件路径
     DEFAULT_APK_PATH_PREVIEW = "${SOURCE_APK_PATH}/outputs/apk/preview"
+    //默认prerelease文件路径
+    DEFAULT_APK_PATH_PRERELEASE = "${SOURCE_APK_PATH}/outputs/apk/prerelease"
     //默认debug文件路径
     DEFAULT_APK_PATH_DEBUG = "${SOURCE_APK_PATH}/outputs/apk/debug"
 
+}
+
+/**
+ * 预正式包
+ */
+tasks.register('buildAppUploadPrerelease') {
+    group '项目框架'
+    // 生成release包
+    // 先执行根目录下build.gradle中的"clean"任务
+    dependsOn("assemblePrerelease")
+    doLast {
+        println DEFAULT_APK_PATH_PRERELEASE
+        //上传apk文件到蒲公英平台
+        def apkDir = new File(DEFAULT_APK_PATH_PRERELEASE)
+//        uploadApk(apkDir)
+        getToken(apkDir)
+    }
 }
 
 /**
@@ -92,6 +111,7 @@ String getBuildType(){
         case "preview":
             flavor = "预发布环境包"
             break
+        case "prerelease":
         case "release":
             flavor = "正式包"
             break

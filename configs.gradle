@@ -16,6 +16,8 @@ ext {
     def SERVER_TYPE_DEBUG = "debug"
     // 预发布服
     def SERVER_TYPE_PREVIEW = "preview"
+    // 正式服-可debug
+    def SERVER_TYPE_PRE_RELEASE = "prerelease"
     // 正式服
     def SERVER_TYPE_RELEASE = "release"
     /**编译环境*/
@@ -35,6 +37,8 @@ ext {
         serverType = SERVER_TYPE_DEBUG
     } else if (taskName.endsWith("Preview")) {
         serverType = SERVER_TYPE_PREVIEW
+    }else if (taskName.endsWith("Prerelease")) {
+        serverType = SERVER_TYPE_PRE_RELEASE
     }else if (taskName.endsWith("Release")) {
         serverType = SERVER_TYPE_RELEASE
     } else {
@@ -99,6 +103,7 @@ ext {
                 }
                 APP_SHARE_TYPE = false
                 break
+            case SERVER_TYPE_PRE_RELEASE:
             case SERVER_TYPE_RELEASE:
                 HOST = "https://static.hotkidceo.com"
                 APP_CONFIG_SERVER_IP = "https://srv.hotkidceo.com"
