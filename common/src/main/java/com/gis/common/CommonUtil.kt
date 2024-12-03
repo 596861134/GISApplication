@@ -91,7 +91,7 @@ object CommonUtil {
         try {
             val packageInfo = mContext.packageManager.getPackageInfo(mContext.packageName, 0)
             val versionCode = PackageInfoCompat.getLongVersionCode(packageInfo)
-            versionName = packageInfo.versionName
+            versionName = packageInfo.versionName ?:""
             if (versionName.isEmpty()) {
                 return ""
             }

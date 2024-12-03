@@ -196,12 +196,12 @@ android {
 
     // 根据AS支持版本适配，但是直接用19也没问题，要用就用最高，jvmTarget也要同步
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_19
-        targetCompatibility JavaVersion.VERSION_19
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     //使用jetPack的组件，会要求jdk 1.8最好，有的时候会遇到报错，需要配置如下，避免target jvm 1.8的那个报错
     kotlinOptions {
-        jvmTarget = "19"
+        jvmTarget = "21"
     }
 
     // 设置存放 so 文件的目录
